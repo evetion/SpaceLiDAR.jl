@@ -13,7 +13,7 @@ function s3!(granule::Granule, bucket::String="so-icesat2", verify=false)
         return granule
     end
 end
-s3!(granules::Vector{<:Granule}, args...) = map!(x->s3!(x, args...), granules)
+s3!(granules::Vector{<:Granule}, args...) = map!(x -> s3!(x, args...), granules)
 
 function Base.in(granule::Granule, bucket="so-icesat2")
     AWSS3.s3_exists(aws, bucket, granule.id)
@@ -22,8 +22,8 @@ end
 function sync!(granules::Vector{<:Granule}, bucket="so-icesat2")
     mask = trues(length(granules))
     while sum(mask) > 0
-        in_bucket = map(x->x["Key"], s3_list_objects(aws, bucket))
-        mask = map(g->~(g.id in in_bucket), granules)
+        in_bucket = map(x -> x["Key"], s3_list_objects(aws, bucket))
+        mask = map(g -> ~(g.id in in_bucket), granules)
         @info "Still checking $(sum(mask)) to sync granules..."
         for granule in granules[.~mask]
             granule.url = joinpath(bucket, granule.id)
@@ -39,14 +39,6 @@ function download_to_s3(granules::Vector{<:Granule}, bucket="so-icesat2")
     print(read(`aria2c --on-download-complete $fn_hook --file-allocation=none --continue=true --auto-file-renaming=false -j3 -x1 -i $fn_urls`))
 end
 
-function write_granule_urls!(fn::String, granules::Vector{<:Granule})
-    open(fn, "w") do f
-        for granule in granules
-            println(f, granule.url)
-        end
-    end
-    abspath(fn)
-end
 
 function write_upload_hook!(fn::String, bucket="so-icesat2", rm=true)
     open(fn, "w") do f

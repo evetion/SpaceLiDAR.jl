@@ -1,12 +1,13 @@
 
 
 function xyz(granule::ICESat2_Granule{:ATL08}, tracks=icesat2_tracks)
-    df = DataFrame()
+    dfs = Vector{DataFrame}()
     HDF5.h5open(granule.url, "r") do file
-
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
+        orientation = read(file, "orbit_info/sc_orient")[1]
 
         for track ∈ tracks
+            power = track_power(orientation, track)
             if in(track, names(file)) && in("land_segments", names(file[track]))
                 z = read(file, "$track/land_segments/terrain/h_te_median")
                 x = read(file, "$track/land_segments/longitude")
@@ -14,11 +15,11 @@ function xyz(granule::ICESat2_Granule{:ATL08}, tracks=icesat2_tracks)
                 t = read(file, "$track/land_segments/delta_time")
                 times = unix2datetime.(t .+ t_offset)
 
-                df = vcat(df, DataFrame(x=x, y=y, z=z, t=times, track=track))
+                push!(dfs, DataFrame(x=x, y=y, z=z, t=times, track=track * power))
             end
         end
     end
-    df
+    vcat(dfs...)
 end
 
 function atl03_mapping(granule::ICESat2_Granule{:ATL08})

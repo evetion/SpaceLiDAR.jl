@@ -40,3 +40,12 @@ end
 function in_bbox(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     xyz[(bbox.min_x .<= xyz.x .<= bbox.max_x) .& (bbox.min_y .<= xyz.y .<= bbox.max_y), :]
 end
+
+function write_granule_urls!(fn::String, granules::Vector{<:Granule})
+    open(fn, "w") do f
+        for granule in granules
+            println(f, granule.url)
+        end
+    end
+    abspath(fn)
+end

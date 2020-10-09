@@ -15,3 +15,9 @@ function download(granule::Granule, folder=".")
     isfile(fn) && return fn
     download_curl(granule.url, fn)
 end
+
+function download(granules::Vector{Granule}, folder::AbstractString)
+    for granule in granules
+        download(granule, folder)
+    end
+end

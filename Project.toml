@@ -4,11 +4,11 @@ authors = ["Maarten Pronk", "Deltares"]
 version = "0.1.0"
 
 [deps]
-AWSCore = "4f1ea46c-232b-54a6-9b17-cc2d0f3e6598"
-AWSS3 = "1c724243-ef5b-51ab-93f4-b0a88ac62a95"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
 CategoricalArrays = "324d7699-5711-5eae-9e2f-1d82baa6b597"
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+GeoArrays = "2fb1d81b-e6a0-5fc5-82e6-8e06903437ab"
 HDF5 = "f67ccb44-e63f-5c2f-98bd-6dc0ccc4ba2f"
 HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
 ImageFiltering = "6a3955dd-da59-5b1f-98d4-e7296123deb5"

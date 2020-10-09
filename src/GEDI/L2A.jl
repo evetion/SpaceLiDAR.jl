@@ -1,4 +1,4 @@
-t_offset = 1514764800  # Time delta since Jan 1 00:00 2018.
+const t_offset = 1514764800  # Time delta since Jan 1 00:00 2018.
 
 
 function xyz(granule::GEDI_Granule{:GEDI02A})
