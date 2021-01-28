@@ -1,7 +1,10 @@
+using Dates
+
 const icesat2_tracks = ("gt1l", "gt1r", "gt2l", "gt2r", "gt3l", "gt3r")
 const classification = Dict(0x03 => "low canopy", 0x02 => "ground", 0x04 => "canopy", 0x05 => "unclassified", 0x01 => "noise")
-
+const icesat_date_format = dateformat"yyyymmddHHMMSS"
 const gps_offset = 315964800
+
 mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
@@ -44,4 +47,15 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where T
         end
     end
     g
+end
+
+"""Derive info based on file id.
+
+The id is built up as follows, see 1.2.5 in the user guide
+ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5
+"""
+function info(g::ICESat2_Granule)
+    id, _ = splitext(g.id)
+    type, datetime, track, version, revision = split(id, "_")
+    (type=Symbol(type), date=DateTime(datetime, icesat_date_format), rgt=parse(Int, track[1:4]),cycle=parse(Int, track[5:6]), segment=parse(Int, track[7:end]), version=parse(Int, version), revision=parse(Int, revision))
 end

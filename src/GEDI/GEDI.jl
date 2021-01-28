@@ -1,7 +1,24 @@
+using Dates
+
 const gedi_tracks = ("BEAM0000", "BEAM0001", "BEAM0010", "BEAM0011", "BEAM0101", "BEAM0110", "BEAM1000", "BEAM1011")
+const gedi_date_format = dateformat"yyyymmddHHMMSS"
 
 mutable struct GEDI_Granule{product} <: Granule
     id::AbstractString
     url::AbstractString
 end
 GEDI_Granule(product, args...) = GEDI_Granule{product}(args...)
+
+"""Derive info based on file id.
+
+The id is built up as follows, see section 2.4 in the user guide
+GEDI02_A_2019110014613_O01991_T04905_02_001_01.h5
+
+"""
+function info(g::GEDI_Granule)
+    id, _ = splitext(g.id)
+    type, name, datetime, orbit, track, ppds, version, revision = split(id, "_")
+    days = Day(parse(Int, datetime[5:7])-1)  # Stored as #days in year
+    datetime = datetime[1:4] * "0101" * datetime[8:end]
+    (type=Symbol(type*name), date=DateTime(datetime, gedi_date_format) + days, orbit=parse(Int, orbit[2:end]),track=parse(Int, track[2:end]), ppds=parse(Int, ppds), version=parse(Int, version), revision=parse(Int, revision))
+end

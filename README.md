@@ -9,6 +9,11 @@
 # SpaceLiDAR
 A Julia toolbox for ICESat-2 and GEDI data.
 
+Currently supports the following data products:
+- ICESat-2 [ATL03](https://nsidc.org/sites/nsidc.org/files/ATL03-V003-UserGuide.pdf)
+- ICESat-2 [ATL08](https://nsidc.org/sites/nsidc.org/files/ATL08-V003-UserGuide.pdf)
+- GEDI [L2A](https://lpdaac.usgs.gov/documents/589/GEDIL02_User_Guide_V1.pdf)
+
 
 # Install
 ```julia
