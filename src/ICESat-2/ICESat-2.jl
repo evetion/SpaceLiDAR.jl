@@ -9,7 +9,7 @@ mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
     bbox::NamedTuple
-    info::Dict
+    info::NamedTuple
 end
 ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
@@ -55,7 +55,11 @@ The id is built up as follows, see 1.2.5 in the user guide
 ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5
 """
 function info(g::ICESat2_Granule)
-    id, _ = splitext(g.id)
+    icesat2_info(g.id)
+end
+
+function icesat2_info(filename)
+    id, _ = splitext(filename)
     type, datetime, track, version, revision = split(id, "_")
     (type=Symbol(type), date=DateTime(datetime, icesat_date_format), rgt=parse(Int, track[1:4]),cycle=parse(Int, track[5:6]), segment=parse(Int, track[7:end]), version=parse(Int, version), revision=parse(Int, revision))
 end

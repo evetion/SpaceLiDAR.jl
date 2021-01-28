@@ -15,17 +15,17 @@ end
 
 """Generate granule from .h5 file."""
 function granule_from_file(filename::AbstractString)
-    _, ext = splitext(filename)
+    id, ext = splitext(filename)
     ext != ".h5" && error("Granule must be a .h5 file")
 
     name = basename(filename)
     # ICESat-2
     if startswith(name, "ATL")
-        product, datetime, track, version, _ = split(name, "_")
-        return ICESat2_Granule(Symbol(product), name, filename, (x_min = 0.,), Dict())
+        info = icesat2_info(name)
+        return ICESat2_Granule(info.type, name, filename, (x_min = 0.,), info)
     elseif startswith(name, "GEDI")
-        product, level, date, track, time, _, version, _ = split(name, "_")
-        return GEDI_Granule(Symbol("$(product)$(level)"), name, filename)
+        info = gedi_info(name)
+        return GEDI_Granule(info.type, name, filename, info)
     else
         error("Unknown granule.")
     end
