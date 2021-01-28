@@ -1,10 +1,10 @@
 using AWSCore
 using AWSS3
 
-const aws = AWSCore.aws_config(profile="delft3dgt")
+const aws = AWSCore.aws_config(profile="default")
 
 """Change default download location to a S3 bucket."""
-function s3!(granule::Granule, bucket::String="so-icesat2", verify=false)
+function s3!(granule::Granule, bucket::String="spacelidar", verify=false)
     fn = granule.id
     if verify && ~in(bucket, fn)
         return granule
@@ -15,11 +15,11 @@ function s3!(granule::Granule, bucket::String="so-icesat2", verify=false)
 end
 s3!(granules::Vector{<:Granule}, args...) = map!(x -> s3!(x, args...), granules)
 
-function Base.in(granule::Granule, bucket="so-icesat2")
+function Base.in(granule::Granule, bucket::AbstractString="spacelidar")
     AWSS3.s3_exists(aws, bucket, granule.id)
 end
 
-function sync!(granules::Vector{<:Granule}, bucket="so-icesat2")
+function sync!(granules::Vector{<:Granule}, bucket="spacelidar")
     mask = trues(length(granules))
     while sum(mask) > 0
         in_bucket = map(x -> x["Key"], s3_list_objects(aws, bucket))
@@ -33,14 +33,14 @@ function sync!(granules::Vector{<:Granule}, bucket="so-icesat2")
     granules
 end
 
-function download_to_s3(granules::Vector{<:Granule}, bucket="so-icesat2")
+function download_to_s3(granules::Vector{<:Granule}, bucket="spacelidar")
     fn_hook = write_upload_hook!("s3_upload_hook.sh", bucket)
     fn_urls = write_granule_urls!("to_download.txt", granules)
     print(read(`aria2c --on-download-complete $fn_hook --file-allocation=none --continue=true --auto-file-renaming=false -j3 -x1 -i $fn_urls`))
 end
 
 
-function write_upload_hook!(fn::String, bucket="so-icesat2", rm=true)
+function write_upload_hook!(fn::String, bucket="spacelidar", rm=true)
     open(fn, "w") do f
         println(f, "#bin/sh")
         if rm

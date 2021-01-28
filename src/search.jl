@@ -10,14 +10,15 @@ Mission(x) = Mission{x}()
 
 function find(::Mission{:GEDI}, product::String="GEDI02_A", bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}=world, version::String="001")
     # https://lpdaacsvc.cr.usgs.gov/services/gedifinder?product=GEDI02_A&version=001&bbox=[28.0,-83,24.0,-79]
-    url = "https://lpdaacsvc.cr.usgs.gov/services/gedifinder"
+    url = "https://lpdaacsvc.cr.usgs.gov/services/gedifinder?"
     q = Dict(
-        "bbox" => "[$(bbox.max_y), $(bbox.min_x), $(bbox.min_y), $(bbox.max_x)]",
+        "bbox" => "[$(bbox.max_y),$(bbox.min_x),$(bbox.min_y),$(bbox.max_x)]",
         "version" => version,
         "product" => product
         )
     # uri = HTTP.URI(;scheme="https", host="lpdaacsvc.cr.usgs.gov", path="/services/gedifinder", query=q)
-    r = HTTP.get(url, query=q)
+    r = HTTP.get(url, query=q, verbose=2)
+    @info r.url
     data = JSON.parse(String(r.body))
     @info data["data"]
 

@@ -1,39 +1,57 @@
-
-function xyz(granule::ICESat2_Granule{:ATL03}, bbox=nothing, tracks=icesat2_tracks)
-    df = DataFrame()
-    dfs = Vector{DataFrame}()
+function xyz(granule::ICESat2_Granule{:ATL03}; bbox=nothing, tracks=icesat2_tracks, step=1)
+    dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
-        orientation = read(file, "orbit_info/sc_orient")[1]
+        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        orientation = read(file, "orbit_info/sc_orient")[1]::Int8
 
         for track ∈ tracks
             power = track_power(orientation, track)
-            if in(track, names(file)) && in("heights", names(file[track]))
-                track_df = xyz(file, track, power, t_offset)
+            if in(track, keys(file)) && in("heights", keys(file[track]))
+                track_df = xyz(granule, file, track, power, t_offset, step)
                 push!(dfs, track_df)
             end
         end
     end
-    vcat(dfs...)
+    dfs
 end
 
-function xyz(file::HDF5.HDF5File, track::AbstractString, power::AbstractString, t_offset::Real)
-    z = read(file, "$track/heights/h_ph")
-    x = read(file, "$track/heights/lon_ph")
-    y = read(file, "$track/heights/lat_ph")
-    t = read(file, "$track/heights/delta_time")
-    c = read(file, "$track/heights/signal_conf_ph")[1,:]
+function lines(granule::ICESat2_Granule{:ATL03}; tracks=icesat2_tracks, step=100)
+    dfs = Vector{NamedTuple}()
+    HDF5.h5open(granule.url, "r") do file
+        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        orientation = read(file, "orbit_info/sc_orient")[1]::Int8
+
+        for track ∈ tracks
+            power = track_power(orientation, track)
+            if in(track, keys(file)) && in("heights", keys(file[track]))
+                track_df = xyz(granule, file, track, power, t_offset, step)
+                line = makeline(track_df.x, track_df.y, track_df.z)
+                i = div(length(track_df.t), 2) + 1
+                nt = (geom=line, sun_angle=Float64(track_df.sun_angle[i]), track=track, power=power, t=track_df.t[i], granule=granule.id)
+                push!(dfs, nt)
+            end
+        end
+    end
+    dfs
+end
+
+function xyz(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Real, step=1)
+    z = file["$track/heights/h_ph"][1:step:end]::Array{Float32,1}
+    x = file["$track/heights/lon_ph"][1:step:end]::Array{Float64,1}
+    y = file["$track/heights/lat_ph"][1:step:end]::Array{Float64,1}
+    t = file["$track/heights/delta_time"][1:step:end]::Array{Float64,1}
+    c = file["$track/heights/signal_conf_ph"][1,1:step:end]::Array{Int8,1}
 
     # Segment calc
-    segment = read(file, "$track/geolocation/segment_id")
-    sun_angle = read(file, "$track/geolocation/solar_elevation")
-    segment_counts = read(file, "$track/geolocation/segment_ph_cnt")
-    segments = map_counts(segment, segment_counts)
-    sun_angles = map_counts(sun_angle, segment_counts)
+    segment = read(file, "$track/geolocation/segment_id")::Array{Int32,1}
+    sun_angle = read(file, "$track/geolocation/solar_elevation")::Array{Float32,1}
+    segment_counts = read(file, "$track/geolocation/segment_ph_cnt")::Array{Int32,1}
+    segments = map_counts(segment, segment_counts)[1:step:end]
+    sun_angles = map_counts(sun_angle, segment_counts)[1:step:end]
 
     times = unix2datetime.(t .+ t_offset)
 
-    DataFrame(x=x, y=y, z=z, t=times, confidence=c, segment=segments, track=track * power, sun_angle=sun_angles)
+    (x=x, y=y, z=z, t=times, confidence=c, segment=segments, track=Fill(track, length(sun_angles)), power=Fill(power, length(sun_angles)), sun_angle=sun_angles)
 end
 
 function map_counts(values, counts)
@@ -50,57 +68,56 @@ end
 
 
 """Retrieve all points as classified as ground in ATL08."""
-function classify(granule::ICESat2_Granule{:ATL03}, granule_b::Union{ICESat2_Granule{:ATL08},Nothing}=nothing, tracks=icesat2_tracks)
+function classify(granule::ICESat2_Granule{:ATL03}, granule_b::Union{ICESat2_Granule{:ATL08},Nothing}=nothing; tracks=icesat2_tracks)
     if isnothing(granule_b)
         granule_b = granule_from_file(replace(granule.url, "ATL03_" => "ATL08_"))
     end
 
-    dfs = Vector{DataFrame}()
+    dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
-        orientation = read(file, "orbit_info/sc_orient")[1]
+        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        orientation = read(file, "orbit_info/sc_orient")[1]::Int8
 
         for track ∈ tracks
             power = track_power(orientation, track)
-            if in(track, names(file)) && in("heights", names(file[track]))
+            if in(track, keys(file)) && in("heights", keys(file[track]))
                 track_df = xyz(file, track, power, t_offset)
 
                 mapping = atl03_mapping(granule_b, track)
 
-                DataFrames.insertcols!(track_df, ncol(track_df) + 1, :classification => "unclassified")
-                segments = unique(mapping.segment)
-                index_map = create_mapping(track_df, segments)
-                for segment in segments
-                    pos = searchsortedfirst(track_df.segment, segment)
-                    if (pos <= length(track_df.segment)) && (track_df.segment[pos] == segment)
-                        index_map[segment] = pos
-                    else
-                        index_map[segment] = nothing
-                    end
-                end
+                # DataFrames.insertcols!(track_df, ncol(track_df) + 1, :classification => "unclassified")
+                unique_segments = unique(mapping.segment)
+                index_map = create_mapping(track_df.segment, unique_segments)
+                # @time for segment in unique_segments
+                #     pos = searchsortedfirst(track_df.segment, segment)
+                #     if (pos <= length(track_df.segment)) && (track_df.segment[pos] == segment)
+                #         index_map[segment] = pos
+                #     else
+                #         index_map[segment] = nothing
+                #     end
+                # end
 
-                for row in eachrow(mapping)
-                    index = index_map[row.segment]
+                class = fill("unclassified", length(track_df.x))
+                for i in 1:length(mapping.segment)
+                    index = get(index_map, mapping.segment[i], nothing)
                     isnothing(index) && continue
-                    offset = row.index - 1
-                    track_df[index + offset, :classification] = classification[row.classification + 1]
-                    # subdf[index + offset, :classification] = row.classification + 1
+                    offset = mapping.index[i] - 1
+                    class[index + offset] = classification[mapping.classification[i] + 1]
                 end
-                push!(dfs, track_df)
+                track_dfc = merge(track_df, (classification=class,))
+                push!(dfs, track_dfc)
             end
         end
     end
-    vcat(dfs...)
+    dfs
 end
 
-function create_mapping(df, segments)
-    index_map = Dict{Int64,Union{Nothing,Int64}}()
-    for segment in segments
-        pos = searchsortedfirst(df.segment, segment)
-        if (pos <= length(df.segment)) && (df.segment[pos] == segment)
-            index_map[segment] = pos
-        else
-            index_map[segment] = nothing
+function create_mapping(dfsegment, unique_segments)
+    index_map = Dict{Int64,Int64}()
+    for unique_segment in unique_segments
+        pos = searchsortedfirst(dfsegment, unique_segment)
+        if (pos <= length(dfsegment)) && (dfsegment[pos] == unique_segment)
+            index_map[unique_segment] = pos
         end
     end
     index_map

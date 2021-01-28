@@ -37,8 +37,8 @@ function granules_from_folder(foldername::AbstractString)
 end
 
 """Filter with bbox."""
-function in_bbox(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
-    xyz[(bbox.min_x .<= xyz.x .<= bbox.max_x) .& (bbox.min_y .<= xyz.y .<= bbox.max_y), :]
+function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+    @view xyz[(bbox.min_x .<= xyz.x .<= bbox.max_x) .& (bbox.min_y .<= xyz.y .<= bbox.max_y), :]
 end
 
 function write_granule_urls!(fn::String, granules::Vector{<:Granule})
