@@ -17,15 +17,14 @@ function find(::Mission{:GEDI}, product::String="GEDI02_A", bbox::NamedTuple{(:m
         "product" => product
         )
     # uri = HTTP.URI(;scheme="https", host="lpdaacsvc.cr.usgs.gov", path="/services/gedifinder", query=q)
-    r = HTTP.get(url, query=q, verbose=2)
-    @info r.url
+    r = HTTP.get(url, query=q, verbose=0)
     data = JSON.parse(String(r.body))
-    @info data["data"]
 
     map(x -> GEDI_Granule(
         Symbol(product),
         replace(basename(x), ".h5" => ""),
         x,
+        gedi_info(basename(x))
     ),
     data["data"])
 end
@@ -54,15 +53,13 @@ function find(::Mission{:ICESat2}, product::String="ATL03", bbox::NamedTuple{(:m
         cgranules = parse_cmr_json(r)
         append!(granules, cgranules)
     end
-    @info granules[1]
-    @info granules[end]
     # TODO get more pages
     map(x -> ICESat2_Granule(
             Symbol(product),
             x["producer_granule_id"],
             get(get(x, "links", [Dict()])[1], "href", ""),
             NamedTuple(),
-            x
+            icesat2_info(x["producer_granule_id"])
         ),
         granules)
 end

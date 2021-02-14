@@ -29,7 +29,7 @@ granules = find(:ICESat2, "ATL08")
 
 # Find only ATL03 granules in a part of Vietnam
 vietnam = (min_x = 102., min_y = 8.0, max_x = 107.0, max_y = 12.0)
-granules = find(:ICESat2, "ATL03", vietnam, "001")
+granules = find(:ICESat2, "ATL03", vietnam, "003")
 
 # Find GEDI granules in the same way
 granules = find(:GEDI, "GEDI02_A")

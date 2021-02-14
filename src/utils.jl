@@ -3,7 +3,6 @@
 function download_curl(url::AbstractString, filename::AbstractString)
     err = PipeBuffer()
     pipe = pipeline(`curl -s -b cookie.txt -c cookie.txt --netrc-optional -S -g -L -f -o $filename $url`, stderr=err)
-    @info pipe
     process = run(pipe, wait=false)
     if !success(process)
         error_msg = readline(err)
@@ -41,6 +40,10 @@ function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4
     @view xyz[(bbox.min_x .<= xyz.x .<= bbox.max_x) .& (bbox.min_y .<= xyz.y .<= bbox.max_y), :]
 end
 
+function bounds(table)
+    NamedTuple{(:min_x, :max_x, :min_y, :max_y, :min_z, :max_z)}((extrema(table.x)..., extrema(table.y)..., extrema(table.z)...))
+end
+
 function write_granule_urls!(fn::String, granules::Vector{<:Granule})
     open(fn, "w") do f
         for granule in granules
@@ -48,4 +51,32 @@ function write_granule_urls!(fn::String, granules::Vector{<:Granule})
         end
     end
     abspath(fn)
+end
+
+function test(granule::Granule)
+    try
+        HDF5.h5open(granule.url, "r") do file
+            keys(file)
+        end
+        return true
+    catch e
+        @error "Granule at $(granule.url) failed with $e."
+        return false
+    end
+    end
+
+"""Writes/updates netrc file for ICESat-2 and GEDI downloads."""
+function netrc!(username, password)
+    if Sys.iswindows()
+        fn = joinpath(homedir(), "_netrc")
+    else
+        fn = joinpath(homedir(), ".netrc")
+    end
+
+    open(fn, "a") do f
+        write(f, "\n")
+        write(f, "machine urs.earthdata.nasa.gov login $username password $(password)\n")
+        write(f, "machine n5eil01u.ecs.nsidc.org login $username password $(password)\n")
+    end
+    fn
 end

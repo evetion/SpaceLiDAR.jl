@@ -1,4 +1,6 @@
 using HDF5
+# using Downloads
+
 abstract type Granule end
 
 function HDF5.h5open(granule::Granule)
@@ -14,6 +16,7 @@ function download(granule::Granule, folder=".")
     fn = joinpath(folder, granule.id)
     isfile(fn) && return fn
     download_curl(granule.url, fn)
+    # Downloads.download(granule.url, fn)
 end
 
 function download(granules::Vector{Granule}, folder::AbstractString)

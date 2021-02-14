@@ -12,6 +12,9 @@ function xyz(granule::ICESat2_Granule{:ATL03}; bbox=nothing, tracks=icesat2_trac
             end
         end
     end
+    for df in dfs
+        df.z[df.z .== fill_value] .= NaN
+    end
     dfs
 end
 
@@ -27,7 +30,7 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks=icesat2_tracks, step=100
                 track_df = xyz(granule, file, track, power, t_offset, step)
                 line = makeline(track_df.x, track_df.y, track_df.z)
                 i = div(length(track_df.t), 2) + 1
-                nt = (geom=line, sun_angle=Float64(track_df.sun_angle[i]), track=track, power=power, t=track_df.t[i], granule=granule.id)
+                nt = (geom = line, sun_angle = Float64(track_df.sun_angle[i]), track = track, power = power, t = track_df.t[i], granule = granule.id)
                 push!(dfs, nt)
             end
         end
@@ -51,7 +54,7 @@ function xyz(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractS
 
     times = unix2datetime.(t .+ t_offset)
 
-    (x=x, y=y, z=z, t=times, confidence=c, segment=segments, track=Fill(track, length(sun_angles)), power=Fill(power, length(sun_angles)), sun_angle=sun_angles)
+    (x = x, y = y, z = z, t = times, confidence = c, segment = segments, track = Fill(track, length(sun_angles)), power = Fill(power, length(sun_angles)), sun_angle = sun_angles)
 end
 
 function map_counts(values, counts)
@@ -85,17 +88,8 @@ function classify(granule::ICESat2_Granule{:ATL03}, granule_b::Union{ICESat2_Gra
 
                 mapping = atl03_mapping(granule_b, track)
 
-                # DataFrames.insertcols!(track_df, ncol(track_df) + 1, :classification => "unclassified")
                 unique_segments = unique(mapping.segment)
                 index_map = create_mapping(track_df.segment, unique_segments)
-                # @time for segment in unique_segments
-                #     pos = searchsortedfirst(track_df.segment, segment)
-                #     if (pos <= length(track_df.segment)) && (track_df.segment[pos] == segment)
-                #         index_map[segment] = pos
-                #     else
-                #         index_map[segment] = nothing
-                #     end
-                # end
 
                 class = fill("unclassified", length(track_df.x))
                 for i in 1:length(mapping.segment)
@@ -104,7 +98,7 @@ function classify(granule::ICESat2_Granule{:ATL03}, granule_b::Union{ICESat2_Gra
                     offset = mapping.index[i] - 1
                     class[index + offset] = classification[mapping.classification[i] + 1]
                 end
-                track_dfc = merge(track_df, (classification=class,))
+                track_dfc = merge(track_df, (classification = class,))
                 push!(dfs, track_dfc)
             end
         end
