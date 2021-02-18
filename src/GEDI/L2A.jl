@@ -61,7 +61,7 @@ function lines(granule::GEDI_Granule{:GEDI02A}; tracks=gedi_tracks, step=1, grou
                 for track_df ∈ xyz(granule, file, track, power, t_offset, step, ground, canopy, quality)
                     line = makeline(track_df.x, track_df.y, track_df.z)
                     halfway = div(length(track_df.t), 2) + 1
-                    nt = (geom = line, sun_angle = Float64(track_df.sun_angle[halfway]), track = track, power = power, t = track_df.t[halfway], granule = granule.id)
+                    nt = (geom = line, track = track, power = power, t = track_df.t[halfway], granule = granule.id)
                     push!(dfs, nt)
                 end
             end

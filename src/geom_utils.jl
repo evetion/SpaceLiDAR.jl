@@ -46,7 +46,6 @@ function splitline(line::AG.IGeometry, distance=1.)
     else
         lines = Vector{Vector{Tuple{Float64,Float64,Float64}}}()
         push!(splits, length(points))
-        @info splits
         for i ∈ 1:length(splits) - 1
             line = points[splits[i] + 1:splits[i + 1]]
             push!(lines, line)
@@ -68,4 +67,8 @@ function splitline(table::TypedTables.Table, distance=1.)
         end
     end
     Table(rows)
+end
+
+function intersect(a::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}, b::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+    !(b.min_x > a.max_x || b.max_x < a.min_x || b.min_y > a.max_y || b.max_y < a.min_y)
 end

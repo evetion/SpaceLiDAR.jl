@@ -14,12 +14,17 @@ mutable struct ICESat2_Granule{product} <: Granule
 end
 ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
+function Base.copy(g::ICESat2_Granule{product}) where product
+    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info)
+end
 
 function bounds(granule::ICESat2_Granule)
     HDF5.h5open(granule.url, "r") do file
         extent = attributes(file["METADATA/Extent"])
         nt = (;collect(Symbol(x) => read(extent[x]) for x in keys(extent))...)
-        (min_x = nt.westBoundLongitude, max_x = nt.eastBoundLongitude, min_y = nt.southBoundLatitude, max_y = nt.northBoundLatitude, min_z = -1000, max_z = 8000)
+        ntb = (min_x = nt.westBoundLongitude, max_x = nt.eastBoundLongitude, min_y = nt.southBoundLatitude, max_y = nt.northBoundLatitude, min_z = -1000, max_z = 8000)
+        granule.bbox = ntb
+        ntb
     end
 end
 

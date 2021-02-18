@@ -15,6 +15,7 @@ end
 function download(granule::Granule, folder=".")
     fn = joinpath(folder, granule.id)
     isfile(fn) && return fn
+    isfile(granule.url) && return granule.url
     download_curl(granule.url, fn)
     # Downloads.download(granule.url, fn)
 end

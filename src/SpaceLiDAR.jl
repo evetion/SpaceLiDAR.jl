@@ -20,6 +20,8 @@ include("ICESat-2/ATL03.jl")
 include("ICESat-2/ATL08.jl")
 include("ICESat-2/ATL12.jl")
 
-export find
+export find, download, netrc!
+export xyz, lines, points, in_bbox, bounds
+export test, granule_from_file, granules_from_folder, write_granule_urls!
 
 end # module

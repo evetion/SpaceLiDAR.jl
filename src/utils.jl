@@ -35,9 +35,33 @@ function granules_from_folder(foldername::AbstractString)
     return [granule_from_file(joinpath(foldername, file)) for file in readdir(foldername) if splitext(file)[end] == ".h5"]
 end
 
+function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Granule
+    local_granules = Vector{eltype(granules)}()
+    for granule in granules
+        file = joinpath(folder, granule.id)
+        if isfile(file)
+            g = copy(granule)
+            g.url = file
+            push!(local_granules, g)
+        end
+    end
+    local_granules
+end
+
+
 """Filter with bbox."""
 function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     @view xyz[(bbox.min_x .<= xyz.x .<= bbox.max_x) .& (bbox.min_y .<= xyz.y .<= bbox.max_y), :]
+end
+
+function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where G <: Granule
+    box = bounds(g)
+    intersect((;box.min_x,box.min_y,box.max_x,box.max_y), bbox)
+end
+
+function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where G <: Granule
+    m = in_bbox.(g, Ref(bbox))
+    g[m]
 end
 
 function bounds(table)

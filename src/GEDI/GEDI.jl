@@ -10,6 +10,9 @@ mutable struct GEDI_Granule{product} <: Granule
 end
 GEDI_Granule(product, args...) = GEDI_Granule{product}(args...)
 
+function Base.copy(g::GEDI_Granule{product}) where product
+    GEDI_Granule(product, g.id, g.url, g.info)
+end
 
 function info(g::GEDI_Granule)
     gedi_info(g.id)

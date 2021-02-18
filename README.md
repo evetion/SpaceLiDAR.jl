@@ -35,11 +35,27 @@ granules = find(:ICESat2, "ATL03", vietnam, "003")
 granules = find(:GEDI, "GEDI02_A")
 
 # A granule is pretty simple
+granule = granules[1]
 granule.id  # filename
 granule.url  # download url
+granule.info  # derived information from id
 
 # Downloading granules requires a setup .netrc with an NASA EarthData account
-download(granules[1])
+# we provide a helper function, that creates/updates a ~/.netrc or ~/_netrc
+SpaceLiDAR.netrc!(<username>, <password>)  # replace with your credentials
+
+# Afterward you can download (requires curl to be available on PATH)
+fn = SpaceLiDAR.download(granule)
+
+# You can also load a granule from disk
+granule = granule_from_file(fn)
+
+# Or from a folder
+local_granules = granules_from_folder(<folder>)
+
+# Instantiate search results locally (useful for GEDI location indexing)
+local_granules = instantiate(granules, <folder>)
+
 ```
 
 Derive linestrings

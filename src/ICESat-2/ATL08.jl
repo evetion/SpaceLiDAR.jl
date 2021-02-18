@@ -32,7 +32,7 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
     gt, ct
 end
 
-function lines(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=100)
+function lines(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=100, quality=1)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
