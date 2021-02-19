@@ -1,6 +1,7 @@
 function makeline(x, y, z)
+    mask = .~isnan.(z)
     line = GDF.AG.creategeom(GDF.AG.GDAL.wkbLineString25D)
-    GDF.AG.addpoint!.(Ref(line), x, y, z)
+    GDF.AG.addpoint!.(Ref(line), x[mask], y[mask], z[mask])
     line
 end
 

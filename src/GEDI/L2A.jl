@@ -31,6 +31,10 @@ function xyz(::GEDI_Granule{:GEDI02A}, file, track, power, t_offset, step, groun
     q = file["$track/quality_flag"][1:step:end]::Array{UInt8,1}
     sun_angle = file["$track/solar_elevation"][1:step:end]::Array{Float32,1}
 
+    # Mask out invalid values
+    zt[(zt .< -1000.0) .& (zt .> 25000.0)] .= NaN
+    zb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
+
     if isnothing(quality)
         m = trues(length(q))
     else

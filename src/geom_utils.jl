@@ -15,11 +15,13 @@ function z_along_line(line, point)
     lx, ly, lz = AG.getpoint(line, AG.ngeom(line) - 1)
     fx, lx = sort([fx, lx])
     if x <= fx
+        @info "Before line"
         return fz
     elseif x >= lx
+        @info "Behind line"
         return lz
     else
-        for i ∈ 1:AG.ngeom(line) - 2
+        for i ∈ 0:AG.ngeom(line) - 2
             xa, ay, za = AG.getpoint(line, i)
             xb, by, zb = AG.getpoint(line, i + 1)
             if xa < x < xb || xa > x > xb
@@ -27,7 +29,8 @@ function z_along_line(line, point)
             end
         end
     end
-    0.
+    @error "Interpolation failed"
+    NaN
 end
 
 """Split a linestring if the next point is further than `distance`.

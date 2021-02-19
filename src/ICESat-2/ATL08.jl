@@ -46,6 +46,7 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=100
                 y = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
                 t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
                 times = unix2datetime.(t .+ t_offset)
+                z[z .== fill_value] .= NaN
                 line = makeline(x, y, z)
                 i = div(length(t), 2) + 1
                 nt = (geom = line, track = track, power = power, t = times[i], granule = granule.id)

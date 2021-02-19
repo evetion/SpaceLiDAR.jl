@@ -33,7 +33,7 @@ alllines = []
 @showprogress 1 "Reading..." for granule in granules_v
     if SpaceLiDAR.test(granule)
         try
-            lines = Table(SpaceLiDAR.lines(granule, step=10, quality=1))
+            lines = Table(SpaceLiDAR.lines(granule, step=1, quality=1))
             push!(alllines, lines)
         catch e
             @warn "$(granule.id) failed with e"
@@ -41,7 +41,7 @@ alllines = []
     end
 end
 t = vcat(alllines...)
-t = SpaceLiDAR.splitline(t)
+t = SpaceLiDAR.splitline(t, 0.1)
 GDF.write("alllines.gpkg", t)
 
 
@@ -76,3 +76,17 @@ end
 
 tt = Table(intersections)
 GDF.write("intersections.gpkg", tt)
+
+
+# # test intersection
+# a = granule_from_file(joinpath(icesat_path, "ATL08_20181015204356_02630107_003_01.h5"))
+# b = granule_from_file(joinpath(gedi_path, "GEDI02_A_2019110075658_O01995_T02063_02_001_01.h5"))
+# p = AG.createpoint(102.568171, 26.957605)
+# a_track = "gt3r"
+# b_track = "BEAM1011"
+
+# ag = Table(lines(a, tracks=(a_track,)))
+# bg = Table(lines(b, tracks=(b_track,)))
+# t = vcat(ag, bg)
+# SpaceLiDAR.z_along_line(ag, p)
+# SpaceLiDAR.z_along_line(bg, p)
