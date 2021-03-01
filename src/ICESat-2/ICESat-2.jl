@@ -5,6 +5,7 @@ const classification = Dict(0x03 => "low canopy", 0x02 => "ground", 0x04 => "can
 const icesat_date_format = dateformat"yyyymmddHHMMSS"
 const gps_offset = 315964800
 const fill_value = 3.4028235f38
+const blacklist = readlines(joinpath(@__DIR__, "blacklist.txt"))
 
 mutable struct ICESat2_Granule{product} <: Granule
     id::String
@@ -77,4 +78,8 @@ function icesat2_info(filename)
     id, _ = splitext(filename)
     type, datetime, track, version, revision = split(id, "_")
     (type = Symbol(type), date = DateTime(datetime, icesat_date_format), rgt = parse(Int, track[1:4]), cycle = parse(Int, track[5:6]), segment = parse(Int, track[7:end]), version = parse(Int, version), revision = parse(Int, revision))
+end
+
+function is_blacklisted(g::Granule)
+    g.id in blacklist
 end

@@ -45,6 +45,7 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Gra
             push!(local_granules, g)
         end
     end
+    @info "Found $(length(local_granules) / length(granules) * 100)% of provided granules."
     local_granules
 end
 
@@ -103,4 +104,57 @@ function netrc!(username, password)
         write(f, "machine n5eil01u.ecs.nsidc.org login $username password $(password)\n")
     end
     fn
+end
+
+using GeoArrays
+using StaticArrays
+using ProgressMeter
+using NearestNeighbors
+using TypedTables
+
+function interpolate!(ga::GeoArray, t::Table, r=1.)
+    tt = hcat(t.x, t.y)
+    ttt = permutedims(tt)
+    tree = BallTree(ttt)
+    ui, uj = size(ga)[1:2]
+    p = Progress(length(ga), 1, "Interpolating...")
+    Threads.@threads for i in 1:ui
+        Threads.@threads for j in 1:uj
+            coords = centercoords(ga, SVector{2}(i, j))::SArray{Tuple{2},Float64,1,2}
+            ga.A[i, j, 1] = idw(coords, tree, r, t.z, ttt)
+            next!(p)
+        end
+    end
+end
+
+function idw(coords, tree, r, values, coordinates, power=2)
+    idxs = inrange(tree, coords, r)
+    if length(idxs) == 0
+        return NaN32
+    else
+        distances = colwise(Euclidean(), Float32.(coords), coordinates[:,idxs])
+        ws = 1.0f0 ./ distances.^power
+        Σw = sum(ws)
+
+        if isinf(Σw)
+            j = findfirst(iszero, distances)
+            μ = values[idxs[j]]
+        else
+            ws ./= Σw
+            vs  = view(values, idxs)
+            μ = sum(ws[i] * vs[i] for i in eachindex(vs))
+        end
+        return μ
+    end
+end
+
+function filter_rgt(granules::Vector{<:Granule}, rgt::Int, cycle::Int)
+    results = Vector{Granule}()
+    for granule in granules
+        i = info(granule)
+        if i.rgt == rgt && i.cycle == cycle
+            push!(results, granule)
+        end
+    end
+    results
 end

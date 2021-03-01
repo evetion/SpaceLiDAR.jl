@@ -19,17 +19,28 @@ function xyz(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1)
     dfs
 end
 
-function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Real, step=1)
-    zt = file["$track/land_segments/terrain/h_te_median"][1:step:end]::Array{Float32,1}
-    zc = file["$track/land_segments/canopy/h_median_canopy_abs"][1:step:end]::Array{Float32,1}
+function xyz(g::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Real, step=1, canopy=false, ground=true)
+    zt = file["$track/land_segments/terrain/h_te_mean"][1:step:end]::Array{Float32,1}
+    tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Array{Float32,1}
+    # zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][1:step:end]::Array{Float32,1}
+    # cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Array{Float32,1}
     x = file["$track/land_segments/longitude"][1:step:end]::Array{Float32,1}
     y = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
     t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
     times = unix2datetime.(t .+ t_offset)
 
-    gt = (x = x, y = y, z = zt, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)), classification = Fill("ground", length(times)), return_number = Fill(2, length(times)), number_of_returns = Fill(2, length(times)))
-    ct = (x = x, y = y, z = zt, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)), classification = Fill("high_vegetation", length(times)), return_number = Fill(1, length(times)), number_of_returns = Fill(2, length(times)))
-    gt, ct
+    gt = (x = x, y = y, z = zt, u = tu, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)), classification = Fill("ground", length(times)), return_number = Fill(2, length(times)), number_of_returns = Fill(2, length(times)), granule = Fill(g.id, length(times)))
+    # ct = (x = x, y = y, z = zt, u = cu, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)), classification = Fill("high_vegetation", length(times)), return_number = Fill(1, length(times)), number_of_returns = Fill(2, length(times)), granule = Fill(g.id, length(times)))
+
+    if canopy && ground
+        ct, gt
+    elseif canopy
+        (ct,)
+    elseif ground
+        (gt,)
+    else
+        ()
+    end
 end
 
 function lines(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=100, quality=1)

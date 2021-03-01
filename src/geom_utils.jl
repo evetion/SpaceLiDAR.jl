@@ -72,6 +72,19 @@ function splitline(table::TypedTables.Table, distance=1.)
     Table(rows)
 end
 
+function clip!(table::TypedTables.Table, box::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+    polygon = createpolygon([[box.min_x, box.min_y], [box.max_x, box.min_y], [box.max_x, box.max_y], [box.min_x, box.max_y], [box.min_x, box.min_y]])
+    table.geom .= clip.(table.geom, Ref(polygon))
+end
+
+function clip(geom::AG.IGeometry, polygon::AG.IGeometry)
+    if AG.ngeom(geom) > 0 && AG.intersects(geom, polygon)
+        AG.intersection(geom, polygon)
+    else
+        AG.createlinestring()
+    end
+end
+
 function intersect(a::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}, b::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     !(b.min_x > a.max_x || b.max_x < a.min_x || b.min_y > a.max_y || b.max_y < a.min_y)
 end
