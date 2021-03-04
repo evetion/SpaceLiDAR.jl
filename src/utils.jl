@@ -121,19 +121,19 @@ function interpolate!(ga::GeoArray, t::Table, r=1.)
     Threads.@threads for i in 1:ui
         Threads.@threads for j in 1:uj
             coords = centercoords(ga, SVector{2}(i, j))::SArray{Tuple{2},Float64,1,2}
-            ga.A[i, j, 1] = idw(coords, tree, r, t.z, ttt)
+            ga.A[i, j, 1] = idw(coords, tree, r, t.z, t.u, ttt)
             next!(p)
         end
     end
 end
 
-function idw(coords, tree, r, values, coordinates, power=2)
+function idw(coords, tree, r, values, uncertainty, coordinates, power=2)
     idxs = inrange(tree, coords, r)
     if length(idxs) == 0
         return NaN32
     else
         distances = colwise(Euclidean(), Float32.(coords), coordinates[:,idxs])
-        ws = 1.0f0 ./ distances.^power
+        ws = 1.0f0 ./ distances.^power # .* view(uncertainty, idxs)
         Σw = sum(ws)
 
         if isinf(Σw)

@@ -4,34 +4,63 @@ function xyz(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1)
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         orientation = read(file, "orbit_info/sc_orient")[1]::Int8
 
-        for track ∈ tracks
+        for (i, track) ∈ enumerate(tracks)
             power = track_power(orientation, track)
             if in(track, keys(file)) && in("land_segments", keys(file[track]))
                 for track_nt ∈ xyz(granule, file, track, power, t_offset, step)
+                    track_nt.z[track_nt.z .== fill_value] .= NaN
                     push!(dfs, track_nt)
                 end
             end
         end
     end
-    for df in dfs
-        df.z[df.z .== fill_value] .= NaN
-    end
     dfs
 end
 
 function xyz(g::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Real, step=1, canopy=false, ground=true)
-    zt = file["$track/land_segments/terrain/h_te_mean"][1:step:end]::Array{Float32,1}
-    tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Array{Float32,1}
-    # zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][1:step:end]::Array{Float32,1}
-    # cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Array{Float32,1}
+    if ground
+        zt = file["$track/land_segments/terrain/h_te_median"][1:step:end]::Array{Float32,1}
+        tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Array{Float32,1}
+    end
+    if canopy
+        zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][1:step:end]::Array{Float32,1}
+        cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Array{Float32,1}
+    end
     x = file["$track/land_segments/longitude"][1:step:end]::Array{Float32,1}
     y = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
     t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
     times = unix2datetime.(t .+ t_offset)
 
-    gt = (x = x, y = y, z = zt, u = tu, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)), classification = Fill("ground", length(times)), return_number = Fill(2, length(times)), number_of_returns = Fill(2, length(times)), granule = Fill(g.id, length(times)))
-    # ct = (x = x, y = y, z = zt, u = cu, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)), classification = Fill("high_vegetation", length(times)), return_number = Fill(1, length(times)), number_of_returns = Fill(2, length(times)), granule = Fill(g.id, length(times)))
-
+    if ground
+        gt = (
+            x = x,
+            y = y,
+            z = zt,
+            u = tu,
+            t = times,
+            track = Fill(track, length(times)),
+            power = Fill(power, length(times)),
+            classification = Fill("ground", length(times)),
+            return_number = Fill(2, length(times)),
+            number_of_returns = Fill(2, length(times)),
+            # granule = Fill(g.id, length(times)),
+            )
+    end
+    if canopy
+        ct = (
+            x = x,
+            y = y,
+            z = zt,
+            u = cu,
+            t = times,
+            track = Fill(track, length(times)),
+            power = Fill(power, length(times)),
+            classification = Fill("high_vegetation", length(times)),
+            return_number = Fill(1, length(times)),
+            number_of_returns = Fill(2, length(times)),
+            # granule = Fill(g.id, length(times))
+        )
+    end
     if canopy && ground
         ct, gt
     elseif canopy

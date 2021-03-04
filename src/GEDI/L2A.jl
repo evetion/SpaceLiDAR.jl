@@ -21,20 +21,22 @@ function xyz(granule::GEDI_Granule{:GEDI02A}; tracks=gedi_tracks, step=1, ground
 end
 
 function xyz(g::GEDI_Granule{:GEDI02A}, file, track, power, t_offset, step, ground, canopy, quality=nothing)
-    zt = file["$track/elev_highestreturn"][1:step:end]::Array{Float32,1}
-    zb = file["$track/elev_lowestmode"][1:step:end]::Array{Float32,1}
     zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
-    xt = file["$track/lon_highestreturn"][1:step:end]::Array{Float64,1}
-    xb = file["$track/lon_lowestmode"][1:step:end]::Array{Float64,1}
-    yt = file["$track/lat_highestreturn"][1:step:end]::Array{Float64,1}
-    yb = file["$track/lat_lowestmode"][1:step:end]::Array{Float64,1}
+    if canopy
+        xt = file["$track/lon_highestreturn"][1:step:end]::Array{Float64,1}
+        yt = file["$track/lat_highestreturn"][1:step:end]::Array{Float64,1}
+        zt = file["$track/elev_highestreturn"][1:step:end]::Array{Float32,1}
+        zt[(zt .< -1000.0) .& (zt .> 25000.0)] .= NaN
+    end
+    if ground
+        xb = file["$track/lon_lowestmode"][1:step:end]::Array{Float64,1}
+        yb = file["$track/lat_lowestmode"][1:step:end]::Array{Float64,1}
+        zb = file["$track/elev_lowestmode"][1:step:end]::Array{Float32,1}
+        zb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
+    end
     t = file["$track/delta_time"][1:step:end]::Array{Float64,1}
     q = file["$track/quality_flag"][1:step:end]::Array{UInt8,1}
     sun_angle = file["$track/solar_elevation"][1:step:end]::Array{Float32,1}
-
-    # Mask out invalid values
-    zt[(zt .< -1000.0) .& (zt .> 25000.0)] .= NaN
-    zb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
 
     if isnothing(quality)
         m = trues(length(q))
@@ -42,9 +44,13 @@ function xyz(g::GEDI_Granule{:GEDI02A}, file, track, power, t_offset, step, grou
         m = q .== quality
     end
     times = unix2datetime.(t .+ t_offset)
-
-    nt_canopy = (x = xt[m], y = yt[m], z = zt[m], u = zu[m], t = times[m], quality = q[m], track = Fill(track, length(q))[m], power = Fill(power, length(q))[m], classification = Fill("canopy", length(q))[m], sun_angle = sun_angle[m], return_number = Fill(1, length(sun_angle))[m], number_of_returns = Fill(2, length(sun_angle))[m], granule = Fill(g.id, sum(m)))
-    nt_ground = (x = xb[m], y = yb[m], z = zb[m], u = zu[m], t = times[m], quality = q[m], track = Fill(track, length(q))[m], power = Fill(power, length(q))[m], classification = Fill("ground", length(q))[m], sun_angle = sun_angle[m], return_number = Fill(2, length(sun_angle))[m], number_of_returns = Fill(2, length(sun_angle))[m], granule = Fill(g.id, sum(m)))
+        
+    if canopy
+        nt_canopy = (x = xt[m], y = yt[m], z = zt[m], u = zu[m], t = times[m], quality = q[m], track = Fill(track, length(q))[m], power = Fill(power, length(q))[m], classification = Fill("canopy", length(q))[m], sun_angle = sun_angle[m], return_number = Fill(1, length(sun_angle))[m], number_of_returns = Fill(2, length(sun_angle))[m])# , granule = Fill(g.id, sum(m)))
+    end
+    if ground
+        nt_ground = (x = xb[m], y = yb[m], z = zb[m], u = zu[m], t = times[m], quality = q[m], track = Fill(track, length(q))[m], power = Fill(power, length(q))[m], classification = Fill("ground", length(q))[m], sun_angle = sun_angle[m], return_number = Fill(2, length(sun_angle))[m], number_of_returns = Fill(2, length(sun_angle))[m])# , granule = Fill(g.id, sum(m)))
+    end
     if canopy && ground
         nt_canopy, nt_ground
     elseif canopy

@@ -53,6 +53,7 @@ function splitline(line::AG.IGeometry, distance=1.)
             line = points[splits[i] + 1:splits[i + 1]]
             push!(lines, line)
         end
+        filter!(x -> length(x) > 1, lines)  # filter out single point linestrings
         return AG.createmultilinestring(lines)
     end
 end
