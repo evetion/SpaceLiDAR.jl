@@ -45,7 +45,7 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Gra
             push!(local_granules, g)
         end
     end
-    @info "Found $(length(local_granules) / length(granules) * 100)% of provided granules."
+    @info "Found $(length(local_granules) / length(granules) * 100)% of $(length(granules)) provided granules."
     local_granules
 end
 
