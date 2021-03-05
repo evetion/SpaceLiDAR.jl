@@ -1,3 +1,4 @@
+using Printf
 
 """Hacked version of Base.download which adds cookies and (optional) netrc parsing."""
 function download_curl(url::AbstractString, filename::AbstractString)
@@ -45,7 +46,7 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Gra
             push!(local_granules, g)
         end
     end
-    @info "Found $(length(local_granules) / length(granules) * 100)% of $(length(granules)) provided granules."
+    @info "Found $(@sprintf("%.0f",(length(local_granules) / length(granules) * 100)))% of $(length(granules)) provided granules."
     local_granules
 end
 
@@ -104,7 +105,7 @@ function netrc!(username, password)
         write(f, "machine n5eil01u.ecs.nsidc.org login $username password $(password)\n")
     end
     fn
-end
+        end
 
 using GeoArrays
 using StaticArrays

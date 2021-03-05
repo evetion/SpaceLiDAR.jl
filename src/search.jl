@@ -22,7 +22,7 @@ function find(::Mission{:GEDI}, product::String="GEDI02_A", bbox::NamedTuple{(:m
 
     map(x -> GEDI_Granule(
         Symbol(product),
-        replace(basename(x), ".h5" => ""),
+        basename(x),
         x,
         gedi_info(basename(x))
     ),
