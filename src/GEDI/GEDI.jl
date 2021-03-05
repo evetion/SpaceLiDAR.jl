@@ -29,5 +29,5 @@ function gedi_info(filename)
     type, name, datetime, orbit, track, ppds, version, revision = Base.split(id, "_")
     days = Day(parse(Int, datetime[5:7]) - 1)  # Stored as #days in year
     datetime = datetime[1:4] * "0101" * datetime[8:end]
-    (type = Symbol(type * name), date = DateTime(datetime, gedi_date_format) + days, orbit = parse(Int, orbit[2:end]), track = parse(Int, track[2:end]), ppds = parse(Int, ppds), version = parse(Int, version), revision = parse(Int, revision))
+    (type = Symbol(type * "_" * name), date = DateTime(datetime, gedi_date_format) + days, orbit = parse(Int, orbit[2:end]), track = parse(Int, track[2:end]), ppds = parse(Int, ppds), version = parse(Int, version), revision = parse(Int, revision))
 end

@@ -4,7 +4,7 @@ function bounds(::GEDI_Granule)
     (min_x = -180., max_x = 180., min_y = -63., max_y = 63., min_z = -1000., max_z = 25000.)
 end
 
-function xyz(granule::GEDI_Granule{:GEDI02A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
+function xyz(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
 
@@ -20,7 +20,7 @@ function xyz(granule::GEDI_Granule{:GEDI02A}; tracks=gedi_tracks, step=1, ground
     dfs
 end
 
-function xyz(g::GEDI_Granule{:GEDI02A}, file, track, power, t_offset, step, ground, canopy, quality=nothing)
+function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, t_offset, step, ground, canopy, quality=nothing)
     zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
     if canopy
         xt = file["$track/lon_highestreturn"][1:step:end]::Array{Float64,1}
@@ -63,7 +63,7 @@ function xyz(g::GEDI_Granule{:GEDI02A}, file, track, power, t_offset, step, grou
 end
 
 
-function lines(granule::GEDI_Granule{:GEDI02A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
+function lines(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         for (i, track) ∈ enumerate(tracks)
