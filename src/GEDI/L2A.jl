@@ -11,7 +11,7 @@ function xyz(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, groun
         for (i, track) ∈ enumerate(tracks)
             power = i > 4 ? "strong" : "weak"
             if in(track, keys(file))
-                for track_df ∈ xyz(granule, file, track, power, t_offset, step, ground, canopy, quality)
+                for track_df ∈ xyz(granule, file, track, power, step, ground, canopy, quality)
                     push!(dfs, track_df)
                 end
             end
@@ -20,7 +20,11 @@ function xyz(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, groun
     dfs
 end
 
-function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, t_offset, step, ground, canopy, quality=nothing)
+function points(granule::GEDI_Granule{:GEDI02_A})
+    xyz(granule, canopy=true, quality=1)
+end
+
+function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=nothing)
     zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
     if canopy
         xt = file["$track/lon_highestreturn"][1:step:end]::Array{Float64,1}
@@ -44,7 +48,7 @@ function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, t_offset, step, gro
         m = q .== quality
     end
     times = unix2datetime.(t .+ t_offset)
-        
+
     if canopy
         nt_canopy = (x = xt[m], y = yt[m], z = zt[m], u = zu[m], t = times[m], quality = q[m], track = Fill(track, length(q))[m], power = Fill(power, length(q))[m], classification = Fill("canopy", length(q))[m], sun_angle = sun_angle[m], return_number = Fill(1, length(sun_angle))[m], number_of_returns = Fill(2, length(sun_angle))[m])# , granule = Fill(g.id, sum(m)))
     end
@@ -69,7 +73,7 @@ function lines(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, gro
         for (i, track) ∈ enumerate(tracks)
             power = i > 4 ? "strong" : "weak"
             if in(track, keys(file))
-                for track_df ∈ xyz(granule, file, track, power, t_offset, step, ground, canopy, quality)
+                for track_df ∈ xyz(granule, file, track, power, step, ground, canopy, quality)
                     line = makeline(track_df.x, track_df.y, track_df.z)
                     nt = (geom = line, track = track, power = power, granule = granule.id)
                     push!(dfs, nt)

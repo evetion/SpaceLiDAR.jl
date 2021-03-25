@@ -1,10 +1,18 @@
 using AWSCore
 using AWSS3
 
-const aws = AWSCore.aws_config(profile="default")
+const aws = AWSCore.aws_config(profile="default", region="eu-west-1")
 
-"""Change default download location to a S3 bucket."""
-function s3!(granule::Granule, bucket::String="spacelidar", verify=false)
+function download_s3(path::AbstractString, fn::AbstractString)
+    # elements = split(path, "/")
+    # bucket = elements[3]
+    # path = join(elements[4:end], "/")
+    # AWSS3.s3_get_file(aws, bucket, path, fn)
+    run(`aws s3 cp --only-show-errors $path $fn`)
+end
+
+"""Change default download locatio n to a S3 bucket."""
+function s3!(granule::Granule, bucket::String="s3://spacelidar", verify=false)
     fn = granule.id
     if verify && ~in(bucket, fn)
         return granule
@@ -19,7 +27,7 @@ function Base.in(granule::Granule, bucket::AbstractString="spacelidar")
     AWSS3.s3_exists(aws, bucket, granule.id)
 end
 
-function sync!(granules::Vector{<:Granule}, bucket="spacelidar")
+function sync!(granules::Vector{<:Granule}, bucket="s3://spacelidar")
     mask = trues(length(granules))
     while sum(mask) > 0
         in_bucket = map(x -> x["Key"], s3_list_objects(aws, bucket))

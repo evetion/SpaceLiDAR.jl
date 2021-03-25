@@ -38,7 +38,7 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks=icesat2_tracks, step=100
     dfs
 end
 
-function xyz(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Real, step=1)
+function xyz(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1)
     z = file["$track/heights/h_ph"][1:step:end]::Array{Float32,1}
     x = file["$track/heights/lon_ph"][1:step:end]::Array{Float64,1}
     y = file["$track/heights/lat_ph"][1:step:end]::Array{Float64,1}
@@ -69,11 +69,14 @@ function map_counts(values, counts)
     c
 end
 
+function points(granule::ICESat2_Granule{:ATL03})
+    classify(granule)
+end
 
 """Retrieve all points as classified as ground in ATL08."""
-function classify(granule::ICESat2_Granule{:ATL03}, granule_b::Union{ICESat2_Granule{:ATL08},Nothing}=nothing; tracks=icesat2_tracks)
-    if isnothing(granule_b)
-        granule_b = granule_from_file(replace(granule.url, "ATL03_" => "ATL08_"))
+function classify(granule::ICESat2_Granule{:ATL03}, atl08::Union{ICESat2_Granule{:ATL08},Nothing}=nothing; tracks=icesat2_tracks)
+    if isnothing(atl08)
+        atl08 = convert(:ATL08, granule)
     end
 
     dfs = Vector{NamedTuple}()
@@ -84,9 +87,9 @@ function classify(granule::ICESat2_Granule{:ATL03}, granule_b::Union{ICESat2_Gra
         for track ∈ tracks
             power = track_power(orientation, track)
             if in(track, keys(file)) && in("heights", keys(file[track]))
-                track_df = xyz(file, track, power, t_offset)
+                track_df = xyz(granule, file, track, power, t_offset)
 
-                mapping = atl03_mapping(granule_b, track)
+                mapping = atl03_mapping(atl08, track)
 
                 unique_segments = unique(mapping.segment)
                 index_map = create_mapping(track_df.segment, unique_segments)
