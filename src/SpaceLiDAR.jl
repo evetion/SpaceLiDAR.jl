@@ -12,7 +12,6 @@ include("search.jl")
 include("geom.jl")
 include("geom_utils.jl")
 include("s3.jl")
-include("laz.jl")
 include("geoarrays.jl")
 include("GEDI/GEDI.jl")
 include("GEDI/L2A.jl")
@@ -20,6 +19,7 @@ include("ICESat-2/ICESat-2.jl")
 include("ICESat-2/ATL03.jl")
 include("ICESat-2/ATL08.jl")
 include("ICESat-2/ATL12.jl")
+include("laz.jl")
 
 export find, download, netrc!
 export xyz, lines, points, in_bbox, bounds

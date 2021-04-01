@@ -48,13 +48,15 @@ function xyz(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractS
     # Segment calc
     segment = read(file, "$track/geolocation/segment_id")::Array{Int32,1}
     sun_angle = read(file, "$track/geolocation/solar_elevation")::Array{Float32,1}
+    u = read(file, "$track/geolocation/sigma_h")::Array{Float32,1}
     segment_counts = read(file, "$track/geolocation/segment_ph_cnt")::Array{Int32,1}
     segments = map_counts(segment, segment_counts)[1:step:end]
     sun_angles = map_counts(sun_angle, segment_counts)[1:step:end]
+    uu = map_counts(u, segment_counts)[1:step:end]
 
     times = unix2datetime.(t .+ t_offset)
 
-    (x = x, y = y, z = z, t = times, confidence = c, segment = segments, track = Fill(track, length(sun_angles)), power = Fill(power, length(sun_angles)), sun_angle = sun_angles)
+    (x = x, y = y, z = z, u = uu, t = times, confidence = c, segment = segments, track = Fill(track, length(sun_angles)), power = Fill(power, length(sun_angles)), sun_angle = sun_angles)
 end
 
 function map_counts(values, counts)

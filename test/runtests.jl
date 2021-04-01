@@ -1,5 +1,6 @@
 using SpaceLiDAR
 using Test
+using LazIO
 
 @testset "SpaceLiDAR.jl" begin
 
@@ -27,6 +28,7 @@ using Test
         @test length(points) == 6
         lines = SpaceLiDAR.lines(g8, step=1000)
         @test length(lines) == 6
+        LazIO.write("test.laz", g8)
     end
     @testset "L2A" begin
         fng = "data/GEDI02_A_2020048225628_O06706_T04016_02_001_01.h5"
@@ -37,5 +39,6 @@ using Test
         @test length(points) == 16
         lines = SpaceLiDAR.lines(gg, step=1000)
         @test length(lines) == 8
+        LazIO.write("test.laz", gg)
     end
 end

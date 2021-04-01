@@ -16,6 +16,7 @@
 *.pdf
 *.png
 *.tif
+*.tiff
 *.shp
 *.dbf
 *.prj
