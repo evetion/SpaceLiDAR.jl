@@ -1,12 +1,12 @@
 using AWSCore
 using AWSS3
 
-const aws = AWSCore.aws_config(profile="default", region="eu-west-1")
 
 function download_s3(path::AbstractString, fn::AbstractString)
     # elements = split(path, "/")
     # bucket = elements[3]
     # path = join(elements[4:end], "/")
+    # aws = AWSCore.aws_config(profile="default", region="eu-west-1")
     # AWSS3.s3_get_file(aws, bucket, path, fn)
     run(`aws s3 cp --only-show-errors $path $fn`)
 end
@@ -24,6 +24,7 @@ end
 s3!(granules::Vector{<:Granule}, args...) = map!(x -> s3!(x, args...), granules)
 
 function Base.in(granule::Granule, bucket::AbstractString="spacelidar")
+    aws = AWSCore.aws_config(profile="default", region="eu-west-1")
     AWSS3.s3_exists(aws, bucket, granule.id)
 end
 
