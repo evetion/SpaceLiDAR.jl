@@ -1,7 +1,7 @@
 name = "SpaceLiDAR"
 uuid = "29bf0bfc-420f-4fa5-b441-811fd9e6e11d"
 authors = ["Maarten Pronk", "Deltares"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 AWSCore = "4f1ea46c-232b-54a6-9b17-cc2d0f3e6598"
@@ -45,7 +45,7 @@ HDF5 = "0.15"
 HTTP = "0.9"
 ImageFiltering = "0.6"
 JSON = "0.21"
-LazIO = "0.3.2"
+LazIO = "0.3.3"
 PolygonOps = "0.1"
 ProgressMeter = "1.4"
 RecipesBase = "1.1"
