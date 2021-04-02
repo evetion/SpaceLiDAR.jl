@@ -13,7 +13,7 @@ using LazIO
 
 
     @testset "ATL03" begin
-        fn3 = "data/ATL03_20191023205923_04120502_003_01.h5"
+        fn3 = joinpath(@__DIR__, "data/ATL03_20191023205923_04120502_003_01.h5")
         g3 = SpaceLiDAR.granule_from_file(fn3)
         points = SpaceLiDAR.xyz(g3, step=1000)
         @test length(points) == 6
@@ -22,7 +22,7 @@ using LazIO
         SpaceLiDAR.classify(g3)
     end
     @testset "ATL08" begin
-        fn8 = "data/ATL08_20191023205923_04120502_003_01.h5"
+        fn8 = joinpath(@__DIR__, "data/ATL08_20191023205923_04120502_003_01.h5")
         g8 = SpaceLiDAR.granule_from_file(fn8)
         points = SpaceLiDAR.xyz(g8, step=1000)
         @test length(points) == 6
@@ -31,7 +31,7 @@ using LazIO
         LazIO.write("test.laz", g8)
     end
     @testset "L2A" begin
-        fng = "data/GEDI02_A_2020048225628_O06706_T04016_02_001_01.h5"
+        fng = joinpath(@__DIR__, "data/GEDI02_A_2020048225628_O06706_T04016_02_001_01.h5")
         gg = SpaceLiDAR.granule_from_file(fng)
         points = SpaceLiDAR.xyz(gg, step=1000)
         @test length(points) == 8
