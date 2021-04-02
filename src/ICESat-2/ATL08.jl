@@ -45,7 +45,7 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
             classification = Fill("ground", length(times)),
-            return_number = Fill(2, length(times)),
+            return_number = Fill(1, length(times)),
             number_of_returns = Fill(2, length(times)),
             # granule = Fill(g.id, length(times)),
             )
@@ -60,7 +60,7 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
             classification = Fill("high_vegetation", length(times)),
-            return_number = Fill(1, length(times)),
+            return_number = Fill(0, length(times)),
             number_of_returns = Fill(2, length(times)),
             # granule = Fill(g.id, length(times))
         )
