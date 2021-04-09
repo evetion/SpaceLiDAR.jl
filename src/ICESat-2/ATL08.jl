@@ -33,6 +33,9 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
     x = file["$track/land_segments/longitude"][1:step:end]::Array{Float32,1}
     y = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
     t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
+    sensitivity = file["$track/land_segments/snr"][1:step:end]::Array{Float32,1}
+    clouds = file["$track/land_segments/layer_flag"][1:step:end]::Array{Int8,1}
+    dem = file["$track/land_segments/dem_h"][1:step:end]::Array{Float32,1}
     times = unix2datetime.(t .+ t_offset)
 
     if ground
@@ -42,12 +45,14 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
             z = zt,
             u = tu,
             t = times,
+            sensitivity = sensitivity,
+            cloud = Bool.(clouds),
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
             classification = Fill("ground", length(times)),
             return_number = Fill(2, length(times)),
             number_of_returns = Fill(2, length(times)),
-            # granule = Fill(g.id, length(times)),
+            reference = dem,
             )
     end
     if canopy
@@ -57,12 +62,14 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
             z = zt,
             u = cu,
             t = times,
+            sensitivity = sensitivity,
+            cloud = Bool.(clouds),
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
             classification = Fill("high_vegetation", length(times)),
             return_number = Fill(1, length(times)),
             number_of_returns = Fill(2, length(times)),
-            # granule = Fill(g.id, length(times))
+            reference = dem,
         )
     end
     if canopy && ground

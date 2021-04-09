@@ -38,7 +38,7 @@ function rm(granule::Granule)
     if isfile(granule.url)
         Base.rm(granule.url)
     else
-        warn("Can't delete $(granule.url)..")
+        @warn("Can't delete $(granule.url)..")
     end
 end
 

@@ -65,7 +65,7 @@ Derive linestrings
 using TypedTables
 fn = "ATL03_20181110072251_06520101_003_01.h5"
 g = SpaceLiDAR.granule_from_file(fn)
-lines = Table(SpaceLiDAR.lines(g, step=10000))
+tlines = Table(SpaceLiDAR.lines(g, step=10000))
 Table with 4 columns and 6 rows:
      geom                       sun_angle  track        t
    ┌───────────────────────────────────────────────────────────────────────────
@@ -75,5 +75,5 @@ Table with 4 columns and 6 rows:
  4 │ wkbLineString25D geometry  38.1424    gt2r_strong  2018-11-10T07:28:07.374
  5 │ wkbLineString25D geometry  38.2016    gt3l_weak    2018-11-10T07:28:05.051
  6 │ wkbLineString25D geometry  38.1611    gt3r_strong  2018-11-10T07:28:06.344
-SpaceLiDAR.GDF.write("lines.gpkg", lines)
+SpaceLiDAR.GDF.write("lines.gpkg", tlines)
 ```

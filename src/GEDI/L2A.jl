@@ -24,8 +24,9 @@ function points(granule::GEDI_Granule{:GEDI02_A})
     xyz(granule, canopy=true, quality=1)
 end
 
-function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1)
+function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1, degraded=false, )
     zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
+    dem = file["$track/digital_elevation_model"][1:step:end]::Array{Float32,1}
     if canopy
         xt = file["$track/lon_highestreturn"][1:step:end]::Array{Float64,1}
         yt = file["$track/lat_highestreturn"][1:step:end]::Array{Float64,1}
@@ -40,6 +41,9 @@ function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canop
     end
     t = file["$track/delta_time"][1:step:end]::Array{Float64,1}
     q = file["$track/quality_flag"][1:step:end]::Array{UInt8,1}
+    d = file["$track/degrade_flag"][1:step:end]::Array{UInt8,1}
+    s = file["$track/surface_flag"][1:step:end]::Array{UInt8,1}
+    zs = file["$track/sensitivity"][1:step:end]::Array{Float32,1}
     sun_angle = file["$track/solar_elevation"][1:step:end]::Array{Float32,1}
 
     if isnothing(quality)
@@ -47,22 +51,30 @@ function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canop
     else
         m = q .== quality
     end
+
+    # Ignore degraded
+    m .&= d .== 0
+
     times = unix2datetime.(t .+ t_offset)
 
     if canopy
-        nt_canopy = (x = xt[m],
-        y = yt[m],
-        z = zt[m],
-        u = zu[m],
-        t = times[m],
-        quality = q[m],
-        track = Fill(track, length(q))[m],
-        power = Fill(power, length(q))[m],
-        classification = Fill("high_vegetation", length(q))[m],
-        sun_angle = sun_angle[m],
-        return_number = Fill(1, length(sun_angle))[m],
-        number_of_returns = Fill(2, length(sun_angle))[m])
-        # , granule = Fill(g.id, sum(m)))
+        nt_canopy = (
+            x = xt[m],
+            y = yt[m],
+            z = zt[m],
+            u = zu[m],
+            sensitivity = zs[m],
+            t = times[m],
+            surface = Bool.(s[m]),
+            quality = Bool.(q[m]),
+            track = Fill(track, length(q))[m],
+            power = Fill(power, length(q))[m],
+            classification = Fill("high_vegetation", length(q))[m],
+            sun_angle = sun_angle[m],
+            return_number = Fill(1, length(sun_angle))[m],
+            number_of_returns = Fill(2, length(sun_angle))[m],
+            reference = dem
+        )
     end
     if ground
         nt_ground = (
@@ -70,16 +82,18 @@ function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canop
             y = yb[m],
             z = zb[m],
             u = zu[m],
+            sensitivity = zs[m],
             t = times[m],
-            quality = q[m],
-            track = Fill(track,
-            length(q))[m],
+            surface = Bool.(s[m]),
+            quality = Bool.(q[m]),
+            track = Fill(track, length(q))[m],
             power = Fill(power, length(q))[m],
             classification = Fill("ground", length(q))[m],
             sun_angle = sun_angle[m],
             return_number = Fill(2, length(sun_angle))[m],
-            number_of_returns = Fill(2, length(sun_angle))[m])
-            # , granule = Fill(g.id, sum(m)))
+            number_of_returns = Fill(2, length(sun_angle))[m],
+            reference = dem
+        )
     end
     if canopy && ground
         nt_canopy, nt_ground
