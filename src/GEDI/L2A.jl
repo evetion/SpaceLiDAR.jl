@@ -24,7 +24,7 @@ function points(granule::GEDI_Granule{:GEDI02_A})
     xyz(granule, canopy=true, quality=1)
 end
 
-function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1, degraded=false, )
+function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1, degraded=false)
     zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
     dem = file["$track/digital_elevation_model"][1:step:end]::Array{Float32,1}
     if canopy
@@ -69,7 +69,7 @@ function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canop
             quality = Bool.(q[m]),
             track = Fill(track, length(q))[m],
             power = Fill(power, length(q))[m],
-            classification = Fill("high_vegetation", length(q))[m],
+            classification = Fill("high_canopy", length(q))[m],
             sun_angle = sun_angle[m],
             return_number = Fill(1, length(sun_angle))[m],
             number_of_returns = Fill(2, length(sun_angle))[m],

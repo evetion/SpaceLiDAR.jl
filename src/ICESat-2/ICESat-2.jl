@@ -1,7 +1,7 @@
 using Dates
 
 const icesat2_tracks = ("gt1l", "gt1r", "gt2l", "gt2r", "gt3l", "gt3r")
-const classification = Dict(0x03 => "low canopy", 0x02 => "ground", 0x04 => "canopy", 0x05 => "unclassified", 0x01 => "noise")
+const classification = Dict(0x03 => "low_canopy", 0x02 => "ground", 0x04 => "high_canopy", 0x05 => "unclassified", 0x01 => "noise")
 const icesat_date_format = dateformat"yyyymmddHHMMSS"
 const gps_offset = 315964800
 const fill_value = 3.4028235f38

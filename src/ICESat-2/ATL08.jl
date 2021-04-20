@@ -66,7 +66,7 @@ function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractS
             cloud = Bool.(clouds),
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
-            classification = Fill("high_vegetation", length(times)),
+            classification = Fill("high_canopy", length(times)),
             return_number = Fill(1, length(times)),
             number_of_returns = Fill(2, length(times)),
             reference = dem,

@@ -19,7 +19,7 @@ function LazIO.write(fn::AbstractString, granule::ICESat2_Granule)
         point_source_ID=Fill(UInt16(meta.rgt), length(t)),
         user_data=Fill(UInt16(meta.cycle), length(t))
     )
-    LazIO.write(fn, nt[.~isnan.(t.z)], bounds(granule), scalex=1e-7, scaley=1e-7, scalez=0.001, system_identifier=LazIO.writestring(id, 32), point_data_format=1, point_data_record_length=28, global_encoding=1)
+    LazIO.write(fn, nt[.~isnan.(t.z)], bounds(granule), scalex=1e-6, scaley=1e-6, scalez=0.001, system_identifier=LazIO.writestring(id, 32), point_data_format=1, point_data_record_length=28, global_encoding=1)
 end
 
 function LazIO.write(fn::AbstractString, granule::GEDI_Granule)
