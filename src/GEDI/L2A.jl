@@ -4,14 +4,14 @@ function bounds(::GEDI_Granule)
     (min_x = -180., max_x = 180., min_y = -63., max_y = 63., min_z = -1000., max_z = 25000.)
 end
 
-function xyz(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
+function points(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
 
         for (i, track) ∈ enumerate(tracks)
             power = i > 4 ? "strong" : "weak"
             if in(track, keys(file))
-                for track_df ∈ xyz(granule, file, track, power, step, ground, canopy, quality)
+                for track_df ∈ points(granule, file, track, power, step, ground, canopy, quality)
                     push!(dfs, track_df)
                 end
             end
@@ -20,11 +20,8 @@ function xyz(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, groun
     dfs
 end
 
-function points(granule::GEDI_Granule{:GEDI02_A})
-    xyz(granule, canopy=true, quality=1)
-end
 
-function xyz(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1, degraded=false)
+function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1, degraded=false)
     zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
     dem = file["$track/digital_elevation_model"][1:step:end]::Array{Float32,1}
     if canopy
@@ -113,7 +110,7 @@ function lines(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, gro
         for (i, track) ∈ enumerate(tracks)
             power = i > 4 ? "strong" : "weak"
             if in(track, keys(file))
-                for track_df ∈ xyz(granule, file, track, power, step, ground, canopy, quality)
+                for track_df ∈ points(granule, file, track, power, step, ground, canopy, quality)
                     line = makeline(track_df.x, track_df.y, track_df.z)
                     nt = (geom = line, track = track, power = power, granule = granule.id)
                     push!(dfs, nt)

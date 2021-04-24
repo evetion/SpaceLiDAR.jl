@@ -1,4 +1,4 @@
-function xyz(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true)
+function points(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
@@ -7,7 +7,7 @@ function xyz(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, ca
         for (i, track) ∈ enumerate(tracks)
             power = track_power(orientation, track)
             if in(track, keys(file)) && in("land_segments", keys(file[track]))
-                for track_nt ∈ xyz(granule, file, track, power, t_offset, step, canopy, ground)
+                for track_nt ∈ points(granule, file, track, power, t_offset, step, canopy, ground)
                     track_nt.z[track_nt.z .== fill_value] .= NaN
                     push!(dfs, track_nt)
                 end
@@ -17,11 +17,7 @@ function xyz(granule::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, ca
     dfs
 end
 
-function points(granule::ICESat2_Granule{:ATL08})
-    xyz(granule, canopy=true)
-end
-
-function xyz(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1, canopy=false, ground=true)
+function points(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1, canopy=false, ground=true)
     if ground
         zt = file["$track/land_segments/terrain/h_te_median"][1:step:end]::Array{Float32,1}
         tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Array{Float32,1}

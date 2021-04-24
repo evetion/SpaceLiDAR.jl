@@ -53,7 +53,7 @@ end
 
 """Filter with bbox."""
 function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
-    xyz[(bbox.min_x .<= xyz.x .<= bbox.max_x) .& (bbox.min_y .<= xyz.y .<= bbox.max_y)]
+    filter(row -> ((bbox.min_x <= row.x <= bbox.max_x) & (bbox.min_y <= row.y <= bbox.max_y)), xyz)
 end
 
 function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where G <: Granule

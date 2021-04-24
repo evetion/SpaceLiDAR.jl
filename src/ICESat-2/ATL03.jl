@@ -1,4 +1,4 @@
-function xyz(granule::ICESat2_Granule{:ATL03}; bbox=nothing, tracks=icesat2_tracks, step=1)
+function points(granule::ICESat2_Granule{:ATL03}; bbox=nothing, tracks=icesat2_tracks, step=1)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
@@ -7,7 +7,7 @@ function xyz(granule::ICESat2_Granule{:ATL03}; bbox=nothing, tracks=icesat2_trac
         for track ∈ tracks
             power = track_power(orientation, track)
             if in(track, keys(file)) && in("heights", keys(file[track]))
-                track_df = xyz(granule, file, track, power, t_offset, step)
+                track_df = points(granule, file, track, power, t_offset, step)
                 push!(dfs, track_df)
             end
         end
@@ -27,7 +27,7 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks=icesat2_tracks, step=100
         for track ∈ tracks
             power = track_power(orientation, track)
             if in(track, keys(file)) && in("heights", keys(file[track]))
-                track_df = xyz(granule, file, track, power, t_offset, step)
+                track_df = points(granule, file, track, power, t_offset, step)
                 line = makeline(track_df.x, track_df.y, track_df.z)
                 i = div(length(track_df.t), 2) + 1
                 nt = (geom = line, sun_angle = Float64(track_df.sun_angle[i]), track = track, power = power, t = track_df.t[i], granule = granule.id)
@@ -38,23 +38,26 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks=icesat2_tracks, step=100
     dfs
 end
 
-function xyz(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1)
+function points(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1)
     z = file["$track/heights/h_ph"][1:step:end]::Array{Float32,1}
     x = file["$track/heights/lon_ph"][1:step:end]::Array{Float64,1}
     y = file["$track/heights/lat_ph"][1:step:end]::Array{Float64,1}
     t = file["$track/heights/delta_time"][1:step:end]::Array{Float64,1}
     c = file["$track/heights/signal_conf_ph"][1,1:step:end]::Array{Int8,1}
 
-    dem = file["$track/geophys_corr/dem_h"][1:step:end]::Array{Float32,1}
-
     # Segment calc
-    segment = read(file, "$track/geolocation/segment_id")::Array{Int32,1}
-    sun_angle = read(file, "$track/geolocation/solar_elevation")::Array{Float32,1}
-    u = read(file, "$track/geolocation/sigma_h")::Array{Float32,1}
     segment_counts = read(file, "$track/geolocation/segment_ph_cnt")::Array{Int32,1}
+
+    segment = read(file, "$track/geolocation/segment_id")::Array{Int32,1}
     segments = map_counts(segment, segment_counts)[1:step:end]
+
+    sun_angle = read(file, "$track/geolocation/solar_elevation")::Array{Float32,1}
     sun_angles = map_counts(sun_angle, segment_counts)[1:step:end]
+
+    u = read(file, "$track/geolocation/sigma_h")::Array{Float32,1}
     uu = map_counts(u, segment_counts)[1:step:end]
+
+    dem = read(file, "$track/geophys_corr/dem_h")::Array{Float32,1}
     demd = map_counts(dem, segment_counts)[1:step:end]
 
     times = unix2datetime.(t .+ t_offset)
@@ -74,10 +77,6 @@ function map_counts(values, counts)
     c
 end
 
-function points(granule::ICESat2_Granule{:ATL03})
-    classify(granule)
-end
-
 """Retrieve all points as classified as ground in ATL08."""
 function classify(granule::ICESat2_Granule{:ATL03}, atl08::Union{ICESat2_Granule{:ATL08},Nothing}=nothing; tracks=icesat2_tracks)
     if isnothing(atl08)
@@ -92,7 +91,7 @@ function classify(granule::ICESat2_Granule{:ATL03}, atl08::Union{ICESat2_Granule
         for track ∈ tracks
             power = track_power(orientation, track)
             if in(track, keys(file)) && in("heights", keys(file[track]))
-                track_df = xyz(granule, file, track, power, t_offset)
+                track_df = points(granule, file, track, power, t_offset)
 
                 mapping = atl03_mapping(atl08, track)
 

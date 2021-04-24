@@ -23,10 +23,17 @@ end
 
 The id is built up as follows, see section 2.4 in the user guide
 GEDI02_A_2019110014613_O01991_T04905_02_001_01.h5
+or newer (V2)
+GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5
 """
 function gedi_info(filename)
     id, _ = splitext(filename)
-    type, name, datetime, orbit, track, ppds, version, revision = Base.split(id, "_")
+    if endswith(id, "V002")
+        type, name, datetime, orbit, segment, track, ppds, pge_version, revision, version = Base.split(id, "_")
+        version = version[2:end]
+    else
+        type, name, datetime, orbit, track, ppds, version, revision = Base.split(id, "_")
+    end
     days = Day(parse(Int, datetime[5:7]) - 1)  # Stored as #days in year
     datetime = datetime[1:4] * "0101" * datetime[8:end]
     (type = Symbol(type * "_" * name), date = DateTime(datetime, gedi_date_format) + days, orbit = parse(Int, orbit[2:end]), track = parse(Int, track[2:end]), ppds = parse(Int, ppds), version = parse(Int, version), revision = parse(Int, revision))
