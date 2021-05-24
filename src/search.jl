@@ -32,12 +32,12 @@ const url = "https://cmr.earthdata.nasa.gov/search/granules.json"
 # end
 
 function find(::Mission{:GEDI}, product::String="GEDI02_A", bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}=world, version::String="002")
-    granules = earthdata_search(product, bbox, version)
+    granules = earthdata_search(product, bbox, version; provider="LPDAAC_ECS")
     map(x -> GEDI_Granule(
         Symbol(product),
-        basename(x),
-        x,
-        gedi_info(basename(x))
+        x["producer_granule_id"],
+        get(get(x, "links", [Dict()])[1], "href", ""),
+        gedi_info(x["producer_granule_id"])
     ),
     granules)
 end
@@ -62,7 +62,6 @@ function find(::Mission{:ICESat}, product::String="GLAH14", bbox::NamedTuple{(:m
             Symbol(product),
             x["producer_granule_id"],
             get(get(x, "links", [Dict()])[1], "href", ""),
-            NamedTuple(),
             icesat_info(x["producer_granule_id"])
         ),
         granules)
@@ -77,11 +76,11 @@ function find(mission::Symbol, args...)
     find(Mission(mission), args...)
 end
 
-function earthdata_search(product::String, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}=world, version::String)
+function earthdata_search(product::String, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}, version::String; provider="NSIDC_ECS")
     page_size = 2000
     page_num = 1
     q = Dict(
-        "provider" => "NSIDC_ECS",
+        "provider" => provider,
         "page_num" => page_num,
         "page_size" => page_size,
         "short_name" => product,

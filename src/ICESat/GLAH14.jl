@@ -27,7 +27,7 @@ function points(granule::ICESat_Granule{:GLAH14}; step=1)
         # att_flag = file["Data_40HZ/Quality/sigma_att_flg"][1:step:end]::Array{Int8,1}
 
         dem = file["Data_40HZ/Geophysical/d_DEM_elv"][1:step:end][m]::Array{Float64,1}
-        dem[dem .== dem_fill] .= NaN
+        dem[dem .== icesat_fill] .= NaN
 
         times = unix2datetime.(t .+ j2000_offset)
 

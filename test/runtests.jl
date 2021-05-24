@@ -21,14 +21,27 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 
 @testset "SpaceLiDAR.jl" begin
 
-    @test SpaceLiDAR.track_power(0, "gt1l") == "strong"
-    @test SpaceLiDAR.track_power(0, "gt1r") == "weak"
-    @test SpaceLiDAR.track_power(1, "gt1l") == "weak"
-    @test SpaceLiDAR.track_power(1, "gt1r") == "strong"
-    @test SpaceLiDAR.track_power(2, "gt1l") == "transit"
-    @test SpaceLiDAR.track_power(2, "gt1r") == "transit"
+    @testset "utils" begin
+        @test SpaceLiDAR.track_power(0, "gt1l") == "strong"
+        @test SpaceLiDAR.track_power(0, "gt1r") == "weak"
+        @test SpaceLiDAR.track_power(1, "gt1l") == "weak"
+        @test SpaceLiDAR.track_power(1, "gt1r") == "strong"
+        @test SpaceLiDAR.track_power(2, "gt1l") == "transit"
+        @test SpaceLiDAR.track_power(2, "gt1r") == "transit"
+    end
 
+    @testset "search" begin
+        @test length(find(:ICESat, "GLAH14")) > 0
+        @test length(find(:ICESat2, "ATL03", (min_x = 4., min_y = 40., max_x = 5., max_y = 50.))) > 0
+        @test length(find(:ICESat2, "ATL08", (min_x = 4., min_y = 40., max_x = 5., max_y = 50.))) > 0
+        @test length(find(:GEDI, "GEDI02_A", (min_x = 4., min_y = 40., max_x = 5., max_y = 50.))) > 0
+    end
 
+    @testset "GLAH14" begin
+        fn = joinpath(@__DIR__, "data/GLAH14_634_1102_001_0071_0_01_0001.H5")
+        g = SpaceLiDAR.granule_from_file(fn)
+        points = SpaceLiDAR.points(g)
+    end
     @testset "ATL03" begin
         fn3 = joinpath(@__DIR__, "data/ATL03_20201121151145_08920913_004_01.h5")
         g3 = SpaceLiDAR.granule_from_file(fn3)
