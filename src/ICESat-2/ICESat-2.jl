@@ -6,7 +6,7 @@ const icesat_date_format = dateformat"yyyymmddHHMMSS"
 const gps_offset = 315964800
 const fill_value = 3.4028235f38
 const blacklist = readlines(joinpath(@__DIR__, "blacklist.txt"))
-const icesat_inclination = 88.0  # actually 92, so this is 180. - 92.
+const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
 
 
 mutable struct ICESat2_Granule{product} <: Granule
@@ -33,8 +33,8 @@ end
 
 """Rough approximation of the track angle on a Euclidian lon/lat plot."""
 function angle(::ICESat2_Granule, latitude=0.0)
-    d = icesat_inclination / (pi / 2)
-    cos(latitude / d) * icesat_inclination
+    d = icesat2_inclination / (pi / 2)
+    cos(latitude / d) * icesat2_inclination
 end
 
 """Return whether track is a strong or weak beam.

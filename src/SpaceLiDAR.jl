@@ -19,6 +19,8 @@ include("ICESat-2/ICESat-2.jl")
 include("ICESat-2/ATL03.jl")
 include("ICESat-2/ATL08.jl")
 include("ICESat-2/ATL12.jl")
+include("ICESat/ICESat.jl")
+include("ICESat/GLAH14.jl")
 include("laz.jl")
 
 export find, download, netrc!

@@ -1,6 +1,23 @@
 using SpaceLiDAR
 using Test
 using LazIO
+using Downloads
+
+# ensure test data is present
+testdir = @__DIR__
+datadir = joinpath(testdir, "data")
+isdir(datadir) || mkdir(datadir)
+
+function download_artifact(version, source_filename)
+    local_path = joinpath(datadir, source_filename)
+    url = "https://github.com/evetion/SpaceLiDAR-artifacts/releases/download/v$version/$source_filename"
+    isfile(local_path) || Downloads.download(url, local_path)
+end
+
+download_artifact(v"0.1", "ATL03_20201121151145_08920913_004_01.h5")
+download_artifact(v"0.1", "ATL08_20201121151145_08920913_004_01.h5")
+download_artifact(v"0.1", "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5")
+download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 
 @testset "SpaceLiDAR.jl" begin
 
