@@ -14,7 +14,7 @@ makedocs(;
 
 deploydocs(;
     repo="github.com/evetion/SpaceLiDAR.jl",
-    deps   = Deps.pip("mkdocs-material", "pygments", "python-markdown-math", "mkdocs-autorefs"),
-    make   = () -> run(`mkdocs build`)
-    target = "site"
+    deps=Deps.pip("mkdocs-material", "pygments", "python-markdown-math", "mkdocs-autorefs"),
+    make=() -> run(`mkdocs build`),
+    target="site"
 )
