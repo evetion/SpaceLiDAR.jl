@@ -38,7 +38,7 @@ function granules_from_folder(foldername::AbstractString)
     return [granule_from_file(joinpath(foldername, file)) for file in readdir(foldername) if splitext(file)[end] == ".h5"]
 end
 
-function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Granule
+function instantiate!(granules::Vector{T}, folder::AbstractString) where T <: Granule
     local_granules = Vector{eltype(granules)}()
     for granule in granules
         file = joinpath(folder, granule.id)
@@ -91,7 +91,7 @@ function test(granule::Granule)
         @error "Granule at $(granule.url) failed with $e."
         return false
     end
-end
+    end
 
 """Writes/updates netrc file for ICESat-2 and GEDI downloads."""
 function netrc!(username, password)

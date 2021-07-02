@@ -23,7 +23,7 @@ include("ICESat/ICESat.jl")
 include("ICESat/GLAH14.jl")
 include("laz.jl")
 
-export find, download, netrc!
+export find, download!, netrc!
 export xyz, lines, points, in_bbox, bounds
 export test, granule_from_file, granules_from_folder, write_granule_urls!
 
@@ -31,12 +31,12 @@ precompile(find, (Symbol, String, NamedTuple, String))
 precompile(find, (Symbol, String))
 precompile(GeoArrays.read, (String,))
 precompile(GeoArrays.read, (String, Bool))
-precompile(instantiate, (Vector{ICESat2_Granule}, String))
-precompile(instantiate, (Vector{GEDI_Granule}, String))
+precompile(instantiate!, (Vector{ICESat2_Granule}, String))
+precompile(instantiate!, (Vector{GEDI_Granule}, String))
 precompile(granules_from_folder, (String,))
 precompile(granule_from_file, (String,))
-precompile(download, (ICESat2_Granule,))
-precompile(download, (GEDI_Granule,))
+precompile(download!, (ICESat2_Granule,))
+precompile(download!, (GEDI_Granule,))
 precompile(points, (GEDI_Granule,))
 precompile(points, (ICESat2_Granule,))
 precompile(lines, (GEDI_Granule,))
