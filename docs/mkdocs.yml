@@ -13,9 +13,7 @@ extra_javascript:
 
 docs_dir: 'build'
 
-# nav:
-#   - Home: index.md
-#   - Changelog: CHANGELOG.md
+nav:
 
 theme:
   name: material
@@ -39,7 +37,7 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.tabs
-    - navigation.sections
+    # - navigation.sections
     - navigation.expand
     - navigation.top
 plugins:
