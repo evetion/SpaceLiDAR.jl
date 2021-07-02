@@ -57,6 +57,8 @@ markdown_extensions:
 edit_uri: edit/master/docs/
 repo_name: evetion/SpaceLiDAR.jl
 extra:
+  version:
+    provider: mike
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/evetion/SpaceLiDAR.jl
