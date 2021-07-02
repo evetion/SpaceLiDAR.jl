@@ -1,0 +1,68 @@
+site_name:        SpaceLiDAR.jl
+repo_url:         https://github.com/evetion/SpaceLiDAR.jl
+site_description: Description...
+site_author:      evetion
+site_url:         https://www.evetion.nl/SpaceLiDAR.jl/
+
+extra_css:
+  - assets/Documenter.css
+
+extra_javascript:
+  - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML
+  - assets/mathjaxhelper.js
+
+docs_dir: 'build'
+
+# nav:
+#   - Home: index.md
+#   - Changelog: CHANGELOG.md
+
+theme:
+  name: material
+  icon: 
+    logo: material/satellite-variant
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: indigo
+      toggle:
+        icon: material/lightbulb-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/lightbulb
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+plugins:
+  - search
+  - autorefs
+markdown_extensions:
+  - extra
+  - tables
+  - fenced_code
+  - mdx_math
+  - pymdownx.highlight
+  - admonition
+  - toc:
+      permalink: true
+edit_uri: edit/master/docs/
+repo_name: evetion/SpaceLiDAR.jl
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/evetion/SpaceLiDAR.jl
+      name: Source code
+    - icon: fontawesome/brands/gitter
+      link: https://gitter.im/evetion/community
+      name: Chat with me on Gitter
+copyright: Copyright &copy; 2021 Maarten Pronk, Deltares
+
