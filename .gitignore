@@ -26,4 +26,4 @@
 *.vscode
 scripts
 *.h5
-
+test/data
