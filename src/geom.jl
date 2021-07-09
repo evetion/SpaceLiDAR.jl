@@ -35,34 +35,45 @@ function envelope_polygon(geom::GDF.AG.AbstractGeometry)
     polygon
 end
 
-"""Calculate angle of direction in degrees where North is 0° for a Table."""
+"""Calculatitudee angle of direction in degrees where North is 0° for a Table."""
 function angle!(t::FlexTable)
     # this assumes the table is ordered by time (ascending)
     t.angle = angle(t.x, t.y)
 end
 
-"""Calculate angle of direction in degrees where North is 0°."""
-function angle(lon, lat)
-    length(lon) == length(lat) || error("`lon` and `lat` should have the same length.")
-    angle = zeros(length(lon))
+"""
+    angle(longitude::Vector{Number}, latitude::Vector{Number})
+
+Calculate the angle of direction from previous points in degrees where North is 0°.
+Points are
+The angle for the first point is undefined and set to the second.
+
+Returns a `Vector{Number}`` of angles
+"""
+function angle(longitude, latitude)
+    length(longitude) == length(latitude) || error("`longitude` and `latitude` should have the same length.")
+    angle = zeros(length(longitude))
     prev = zeros(2)
-    for i ∈ 1:length(lon)
-        angle[i] = rad2deg(atan(lon[i] - prev[1], lat[i] - prev[2]))
-        prev[1] = lon[i]
-        prev[2] = lat[i]
+    for i ∈ 1:length(longitude)
+        angle[i] = rad2deg(atan(longitude[i] - prev[1], latitude[i] - prev[2]))
+        prev[1] = longitude[i]
+        prev[2] = latitude[i]
     end
     angle[1] = angle[2]
     return angle
 end
 
-"""Shift `lon` and `lat` with `distance` m in direction `angle`, where North is 0°."""
-function shift(lon, lat, angle, distance)
-    length(lon) == length(lat) || error("`lon` and `lat` should have the same length.")
+"""
+    shift(longitude, latitude, angle, distance)
 
+Shift `longitude` and `latitude` with `distance` m in direction `angle`, where North is 0°.
+Returns a tuple of the shifted coordinates: `(longitude, latitude)`
+"""
+function shift(longitude, latitude, angle, distance)
     θ = deg2rad(angle)
     δ = distance / earth_radius_m
-    ϕ = deg2rad(lat)
-    λ = deg2rad(lon)
+    ϕ = deg2rad(latitude)
+    λ = deg2rad(longitude)
 
     # Distances.jl only gives us Haversine, so this is the inverse
     ϕnew = asin(

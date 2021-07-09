@@ -42,5 +42,7 @@ precompile(points, (GEDI_Granule,))
 precompile(points, (ICESat2_Granule,))
 precompile(lines, (GEDI_Granule,))
 precompile(lines, (ICESat2_Granule,))
+precompile(angle, (Vector{Float32}, Vector{Float32}))
+precompile(shift, (Float32, Float32, Float64, Float64))
 
 end # module

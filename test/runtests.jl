@@ -1,6 +1,7 @@
 using SpaceLiDAR
 using Test
 using LazIO
+using Distances
 import Downloads
 
 # ensure test data is present
@@ -70,5 +71,15 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
         lines = SpaceLiDAR.lines(gg, step=1000)
         @test length(lines) == 8
         LazIO.write("test.laz", gg)
+    end
+    @testset "Geometry" begin
+        @testset "shift" begin
+            n = 100
+            for (d, angle, x, y) ∈ zip(rand(0:1000, n), rand(1:360, n), rand(-180:180, n), rand(-90:90, n))
+                o = (x, y)
+                p = SpaceLiDAR.shift(o..., angle, d)
+                @test isapprox(Haversine()(o, p), d; rtol=0.001 * d)
+            end
+        end
     end
 end
