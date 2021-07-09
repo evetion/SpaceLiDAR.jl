@@ -91,7 +91,7 @@ function test(granule::Granule)
         @error "Granule at $(granule.url) failed with $e."
         return false
     end
-end
+    end
 
 """Writes/updates netrc file for ICESat-2 and GEDI downloads."""
 function netrc!(username, password)

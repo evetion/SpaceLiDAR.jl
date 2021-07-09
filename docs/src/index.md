@@ -3,6 +3,4 @@
 ```@index
 ```
 
-```@autodocs
-Modules = [SpaceLiDAR]
-```
+Also see the Juliacon Pluto notebook [here](tutorial/juliacon_2021.jl.html)

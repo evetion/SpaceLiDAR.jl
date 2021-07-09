@@ -25,4 +25,5 @@
 *.shx
 *.vscode
 scripts
+*.h5
 

@@ -1,6 +1,7 @@
 using HDF5
 import Downloads
 
+"""This is a method because it will segfault if precompiled."""
 function _download(kwargs...)
     downloader = Downloads.Downloader()
     easy_hook = (easy, _) -> begin
@@ -24,10 +25,10 @@ function download!(granule::Granule, folder=".")
         return fn
     end
     isfile(granule.url) && return granule
-    if startswith(granule.url, "s3://")
+        if startswith(granule.url, "s3://")
         download_s3(granule.url, fn)
     elseif startswith(granule.url, "http")
-        SpaceLiDAR._download(granule.url, fn)
+        _download(granule.url, fn)
     else
         error("Can't determine how to download $(granule.url)")
     end
@@ -42,7 +43,7 @@ function rm(granule::Granule)
         @warn("Can't delete $(granule.url)..")
     end
 end
-
+    
 function download!(granules::Vector{Granule}, folder::AbstractString)
     for granule in granules
         download!(granule, folder)
