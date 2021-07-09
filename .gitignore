@@ -2,7 +2,7 @@
 *.jl.cov
 *.jl.mem
 .DS_Store
-/Manifest.toml
+Manifest.toml
 /dev/
 /docs/build/
 /docs/site/
@@ -26,4 +26,7 @@
 *.vscode
 scripts
 *.h5
-test/data
+/test/data
+/temp
+/output
+/data

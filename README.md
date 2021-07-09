@@ -1,10 +1,9 @@
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://evetion.github.io/SpaceLiDAR.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://evetion.github.io/SpaceLiDAR.jl/dev)
-[![Build Status](https://travis-ci.com/evetion/SpaceLiDAR.jl.svg?branch=master)](https://travis-ci.com/evetion/SpaceLiDAR.jl)
-[![Build Status](https://ci.appveyor.com/api/projects/status/github/evetion/SpaceLiDAR.jl?svg=true)](https://ci.appveyor.com/project/evetion/SpaceLiDAR-jl)
-[![Codecov](https://codecov.io/gh/evetion/SpaceLiDAR.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/evetion/SpaceLiDAR.jl)
-[![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
+[![CI](https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml)
+[![codecov](https://codecov.io/gh/evetion/SpaceLiDAR.jl/branch/master/graph/badge.svg?token=nztwnGtIcY)](https://codecov.io/gh/evetion/SpaceLiDAR.jl)
+
 
 # SpaceLiDAR
 A Julia toolbox for ICESat-2 and GEDI data.
