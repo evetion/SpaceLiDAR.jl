@@ -38,9 +38,3 @@ function gedi_info(filename)
     datetime = datetime[1:4] * "0101" * datetime[8:end]
     (type = Symbol(type * "_" * name), date = DateTime(datetime, gedi_date_format) + days, orbit = parse(Int, orbit[2:end]), track = parse(Int, track[2:end]), ppds = parse(Int, ppds), version = parse(Int, version), revision = parse(Int, revision))
 end
-
-"""Rough approximation of the track angle on a Euclidian lon/lat plot."""
-function angle(::GEDI_Granule, latitude=0.0)
-    d = gedi_inclination / (pi / 2)
-    cos(latitude / d) * gedi_inclination
-end
