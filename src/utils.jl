@@ -35,10 +35,10 @@ end
 
 """Generate granules from folder filled with .h5 files."""
 function granules_from_folder(foldername::AbstractString)
-    return [granule_from_file(joinpath(foldername, file)) for file in readdir(foldername) if splitext(file)[end] == ".h5"]
+    return [granule_from_file(joinpath(foldername, file)) for file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5"]
 end
 
-function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Granule
+function instantiate!(granules::Vector{T}, folder::AbstractString) where T <: Granule
     local_granules = Vector{eltype(granules)}()
     for granule in granules
         file = joinpath(folder, granule.id)

@@ -39,30 +39,44 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks=icesat2_tracks, step=100
 end
 
 function points(::ICESat2_Granule{:ATL03}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1)
-    z = file["$track/heights/h_ph"][1:step:end]::Array{Float32,1}
-    x = file["$track/heights/lon_ph"][1:step:end]::Array{Float64,1}
-    y = file["$track/heights/lat_ph"][1:step:end]::Array{Float64,1}
-    t = file["$track/heights/delta_time"][1:step:end]::Array{Float64,1}
-    c = file["$track/heights/signal_conf_ph"][1,1:step:end]::Array{Int8,1}
+    z = file["$track/heights/h_ph"][1:step:end]::Vector{Float32}
+    x = file["$track/heights/lon_ph"][1:step:end]::Vector{Float64}
+    y = file["$track/heights/lat_ph"][1:step:end]::Vector{Float64}
+    t = file["$track/heights/delta_time"][1:step:end]::Vector{Float64}
+    c = file["$track/heights/signal_conf_ph"][1,1:step:end]::Vector{Int8}
+    q = file["$track/heights/quality_ph"][1:step:end]::Vector{Int8}
 
     # Segment calc
-    segment_counts = read(file, "$track/geolocation/segment_ph_cnt")::Array{Int32,1}
+    segment_counts = read(file, "$track/geolocation/segment_ph_cnt")::Vector{Int32}
 
-    segment = read(file, "$track/geolocation/segment_id")::Array{Int32,1}
+    segment = read(file, "$track/geolocation/segment_id")::Vector{Int32}
     segments = map_counts(segment, segment_counts)[1:step:end]
 
-    sun_angle = read(file, "$track/geolocation/solar_elevation")::Array{Float32,1}
+    sun_angle = read(file, "$track/geolocation/solar_elevation")::Vector{Float32}
     sun_angles = map_counts(sun_angle, segment_counts)[1:step:end]
 
-    u = read(file, "$track/geolocation/sigma_h")::Array{Float32,1}
+    u = read(file, "$track/geolocation/sigma_h")::Vector{Float32}
     uu = map_counts(u, segment_counts)[1:step:end]
 
-    dem = read(file, "$track/geophys_corr/dem_h")::Array{Float32,1}
+    dem = read(file, "$track/geophys_corr/dem_h")::Vector{Float32}
     demd = map_counts(dem, segment_counts)[1:step:end]
 
     times = unix2datetime.(t .+ t_offset)
 
-    (x = x, y = y, z = z, u = uu, t = times, confidence = c, segment = segments, track = Fill(track, length(sun_angles)), power = Fill(power, length(sun_angles)), sun_angle = sun_angles, reference = demd)
+    (
+        x = x,
+        y = y,
+        z = z,
+        q = q,
+        u = uu,
+        t = times,
+        confidence = c,
+        segment = segments,
+        track = Fill(track, length(sun_angles)),
+        power = Fill(power, length(sun_angles)),
+        sun_angle = sun_angles,
+        reference = demd
+    )
 end
 
 function map_counts(values, counts)

@@ -4,7 +4,7 @@ function bounds(::GEDI_Granule)
     (min_x = -180., max_x = 180., min_y = -63., max_y = 63., min_z = -1000., max_z = 25000.)
 end
 
-function points(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=nothing)
+function points(granule::GEDI_Granule{:GEDI02_A}; tracks=gedi_tracks, step=1, ground=true, canopy=false, quality=1)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
 
@@ -22,27 +22,59 @@ end
 
 
 function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, canopy, quality::Union{Nothing,Integer}=1, degraded=false)
-    zu = file["$track/elevation_bin0_error"][1:step:end]::Array{Float32,1}
-    dem = file["$track/digital_elevation_model"][1:step:end]::Array{Float32,1}
+    zu = file["$track/elevation_bin0_error"][1:step:end]::Vector{Float32}
+    dem = file["$track/digital_elevation_model"][1:step:end]::Vector{Float32}
+    intensity = file["$track/energy_total"][1:step:end]::Vector{Float32}
+    aid = file["$track/selected_algorithm"][1:step:end]::Vector{UInt8}
+
     if canopy
-        xt = file["$track/lon_highestreturn"][1:step:end]::Array{Float64,1}
-        yt = file["$track/lat_highestreturn"][1:step:end]::Array{Float64,1}
-        zt = file["$track/elev_highestreturn"][1:step:end]::Array{Float32,1}
+        xt = file["$track/lon_highestreturn"][1:step:end]::Vector{Float64}
+        yt = file["$track/lat_highestreturn"][1:step:end]::Vector{Float64}
+        zt = file["$track/elev_highestreturn"][1:step:end]::Vector{Float32}
         zt[(zt .< -1000.0) .& (zt .> 25000.0)] .= NaN
     end
     if ground
-        xb = file["$track/lon_lowestmode"][1:step:end]::Array{Float64,1}
-        yb = file["$track/lat_lowestmode"][1:step:end]::Array{Float64,1}
-        zb = file["$track/elev_lowestmode"][1:step:end]::Array{Float32,1}
+        xb = file["$track/lon_lowestmode"][1:step:end]::Vector{Float64}
+        yb = file["$track/lat_lowestmode"][1:step:end]::Vector{Float64}
+        zb = file["$track/elev_lowestmode"][1:step:end]::Vector{Float32}
+        # zzb = similar(aid, Float32)
+        # for algorithm in 1:6
+            # zzb[aid .== algorithm] = file["$track/geolocation/elev_lowestreturn_a$algorithm"][1:step:end][aid .== algorithm]
+        # end
         zb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
+        # zzb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
     end
-    t = file["$track/delta_time"][1:step:end]::Array{Float64,1}
-    q = file["$track/quality_flag"][1:step:end]::Array{UInt8,1}
-    d = file["$track/degrade_flag"][1:step:end]::Array{UInt8,1}
-    s = file["$track/surface_flag"][1:step:end]::Array{UInt8,1}
-    zs = file["$track/sensitivity"][1:step:end]::Array{Float32,1}
-    sun_angle = file["$track/solar_elevation"][1:step:end]::Array{Float32,1}
+    t = file["$track/delta_time"][1:step:end]::Vector{Float64}
 
+    # Quality
+    q = file["$track/quality_flag"][1:step:end]::Vector{UInt8}
+    aq = file["$track/rx_assess/quality_flag"][1:step:end]::Vector{UInt8}
+    d = file["$track/degrade_flag"][1:step:end]::Vector{UInt8}
+    stale = file["$track/geolocation/stale_return_flag"][1:step:end]::Vector{UInt8}
+    s = file["$track/surface_flag"][1:step:end]::Vector{UInt8}
+
+    # minel, maxel = zeros(size(s)), zeros(size(s))
+    # for algorithm in 1:6
+    #     z = file["$track/geolocation/elev_lowestmode_a$algorithm"][1:step:end]::Vector{Float32}
+    #     minel .= min.(minel, z)
+    #     maxel .= max.(maxel, z)
+    # end
+    # zarange = maxel .- minel
+
+    a = file["$track/rx_assess/rx_maxamp"][1:step:end]::Vector{Float32}
+    sd = file["$track/rx_assess/sd_corrected"][1:step:end]::Vector{Float32}
+    f = a ./ sd
+
+    # Algorithm
+    zcross = similar(aid, Float32)
+    toploc = similar(aid, Float32)
+    for algorithm in 1:6
+        zcross[aid .== algorithm] = file["$track/rx_processing_a$algorithm/zcross"][1:step:end][aid .== algorithm]
+        toploc[aid .== algorithm] = file["$track/rx_processing_a$algorithm/toploc"][1:step:end][aid .== algorithm]
+    end
+
+    zs = file["$track/sensitivity"][1:step:end]::Vector{Float32}
+    sun_angle = file["$track/solar_elevation"][1:step:end]::Vector{Float32}
     if isnothing(quality)
         m = trues(length(q))
     else
@@ -51,6 +83,14 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
 
     # Ignore degraded
     m .&= d .== 0
+    m .&= aq .!= 0
+    m .&= stale .== 0
+    m .&= f .>= 4
+    m .&= zcross .> 0
+    m .&= toploc .> 0
+    # m .&= zarange .<= 2
+    # # Ignore values outside of 300m of reference surface
+    m .&= s .!= 0
 
     times = unix2datetime.(t .+ t_offset)
 
@@ -60,6 +100,7 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
             y = yt[m],
             z = zt[m],
             u = zu[m],
+            intensity = intensity[m],
             sensitivity = zs[m],
             t = times[m],
             surface = Bool.(s[m]),
@@ -70,7 +111,8 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
             sun_angle = sun_angle[m],
             return_number = Fill(1, length(sun_angle))[m],
             number_of_returns = Fill(2, length(sun_angle))[m],
-            reference = dem
+            reference = dem[m],
+            # range = zarange[m]
         )
     end
     if ground
@@ -79,6 +121,7 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
             y = yb[m],
             z = zb[m],
             u = zu[m],
+            intensity = intensity[m],
             sensitivity = zs[m],
             t = times[m],
             surface = Bool.(s[m]),
@@ -89,7 +132,8 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
             sun_angle = sun_angle[m],
             return_number = Fill(2, length(sun_angle))[m],
             number_of_returns = Fill(2, length(sun_angle))[m],
-            reference = dem
+            reference = dem[m],
+            # range = zarange[m]
         )
     end
     if canopy && ground

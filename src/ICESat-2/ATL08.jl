@@ -19,19 +19,23 @@ end
 
 function points(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Float64, step=1, canopy=false, ground=true)
     if ground
-        zt = file["$track/land_segments/terrain/h_te_median"][1:step:end]::Array{Float32,1}
-        tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Array{Float32,1}
+        zt = file["$track/land_segments/terrain/h_te_median"][1:step:end]::Vector{Float32}
+        tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Vector{Float32}
     end
     if canopy
-        zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][1:step:end]::Array{Float32,1}
-        cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Array{Float32,1}
+        zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][1:step:end]::Vector{Float32}
+        cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Vector{Float32}
     end
-    x = file["$track/land_segments/longitude"][1:step:end]::Array{Float32,1}
-    y = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
-    t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
-    sensitivity = file["$track/land_segments/snr"][1:step:end]::Array{Float32,1}
-    clouds = file["$track/land_segments/layer_flag"][1:step:end]::Array{Int8,1}
-    dem = file["$track/land_segments/dem_h"][1:step:end]::Array{Float32,1}
+    x = file["$track/land_segments/longitude"][1:step:end]::Vector{Float32}
+    y = file["$track/land_segments/latitude"][1:step:end]::Vector{Float32}
+    t = file["$track/land_segments/delta_time"][1:step:end]::Vector{Float64}
+    sensitivity = file["$track/land_segments/snr"][1:step:end]::Vector{Float32}
+    clouds = file["$track/land_segments/layer_flag"][1:step:end]::Vector{Int8}
+    scattered = file["$track/land_segments/msw_flag"][1:step:end]::Vector{Int8}
+    saturated = file["$track/land_segments/sat_flag"][1:step:end]::Vector{Int8}
+    q = file["$track/land_segments/terrain_flg"][1:step:end]::Vector{Int32}
+    phr = file["$track/land_segments/ph_removal_flag"][1:step:end]::Vector{Int8}
+    dem = file["$track/land_segments/dem_h"][1:step:end]::Vector{Float32}
     times = unix2datetime.(t .+ t_offset)
 
     if ground
@@ -41,8 +45,12 @@ function points(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::Abstra
             z = zt,
             u = tu,
             t = times,
+            q = q,
+            phr = phr,
             sensitivity = sensitivity,
-            cloud = Bool.(clouds),
+            scattered = scattered,
+            saturated = saturated,
+            clouds = Bool.(clouds),
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
             classification = Fill("ground", length(times)),
@@ -55,11 +63,15 @@ function points(::ICESat2_Granule{:ATL08}, file::HDF5.H5DataStore, track::Abstra
         ct = (
             x = x,
             y = y,
-            z = zt,
+            z = zc,
             u = cu,
             t = times,
+            q = q,
+            phr = phr,
             sensitivity = sensitivity,
-            cloud = Bool.(clouds),
+            scattered = scattered,
+            saturated = saturated,
+            clouds = Bool.(clouds),
             track = Fill(track, length(times)),
             power = Fill(power, length(times)),
             classification = Fill("high_canopy", length(times)),

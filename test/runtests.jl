@@ -1,7 +1,7 @@
 using SpaceLiDAR
 using Test
 using LazIO
-using Downloads
+import Downloads
 
 # ensure test data is present
 testdir = @__DIR__

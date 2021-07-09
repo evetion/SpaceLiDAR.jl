@@ -17,9 +17,16 @@ Base.getindex(ga::GeoArray, I::Vararg{Float32,2}) = Base.getindex(ga, SVector{2}
 function sample(ga::GeoArray, x::Real, y::Real, buffer=0, reducer=median)
     I = SVector{2}(x, y)
     i, j = indices(ga, I)
-    0 < i <= Base.size(ga.A)[1] || return NaN
-    0 < j <= Base.size(ga.A)[2] || return NaN
+    0 < i - buffer <= Base.size(ga.A)[1] || return NaN
+    0 < j - buffer <= Base.size(ga.A)[2] || return NaN
+    0 < i + buffer <= Base.size(ga.A)[1] || return NaN
+    0 < j + buffer <= Base.size(ga.A)[2] || return NaN
     # (all((i, j) .> (0, 0)) && all(Base.size(ga.A)[1:2] >= (i, j))) || return NaN
-    data = ga.A[i - buffer:i + buffer, j - buffer:j + buffer, :]
-    reducer(data)
+    data = ga.A[i - buffer:i + buffer, j - buffer:j + buffer, 1]
+    mask = isfinite.(data)
+    if sum(mask) == 0
+        return NaN
+    else
+        return reducer(data[mask])
+    end
 end

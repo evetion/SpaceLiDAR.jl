@@ -12,6 +12,10 @@ mutable struct ICESat_Granule{product} <: Granule
 end
 ICESat_Granule(product, args...) = ICESat_Granule{product}(args...)
 
+function Base.copy(g::ICESat_Granule{product}) where product
+    ICESat_Granule(product, g.id, g.url, g.info)
+end
+
 function bounds(granule::ICESat_Granule)
     HDF5.h5open(granule.url, "r") do file
         nt = attributes(file)
