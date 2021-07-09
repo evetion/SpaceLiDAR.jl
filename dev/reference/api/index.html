@@ -15,7 +15,7 @@
       
         <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/reference/api/">
       
-      <link rel="icon" href="../../assets/images/favicon.png">
+      <link rel="icon" href="../../img/favicon.svg">
       <meta name="generator" content="mkdocs-1.2.1, mkdocs-material-7.1.9">
     
     
@@ -592,7 +592,8 @@
                   </a>
                 
                 
-                <p><a id='API-reference-1'></a></p>
+                <p><a id='API-reference'></a></p>
+<p><a id='API-reference-1'></a></p>
 <h1 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
 <ul>
 <li><a href="./#SpaceLiDAR._download-Tuple"><code>SpaceLiDAR._download</code></a></li>
@@ -611,69 +612,69 @@
 <li><a href="./#SpaceLiDAR.splitline"><code>SpaceLiDAR.splitline</code></a></li>
 <li><a href="./#SpaceLiDAR.track_power-Tuple{Integer, String}"><code>SpaceLiDAR.track_power</code></a></li>
 </ul>
-<p><a id='SpaceLiDAR.granule_from_file-Tuple{AbstractString}' href='#SpaceLiDAR.granule_from_file-Tuple{AbstractString}'>#</a>
-<strong><code>SpaceLiDAR.granule_from_file</code></strong> &mdash; <em>Method</em>.</p>
-<p>Generate granule from .h5 file.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/utils.jl#LL16' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.granules_from_folder-Tuple{AbstractString}' href='#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}'>#</a>
-<strong><code>SpaceLiDAR.granules_from_folder</code></strong> &mdash; <em>Method</em>.</p>
-<p>Generate granules from folder filled with .h5 files.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/utils.jl#LL36' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}' href='#SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}'>#</a>
-<strong><code>SpaceLiDAR.in_bbox</code></strong> &mdash; <em>Method</em>.</p>
-<p>Filter with bbox.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/utils.jl#LL56' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.netrc!-Tuple{Any, Any}' href='#SpaceLiDAR.netrc!-Tuple{Any, Any}'>#</a>
-<strong><code>SpaceLiDAR.netrc!</code></strong> &mdash; <em>Method</em>.</p>
-<p>Writes/updates netrc file for ICESat-2 and GEDI downloads.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/utils.jl#LL96' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR._download-Tuple' href='#SpaceLiDAR._download-Tuple'>#</a>
 <strong><code>SpaceLiDAR._download</code></strong> &mdash; <em>Method</em>.</p>
 <p>This is a method because it will segfault if precompiled.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/granule.jl#LL4' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/granule.jl#LL4' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.angle' href='#SpaceLiDAR.angle'>#</a>
 <strong><code>SpaceLiDAR.angle</code></strong> &mdash; <em>Function</em>.</p>
 <p>Rough approximation of the track angle on a Euclidian lon/lat plot.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/ICESat-2/ICESat-2.jl#LL34' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/GEDI/GEDI.jl#LL42' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.angle' href='#SpaceLiDAR.angle'>#</a>
 <strong><code>SpaceLiDAR.angle</code></strong> &mdash; <em>Function</em>.</p>
 <p>Rough approximation of the track angle on a Euclidian lon/lat plot.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/GEDI/GEDI.jl#LL42' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/ICESat-2/ICESat-2.jl#LL34' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.classify' href='#SpaceLiDAR.classify'>#</a>
 <strong><code>SpaceLiDAR.classify</code></strong> &mdash; <em>Function</em>.</p>
 <p>Retrieve all points as classified as ground in ATL08.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/ICESat-2/ATL03.jl#LL94' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/ICESat-2/ATL03.jl#LL94' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}' href='#SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.download_curl</code></strong> &mdash; <em>Method</em>.</p>
 <p>Hacked version of Base.download which adds cookies and (optional) netrc parsing.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/utils.jl#LL3' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/utils.jl#LL3' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.gedi_info-Tuple{Any}' href='#SpaceLiDAR.gedi_info-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.gedi_info</code></strong> &mdash; <em>Method</em>.</p>
 <p>Derive info based on file id.</p>
 <p>The id is built up as follows, see section 2.4 in the user guide GEDI02<em>A</em>2019110014613<em>O01991</em>T04905<em>02</em>001<em>01.h5 or newer (V2) GEDI02</em>A<em>2019242104318</em>O04046<em>01</em>T02343<em>02</em>003<em>02</em>V002.h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/GEDI/GEDI.jl#LL22-L29' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/GEDI/GEDI.jl#LL22-L29' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.granule_from_file-Tuple{AbstractString}' href='#SpaceLiDAR.granule_from_file-Tuple{AbstractString}'>#</a>
+<strong><code>SpaceLiDAR.granule_from_file</code></strong> &mdash; <em>Method</em>.</p>
+<p>Generate granule from .h5 file.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/utils.jl#LL16' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.granules_from_folder-Tuple{AbstractString}' href='#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}'>#</a>
+<strong><code>SpaceLiDAR.granules_from_folder</code></strong> &mdash; <em>Method</em>.</p>
+<p>Generate granules from folder filled with .h5 files.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/utils.jl#LL36' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}' href='#SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}'>#</a>
+<strong><code>SpaceLiDAR.in_bbox</code></strong> &mdash; <em>Method</em>.</p>
+<p>Filter with bbox.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/utils.jl#LL56' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}' href='#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <p>Derive info based on file id.</p>
 <p>The id is built up as follows, see 1.2.5 in the user guide ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/ICESat-2/ICESat-2.jl#LL76-L81' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/ICESat-2/ICESat-2.jl#LL76-L81' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}' href='#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <p>Derive info based on file id.</p>
 <p>The id is built up as follows, see 1.2.5 in the user guide ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/ICESat/ICESat.jl#LL38-L43' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/ICESat/ICESat.jl#LL38-L43' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.netrc!-Tuple{Any, Any}' href='#SpaceLiDAR.netrc!-Tuple{Any, Any}'>#</a>
+<strong><code>SpaceLiDAR.netrc!</code></strong> &mdash; <em>Method</em>.</p>
+<p>Writes/updates netrc file for ICESat-2 and GEDI downloads.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/utils.jl#LL96' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.s3!' href='#SpaceLiDAR.s3!'>#</a>
 <strong><code>SpaceLiDAR.s3!</code></strong> &mdash; <em>Function</em>.</p>
 <p>Change default download locatio n to a S3 bucket.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/s3.jl#LL14' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/s3.jl#LL14' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.splitline' href='#SpaceLiDAR.splitline'>#</a>
 <strong><code>SpaceLiDAR.splitline</code></strong> &mdash; <em>Function</em>.</p>
 <p>Split a linestring if the next point is further than <code>distance</code>. Not using Haversine here, as we want to split on meridians and such.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/geom_utils.jl#LL36-L38' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/geom_utils.jl#LL36-L38' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.track_power-Tuple{Integer, String}' href='#SpaceLiDAR.track_power-Tuple{Integer, String}'>#</a>
 <strong><code>SpaceLiDAR.track_power</code></strong> &mdash; <em>Method</em>.</p>
 <p>Return whether track is a strong or weak beam. See Section 7.5 The Spacecraft Orientation Parameter of the ATL03 ATDB.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/b01cf868aa657ccbcb4397080a239564bfeec112/src/ICESat-2/ICESat-2.jl#LL40-L42' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f5fdf7241716e2359265ae67b29ed2868376bb4/src/ICESat-2/ICESat-2.jl#LL40-L42' class='documenter-source'>source</a><br></p>
                 
               
               
