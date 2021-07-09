@@ -1,6 +1,5 @@
 using TypedTables
 
-const deg2km = 111.19492664455875
 const earth_radius_m = 6378.137 * 1000
 
 function makeline(x, y, z)
@@ -45,10 +44,10 @@ end
     angle(longitude::Vector{Number}, latitude::Vector{Number})
 
 Calculate the angle of direction from previous points in degrees where North is 0°.
-Points are
+Points are given as `longitude` and `latitude` pairs in their own vector.
 The angle for the first point is undefined and set to the second.
 
-Returns a `Vector{Number}`` of angles
+Returns a `Vector{Number}` of angles
 """
 function angle(longitude, latitude)
     length(longitude) == length(latitude) || error("`longitude` and `latitude` should have the same length.")
