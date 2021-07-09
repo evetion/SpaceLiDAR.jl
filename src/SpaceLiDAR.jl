@@ -22,7 +22,7 @@ include("ICESat-2/ATL12.jl")
 include("ICESat/ICESat.jl")
 include("ICESat/GLAH14.jl")
 include("laz.jl")
-include("interpolate.jl")
+# include("interpolate.jl")
 
 export find, download!, netrc!, instantiate!
 export xyz, lines, points, in_bbox, bounds
