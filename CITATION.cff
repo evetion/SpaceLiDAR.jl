@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+authors: 
+  - affiliation: "Deltares, TU Delft"
+    family-names: Pronk
+    given-names: Maarten
+    orcid: "https://orcid.org/0000-0001-8758-3939"
+date-released: 2021-07-30
+title: "SpaceLiDAR.jl"
+version: 1.0.0
+url: "https://github.com/evetion/SpaceLiDAR.jl"
