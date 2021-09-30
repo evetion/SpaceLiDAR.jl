@@ -5,7 +5,7 @@ const earth_radius_m = 6378.137 * 1000
 function makeline(x, y, z)
     mask = .~isnan.(z)
     if sum(mask) > 1  # skip creating invalid lines with 0 or 1 point
-        line = GDF.AG.creategeom(GDF.AG.GDAL.wkbLineString25D)
+        line = GDF.AG.creategeom(GDF.AG.wkbLineString25D)
         GDF.AG.addpoint!.(Ref(line), x[mask], y[mask], z[mask])
         @assert AG.isvalid(line)
     else
