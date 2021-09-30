@@ -1,0 +1,27 @@
+[
+    {
+        "aliases": [],
+        "title": "stable",
+        "version": "stable"
+    },
+    {
+        "aliases": [],
+        "title": "v0.3",
+        "version": "v0.3"
+    },
+    {
+        "aliases": [],
+        "title": "v0.2",
+        "version": "v0.2"
+    },
+    {
+        "aliases": [],
+        "title": "v0.1",
+        "version": "v0.1"
+    },
+    {
+        "aliases": [],
+        "title": "dev",
+        "version": "dev"
+    }
+]

@@ -7,7 +7,8 @@
 # SpaceLiDAR
 A Julia toolbox for ICESat-2 and GEDI data.
 
-*This is mostly a research package for now, things are hacky and quick to change. Expect a registred mature package by JuliaCon (summer) 2021*
+*This is a research package now, things are quick to change.*
+
 
 Currently supports the following data products (UG=User Guide, ATBD=Algorithm Theoretical Basis Documents):
 - ICESat GLAH14 v34 [UG](https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf) [ATBD](https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf)
@@ -17,7 +18,7 @@ Currently supports the following data products (UG=User Guide, ATBD=Algorithm Th
 - GEDI L2A v2 [UG](https://lpdaac.usgs.gov/documents/998/GEDI02_User_Guide_V2.pdf) [ATBD](https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf)
 
 
-Also see the Juliacon Pluto notebook [here](tutorial/juliacon_2021.jl.html)
+For a quick overview, see the FOSS4G Pluto notebook [here](tutorial/foss4g_2021.jl.html)
 
 
 ## Papers
