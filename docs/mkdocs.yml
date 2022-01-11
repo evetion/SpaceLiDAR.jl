@@ -6,6 +6,7 @@ site_url: https://www.evetion.nl/SpaceLiDAR.jl/
 
 extra_css:
   - assets/Documenter.css
+  - css/earth.css
 
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML

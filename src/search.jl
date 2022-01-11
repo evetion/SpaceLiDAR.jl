@@ -42,7 +42,7 @@ function find(::Mission{:GEDI}, product::String="GEDI02_A", bbox::NamedTuple{(:m
     granules)
 end
 
-function find(::Mission{:ICESat2}, product::String="ATL03", bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}=world, version::String="004")
+function find(::Mission{:ICESat2}, product::String="ATL03", bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}=world, version::String="005")
     # https://cmr.earthdata.nasa.gov/search/granules.json?provider=NSIDC_ECS&page_size=2000&sort_key[]=-start_date&sort_key[]=producer_granule_id&short_name=ATL03&version=2&version=02&version=002&temporal[]=2018-10-13T00:00:00Z,2020-01-13T08:13:50Z&bounding_box=-180,-90,180,90
     granules = earthdata_search(product, bbox, version)
     map(x -> ICESat2_Granule(

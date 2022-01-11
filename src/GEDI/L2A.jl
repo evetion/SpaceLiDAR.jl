@@ -26,7 +26,7 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
     dem = file["$track/digital_elevation_model"][1:step:end]::Vector{Float32}
     intensity = file["$track/energy_total"][1:step:end]::Vector{Float32}
     aid = file["$track/selected_algorithm"][1:step:end]::Vector{UInt8}
-        
+
     if canopy
         xt = file["$track/lon_highestreturn"][1:step:end]::Vector{Float64}
         yt = file["$track/lat_highestreturn"][1:step:end]::Vector{Float64}
@@ -37,12 +37,12 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
         xb = file["$track/lon_lowestmode"][1:step:end]::Vector{Float64}
         yb = file["$track/lat_lowestmode"][1:step:end]::Vector{Float64}
         zb = file["$track/elev_lowestmode"][1:step:end]::Vector{Float32}
-        zzb = similar(aid, Float32)
-        for algorithm in 1:6
-            zzb[aid .== algorithm] = file["$track/geolocation/elev_lowestreturn_a$algorithm"][1:step:end][aid .== algorithm]
-        end
+        # zzb = similar(aid, Float32)
+        # for algorithm in 1:6
+            # zzb[aid .== algorithm] = file["$track/geolocation/elev_lowestreturn_a$algorithm"][1:step:end][aid .== algorithm]
+        # end
         zb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
-        zzb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
+        # zzb[(zb .< -1000.0) .& (zb .> 25000.0)] .= NaN
     end
     t = file["$track/delta_time"][1:step:end]::Vector{Float64}
 
@@ -53,19 +53,19 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
     stale = file["$track/geolocation/stale_return_flag"][1:step:end]::Vector{UInt8}
     s = file["$track/surface_flag"][1:step:end]::Vector{UInt8}
 
-    # minel, maxel = zeros(size(s)), zeros(size(s))
-    # for algorithm in 1:6
-    #     z = file["$track/geolocation/elev_lowestmode_a$algorithm"][1:step:end]::Vector{Float32}
-    #     minel .= min.(minel, z)
-    #     maxel .= max.(maxel, z)
-    # end
-    # zarange = maxel .- minel
+    minel, maxel = zeros(size(s)), zeros(size(s))
+    for algorithm in 1:6
+        z = file["$track/geolocation/elev_lowestmode_a$algorithm"][1:step:end]::Vector{Float32}
+        minel .= min.(minel, z)
+        maxel .= max.(maxel, z)
+    end
+    zarange = maxel .- minel
 
     a = file["$track/rx_assess/rx_maxamp"][1:step:end]::Vector{Float32}
     sd = file["$track/rx_assess/sd_corrected"][1:step:end]::Vector{Float32}
     f = a ./ sd
 
-    # Algorithm
+    # # Algorithm
     zcross = similar(aid, Float32)
     toploc = similar(aid, Float32)
     for algorithm in 1:6
@@ -88,17 +88,18 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
     m .&= f .>= 4
     m .&= zcross .> 0
     m .&= toploc .> 0
-    # m .&= zarange .<= 2
+    m .&= zarange .<= 2
     # # Ignore values outside of 300m of reference surface
     m .&= s .!= 0
 
     times = unix2datetime.(t .+ t_offset)
-        
+
     if canopy
         nt_canopy = (
             x = xt[m],
             y = yt[m],
             z = zt[m],
+            # zl = zt[m],
             u = zu[m],
             intensity = intensity[m],
             sensitivity = zs[m],
@@ -120,6 +121,7 @@ function points(g::GEDI_Granule{:GEDI02_A}, file, track, power, step, ground, ca
             x = xb[m],
             y = yb[m],
             z = zb[m],
+            # zl = zzb[m],
             u = zu[m],
             intensity = intensity[m],
             sensitivity = zs[m],

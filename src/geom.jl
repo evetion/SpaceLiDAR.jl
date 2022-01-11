@@ -35,9 +35,10 @@ function envelope_polygon(geom::GDF.AG.AbstractGeometry)
 end
 
 """Calculatitudee angle of direction in degrees where North is 0° for a Table."""
-function angle!(t::FlexTable)
+function angle!(t)
     # this assumes the table is ordered by time (ascending)
     t.angle = angle(t.x, t.y)
+    t
 end
 
 """
