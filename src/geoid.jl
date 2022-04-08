@@ -6,6 +6,6 @@ function to_egm2008!(table)
     wgs84 = Projection("+proj=longlat +datum=WGS84 +no_defs")
     egm2008 = Projection("+proj=vgridshift +grids=$egm08")
     data = hcat(Float64.(table.x), Float64.(table.y), Float64.(table.z))
-    transform!(wgs84, egm2008, data)
+    Proj4.transform!(wgs84, egm2008, data)
     table.z .= data[:,3]
 end

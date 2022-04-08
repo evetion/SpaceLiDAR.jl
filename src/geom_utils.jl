@@ -1,6 +1,5 @@
-using ArchGDAL; const AG = ArchGDAL
+import GeoDataFrames.AG  # ArchGDAL
 using Distances
-using TypedTables
 
 function linpol(ax, bx, ay, by, x)
     # ax, bx = sort([ax, bx])
@@ -58,7 +57,7 @@ function splitline(line::AG.IGeometry, distance=1.)
     end
 end
 
-function splitline(table::TypedTables.Table, distance=1.)
+function splitline(table, distance=1.)
     rows = Vector{NamedTuple}()
     for row in table
         geom = splitline(row.geom, distance)
@@ -73,7 +72,7 @@ function splitline(table::TypedTables.Table, distance=1.)
     Table(rows)
 end
 
-function clip!(table::TypedTables.Table, box::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+function clip!(table, box::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     polygon = createpolygon([[box.min_x, box.min_y], [box.max_x, box.min_y], [box.max_x, box.max_y], [box.min_x, box.max_y], [box.min_x, box.min_y]])
     table.geom .= clip.(table.geom, Ref(polygon))
 end

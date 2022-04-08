@@ -38,10 +38,10 @@ local_granules = instantiate(granules, <folder>)
 
 Derive linestrings
 ```julia
-using TypedTables
+using DataFrames
 fn = "ATL03_20181110072251_06520101_003_01.h5"
 g = SpaceLiDAR.granule_from_file(fn)
-tlines = Table(SpaceLiDAR.lines(g, step=10000))
+tlines = DataFrame(SpaceLiDAR.lines(g, step=10000))
 Table with 4 columns and 6 rows:
      geom                       sun_angle  track        t
    ┌───────────────────────────────────────────────────────────────────────────

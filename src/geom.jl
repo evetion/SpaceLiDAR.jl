@@ -1,5 +1,3 @@
-using TypedTables
-
 const earth_radius_m = 6378.137 * 1000
 
 function makeline(x, y, z)
@@ -18,14 +16,6 @@ function makepoint(x, y, z)
     GDF.AG.createpoint.(x, y, z)
 end
 
-# function Base.show(io::IO, geom::GDF.AG.AbstractGeometry)
-#     if geom.ptr == C_NULL
-#         print(io, "NULL Geometry")
-#     else
-#         print(io, "$(GDF.AG.getgeomtype(geom)) geometry")
-#     end
-# end
-
 function envelope_polygon(geom::GDF.AG.AbstractGeometry)
     e = GDF.AG.envelope(geom)
     polygon = GDF.AG.createpolygon()
@@ -34,9 +24,9 @@ function envelope_polygon(geom::GDF.AG.AbstractGeometry)
     polygon
 end
 
-"""Calculatitudee angle of direction in degrees where North is 0° for a Table."""
+"""Calculatitudee angle of direction in degrees where North is 0° for a DataFrame."""
 function angle!(t)
-    # this assumes the table is ordered by time (ascending)
+    # this assumes the DataFrame is ordered by time (ascending)
     t.angle = angle(t.x, t.y)
     t
 end
