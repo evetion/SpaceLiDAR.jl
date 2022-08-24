@@ -93,8 +93,7 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
         g6 = SpaceLiDAR.granule_from_file(fn6)
         points = SpaceLiDAR.points(g6, step = 1000)
         @test length(points) == 6
-        lines = SpaceLiDAR.lines(g6, step = 1000)
-        @test length(lines) == 6
+        @test length(points[1].z) == 34
     end
     @testset "ATL08" begin
         fn8 = joinpath(@__DIR__, "data/ATL08_20201121151145_08920913_005_01.h5")
