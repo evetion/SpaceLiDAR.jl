@@ -20,6 +20,7 @@ function download_artifact(version, source_filename)
 end
 
 download_artifact(v"0.2", "ATL03_20201121151145_08920913_005_01.h5")
+download_artifact(v"0.2", "ATL06_20220404104324_01881512_005_01.h5")
 download_artifact(v"0.2", "ATL08_20201121151145_08920913_005_01.h5")
 download_artifact(
     v"0.1",
@@ -55,6 +56,13 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
         ) > 0
         @test length(
             find(
+                :ICESat2,
+                "ATL06",
+                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
+            ),
+        ) > 0
+        @test length(
+            find(
                 :GEDI,
                 "GEDI02_A",
                 (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
@@ -79,6 +87,14 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
         lines = SpaceLiDAR.lines(g3, step = 1000)
         @test length(lines) == 6
         SpaceLiDAR.classify(g3)
+    end
+    @testset "ATL06" begin
+        fn6 = joinpath(@__DIR__, "data/ATL06_20220404104324_01881512_005_01.h5")
+        g6 = SpaceLiDAR.granule_from_file(fn6)
+        points = SpaceLiDAR.points(g6, step = 1000)
+        @test length(points) == 6
+        lines = SpaceLiDAR.lines(g6, step = 1000)
+        @test length(lines) == 6
     end
     @testset "ATL08" begin
         fn8 = joinpath(@__DIR__, "data/ATL08_20201121151145_08920913_005_01.h5")
