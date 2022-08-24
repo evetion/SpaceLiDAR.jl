@@ -4,6 +4,7 @@ using LazIO
 using Distances
 import Downloads
 using Random
+using GeoDataFrames
 
 const rng = MersenneTwister(54321)
 
@@ -122,5 +123,10 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
                 @test isapprox(Haversine()(o, p), d; rtol = 0.001 * d)
             end
         end
+    end
+    @testset "Geoid" begin
+        df = GeoDataFrames.DataFrame(x = [1.0], y = [2.0], z = [0.0])
+        SpaceLiDAR.to_egm2008!(df)
+        @test df.z[1] != 0
     end
 end
