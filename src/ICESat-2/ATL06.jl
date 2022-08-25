@@ -35,6 +35,7 @@ function points(
     t = file["$track/land_ice_segments/delta_time"][1:step:end]::Vector{Float64}
     q = file["$track/land_ice_segments/atl06_quality_summary"][1:step:end]::Vector{Int8}
     dem = file["$track/land_ice_segments/dem/dem_h"][1:step:end]::Vector{Float32}
+    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
     times = unix2datetime.(t .+ t_offset)
 
     nt = (;
@@ -46,6 +47,7 @@ function points(
         q = q,
         track = Fill(track, length(times)),
         power = Fill(power, length(times)),
+        trackid = Fill(parse(Int8, spot_number), length(times)),
         reference = dem,
     )
     return nt

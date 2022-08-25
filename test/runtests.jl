@@ -1,6 +1,7 @@
 using SpaceLiDAR
 using Test
 using LazIO
+using Dates
 using Distances
 import Downloads
 using Random
@@ -94,6 +95,9 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
         points = SpaceLiDAR.points(g6, step = 1000)
         @test length(points) == 6
         @test length(points[1].z) == 34
+        df = reduce(vcat, GeoDataFrames.DataFrame.(points))
+        @test minimum(df.t) == Dates.DateTime("2022-04-04T10:43:41.629")
+        @test all(in.(df.trackid, Ref(1:6)))
     end
     @testset "ATL08" begin
         fn8 = joinpath(@__DIR__, "data/ATL08_20201121151145_08920913_005_01.h5")
