@@ -34,7 +34,7 @@ function points(
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
                 track_nt = points(granule, file, track, power, t_offset, step)
                 track_nt.height[track_nt.height.==fill_value] .= NaN
-                track_nt.height_uncertainty[track_nt.height_uncertainty.==fill_value] .= NaN
+                track_nt.height_error[track_nt.height_error.==fill_value] .= NaN
                 push!(dfs, track_nt)
             end
         end
@@ -65,7 +65,7 @@ function points(
         longitude = x,
         latitude = y,
         height = z,
-        height_uncertainty = zu,
+        height_error = zu,
         datetime = times,
         quality = .!Bool.(q),
         track = Fill(track, length(times)),
