@@ -34,7 +34,6 @@ function points(
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
                 track_nt = points(granule, file, track, power, t_offset, step)
                 track_nt.height[track_nt.height.==fill_value] .= NaN
-                track_nt.height_error[track_nt.height_error.==fill_value] .= NaN
                 push!(dfs, track_nt)
             end
         end
@@ -52,7 +51,8 @@ function points(
     step = 1,
 )
     z = file["$track/land_ice_segments/h_li"][1:step:end]::Vector{Float32}
-    zu = file["$track/land_ice_segments/sigma_geo_h"][1:step:end]::Vector{Float32}
+    sigma_geo_h = file["$track/land_ice_segments/sigma_geo_h"][1:step:end]::Vector{Float32}
+    h_li_sigma = file["$track/land_ice_segments/h_li_sigma"][1:step:end]::Vector{Float32}
     x = file["$track/land_ice_segments/longitude"][1:step:end]::Vector{Float64}
     y = file["$track/land_ice_segments/latitude"][1:step:end]::Vector{Float64}
     t = file["$track/land_ice_segments/delta_time"][1:step:end]::Vector{Float64}
@@ -61,11 +61,14 @@ function points(
     spot_number = attrs(file["$track"])["atlas_spot_number"]::String
     times = unix2datetime.(t .+ t_offset)
 
+    sigma_geo_h[sigma_geo_h.==fill_value] .= NaN
+    h_li_sigma[h_li_sigma.==fill_value] .= NaN
+
     nt = (;
         longitude = x,
         latitude = y,
         height = z,
-        height_error = zu,
+        height_error = sqrt.(sigma_geo_h.^2 + h_li_sigma.^2),
         datetime = times,
         quality = .!Bool.(q),
         track = Fill(track, length(times)),
