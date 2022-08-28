@@ -27,12 +27,9 @@ function points(
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
-        orientation = read(file, "orbit_info/sc_orient")[1]::Int8
-
         for (i, track) in enumerate(tracks)
-            power = track_power(orientation, track)
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
-                track_nt = points(granule, file, track, power, t_offset, step)
+                track_nt = points(granule, file, track, t_offset, step)
                 track_nt.height[track_nt.height.==fill_value] .= NaN
                 push!(dfs, track_nt)
             end
@@ -46,7 +43,6 @@ function points(
     ::ICESat2_Granule{:ATL06},
     file::HDF5.H5DataStore,
     track::AbstractString,
-    power::AbstractString,
     t_offset::Float64,
     step = 1,
 )
@@ -59,6 +55,7 @@ function points(
     q = file["$track/land_ice_segments/atl06_quality_summary"][1:step:end]::Vector{Int8}
     dem = file["$track/land_ice_segments/dem/dem_h"][1:step:end]::Vector{Float32}
     spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
     times = unix2datetime.(t .+ t_offset)
 
     sigma_geo_h[sigma_geo_h.==fill_value] .= NaN
@@ -72,7 +69,7 @@ function points(
         datetime = times,
         quality = .!Bool.(q),
         track = Fill(track, length(times)),
-        power = Fill(power, length(times)),
+        strong_beam = Fill(atlas_beam_type == "strong", length(times)),
         detector_id = Fill(parse(Int8, spot_number), length(times)),
         height_reference = dem,
     )
