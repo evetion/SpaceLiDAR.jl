@@ -11,7 +11,7 @@ The names of the tuples are based on the following fields:
 | `height`           | `land_ice_segments/h_li`                  | Standard land-ice segment height                  | m above the WGS 84 ellipsoid |
 | `height_error`     | `land_ice_segments/sigma_geo_h`           | Total vertical geolocation error                  | m above the WGS 84 ellipsoid |
 | `datetime`         | `land_ice_segments/delta_time`            | + `ancillary_data/atlas_sdp_gps_epoch` + `gps_offset` | date-time                  |
-| `quality`          | `land_ice_segments/atl06_quality_summary` | Boolean flag indicating the best-quality subset   | -                            |
+| `quality`          | `land_ice_segments/atl06_quality_summary` | Boolean flag indicating the best-quality subset   | 1 = high quality             |
 | `track`            | `gt1l` - `gt3r` groups                    | -                                                 | -                            |
 | `power`            | `-`                                       | "strong" or "weak" laser power                    | -                            |
 | `detector_id`      | `atlas_spot_number attribute`             | -                                                 | -                            |
