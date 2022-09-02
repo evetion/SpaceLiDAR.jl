@@ -10,11 +10,11 @@ The names of the tuples are based on the following fields:
 | `latitude`         | `Data_40HZ/Geolocation/d_lat`            | Latitude of segment center, WGS84, North=+            | decimal degrees         |
 | `height`           | `Data_40HZ/Elevation_Surfaces/d_elev`    | + `Data_40HZ/Elevation_Corrections/d_satElevCorr`     | m above WGS84 ellipsoid |
 | `datetime`         | `Data_40HZ/DS_UTCTime_40`                | Precise time of aquisiton                             | date-time               |
-| `quality`          | `Data_40HZ/Quality/elev_use_flg`         | & `Data_40HZ/Quality/sigma_att_flg` = 0               |                         |
+| `quality` [^1]     | `Data_40HZ/Quality/elev_use_flg`         | & `Data_40HZ/Quality/sigma_att_flg` = 0               |                         |
 |                    | & `Data_40HZ/Waveform/i_numPk` = 1       | & `Data_40HZ.Elevation_Corrections/d_satElevCorr` < 3 | 1 = high quality        |
 | `height_reference` | `land_ice_segments/dem/dem_h`            | Height of the (best available) DEM                    | height above WGS84      |
 
-You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points(g)))`.
+You can get the output in a `DataFrame` with `DataFrame(points(g)`.
 """
 
 const icesat_fill = 1.7976931348623157E308
@@ -49,20 +49,27 @@ function points(granule::ICESat_Granule{:GLAH06}; step=1)
         # This pipeline was validated against MATLAB's geodetic2ecef -> ecef2geodetic
         pipe = Proj.proj_create("+proj=pipeline +step +proj=unitconvert +xy_in=deg +z_in=m +xy_out=rad +z_out=m +step +inv +proj=longlat +a=6378136.3 +rf=298.257 +e=0.08181922146 +step +proj=cart +a=6378136.3 +rf=298.257 +step +inv +proj=cart +ellps=WGS84 +step +proj=unitconvert +xy_in=rad +z_in=m +xy_out=deg +z_out=m +step +proj=axisswap +order=2,1")
         
-        # the values passed to proj_trans() respect the axis order and axis unit of the official definition ( so for example, for EPSG:4326, with latitude first and longitude next, in degrees)
-        _, _, height_ref = Proj.proj_trans(pipe, Proj.PJ_FWD, (latitude,longitude, height_ref))
+        pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(longitude, latitude, height_ref))
+        height_ref = [x[3] for x in pts]::Vector{Float64}
 
-        longitude, latitude, height = Proj.proj_trans(pipe, Proj.PJ_FWD, (latitude, longitude, height))
+        pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(longitude, latitude, height))
+        longitude = [x[2] for x in pts]::Vector{Float64}
+        latitude = [x[1] for x in pts]::Vector{Float64}
+        height = [x[3] for x in pts]::Vector{Float64}
 
         gt = (
             longitude = longitude,
             latitude = latitude,
             height = height,
             datetime = datetime,
-            # quality defined according to Smith et al, 2020. DOI: 10.1126/science.aaz5845
+            # quality defined according [^1]
             quality = (quality .== 0) .& (sigma_att_flg .== 0) .& (i_numPk == 1) .& (saturation_correction .< 3),
             height_ref = height_ref,
             )
-        gt
+        return gt
     end
 end
+
+# footnotes
+# [^1]: # Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... & Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.
+
