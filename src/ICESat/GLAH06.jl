@@ -55,7 +55,9 @@ function points(granule::ICESat_Granule{:GLAH06}; step = 1)
 
         pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(longitude, latitude, height))
         height = [x[3] for x in pts]::Vector{Float64}
-        latitude = [x[1] for x in pts]::Vector{Float64}
+
+        # no need to update latitude as differences are well below the precision of the instrument (~1.0e-06 degrees)
+        # latitude = [x[1] for x in pts]::Vector{Float64}
 
         gt = (
             longitude = longitude,
