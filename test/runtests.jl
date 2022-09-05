@@ -38,36 +38,12 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
     end
 
     @testset "search" begin
-        @test length(find(:ICESat, "GLAH14")) > 0
-        @test length(find(:ICESat, "GLAH06")) > 0
-        @test length(
-            find(
-                :ICESat2,
-                "ATL03",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
-        @test length(
-            find(
-                :ICESat2,
-                "ATL08",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
-        @test length(
-            find(
-                :ICESat2,
-                "ATL06",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
-        @test length(
-            find(
-                :GEDI,
-                "GEDI02_A",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
+        @test length(find(:ICESat, "GLAH14", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat, "GLAH06", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat2, "ATL03", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat2, "ATL08", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat2, "ATL06", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:GEDI, "GEDI02_A", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
     end
 
     @testset "GLAH14" begin
