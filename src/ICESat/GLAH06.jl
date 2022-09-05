@@ -55,6 +55,7 @@ function points(granule::ICESat_Granule{:GLAH06}; step = 1)
 
         pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(longitude, latitude, height))
         height = [x[3] for x in pts]::Vector{Float64}
+        latitude = [x[1] for x in pts]::Vector{Float64}
 
         gt = (
             longitude = longitude,
@@ -64,7 +65,7 @@ function points(granule::ICESat_Granule{:GLAH06}; step = 1)
             # quality defined according [^1]
             quality = (quality .== 0) .&
                       (sigma_att_flg .== 0) .&
-                      (i_numPk == 1) .&
+                      (i_numPk .== 1) .&
                       (saturation_correction .< 3),
             height_ref = height_ref,
         )
