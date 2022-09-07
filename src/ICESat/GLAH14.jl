@@ -1,6 +1,4 @@
-const icesat_fill = 1.7976931348623157E308
-
-function points(granule::ICESat_Granule{:GLAH14}; step=1)
+function points(granule::ICESat_Granule{:GLAH14}; step = 1)
     HDF5.h5open(granule.url, "r") do file
 
         zt = file["Data_40HZ/Elevation_Surfaces/d_elev"][1:step:end]::Vector{Float64}
@@ -13,7 +11,7 @@ function points(granule::ICESat_Granule{:GLAH14}; step=1)
 
         x = file["Data_40HZ/Geolocation/d_lon"][1:step:end]::Vector{Float64}
         m .&= (x .!= icesat_fill)
-        x[x .> 180] .= x[x .> 180] .- 360.0  # translate from 0 - 360
+        x[x.>180] .= x[x.>180] .- 360.0  # translate from 0 - 360
         y = file["Data_40HZ/Geolocation/d_lat"][1:step:end]::Vector{Float64}
         m .&= (y .!= icesat_fill)
 
@@ -28,7 +26,7 @@ function points(granule::ICESat_Granule{:GLAH14}; step=1)
         gain_value = file["Data_40HZ/Waveform/i_gval_rcv"][1:step:end][m]::Vector{Int32}
 
         dem = file["Data_40HZ/Geophysical/d_DEM_elv"][1:step:end][m]::Vector{Float64}
-        dem[dem .== icesat_fill] .= NaN
+        dem[dem.==icesat_fill] .= NaN
 
         times = unix2datetime.(t .+ j2000_offset)
 
@@ -48,8 +46,8 @@ function points(granule::ICESat_Granule{:GLAH14}; step=1)
             gain = gain_value,
             reflectivity = ref_flag,
             attitude = att_flag,
-            saturation = sat_corr_flag
-            )
+            saturation = sat_corr_flag,
+        )
         gt
     end
 end

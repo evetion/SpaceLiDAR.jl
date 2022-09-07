@@ -23,11 +23,9 @@ end
 download_artifact(v"0.2", "ATL03_20201121151145_08920913_005_01.h5")
 download_artifact(v"0.2", "ATL06_20220404104324_01881512_005_01.h5")
 download_artifact(v"0.2", "ATL08_20201121151145_08920913_005_01.h5")
-download_artifact(
-    v"0.1",
-    "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5",
-)
+download_artifact(v"0.1", "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5")
 download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
+download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
 @testset "SpaceLiDAR.jl" begin
     @testset "utils" begin
@@ -40,39 +38,21 @@ download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
     end
 
     @testset "search" begin
-        @test length(find(:ICESat, "GLAH14")) > 0
-        @test length(
-            find(
-                :ICESat2,
-                "ATL03",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
-        @test length(
-            find(
-                :ICESat2,
-                "ATL08",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
-        @test length(
-            find(
-                :ICESat2,
-                "ATL06",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
-        @test length(
-            find(
-                :GEDI,
-                "GEDI02_A",
-                (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0),
-            ),
-        ) > 0
+        @test length(find(:ICESat, "GLAH14", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat, "GLAH06", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat2, "ATL03", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat2, "ATL08", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:ICESat2, "ATL06", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
+        @test length(find(:GEDI, "GEDI02_A", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
     end
 
     @testset "GLAH14" begin
         fn = joinpath(@__DIR__, "data/GLAH14_634_1102_001_0071_0_01_0001.H5")
+        g = SpaceLiDAR.granule_from_file(fn)
+        points = SpaceLiDAR.points(g)
+    end
+    @testset "GLAH06" begin
+        fn = joinpath(@__DIR__, "data/GLAH06_634_2131_002_0084_4_01_0001.H5")
         g = SpaceLiDAR.granule_from_file(fn)
         points = SpaceLiDAR.points(g)
     end
