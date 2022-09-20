@@ -3,9 +3,8 @@ name: Documentation Versions
 on:
   push:
     branches:
-      - gh_pages
+      - gh-pages
     tags: "*"
-  pull_request:
 
 jobs:
   build:
