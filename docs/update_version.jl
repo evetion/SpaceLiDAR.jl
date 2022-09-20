@@ -15,10 +15,10 @@ else
     group = replace(group, "\n" => "")
     group = replace(group, "\"" => "")
     group = replace(group, " " => "")
-    json = []
+    vectord = Dict[]
     for version in split(group, ",")
         if length(version) > 0
-            push!(json, Dict(
+            push!(vectord, Dict(
                 "version" => version,
                 "title" => version,
                 "aliases" => [],
@@ -26,4 +26,4 @@ else
         end
     end
 end
-write("versions.json", JSON.json(json))
+write("versions.json", JSON.json(vectord))
