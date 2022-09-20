@@ -5,6 +5,10 @@ on:
     branches:
       - gh-pages
     tags: "*"
+  workflow_run:
+    workflows: ["Documentation"]
+    types:
+      - completed
 
 jobs:
   build:
