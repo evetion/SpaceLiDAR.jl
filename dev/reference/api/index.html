@@ -657,8 +657,8 @@
 <h1 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
 <ul>
 <li><a href="./#SpaceLiDAR._download-Tuple"><code>SpaceLiDAR._download</code></a></li>
-<li><a href="./#SpaceLiDAR.angle-Tuple{Any, Any}"><code>SpaceLiDAR.angle</code></a></li>
 <li><a href="./#SpaceLiDAR.angle"><code>SpaceLiDAR.angle</code></a></li>
+<li><a href="./#SpaceLiDAR.angle-Tuple{Any, Any}"><code>SpaceLiDAR.angle</code></a></li>
 <li><a href="./#SpaceLiDAR.angle!-Tuple{Any}"><code>SpaceLiDAR.angle!</code></a></li>
 <li><a href="./#SpaceLiDAR.classify"><code>SpaceLiDAR.classify</code></a></li>
 <li><a href="./#SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}"><code>SpaceLiDAR.download_curl</code></a></li>
@@ -669,8 +669,8 @@
 <li><a href="./#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}"><code>SpaceLiDAR.info</code></a></li>
 <li><a href="./#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}"><code>SpaceLiDAR.info</code></a></li>
 <li><a href="./#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>SpaceLiDAR.netrc!</code></a></li>
-<li><a href="./#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}"><code>SpaceLiDAR.points</code></a></li>
 <li><a href="./#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat2_Granule{:ATL06}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="./#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}"><code>SpaceLiDAR.points</code></a></li>
 <li><a href="./#SpaceLiDAR.s3!"><code>SpaceLiDAR.s3!</code></a></li>
 <li><a href="./#SpaceLiDAR.shift-NTuple{4, Any}"><code>SpaceLiDAR.shift</code></a></li>
 <li><a href="./#SpaceLiDAR.splitline"><code>SpaceLiDAR.splitline</code></a></li>
@@ -679,65 +679,65 @@
 <p><a id='SpaceLiDAR._download-Tuple' href='#SpaceLiDAR._download-Tuple'>#</a>
 <strong><code>SpaceLiDAR._download</code></strong> &mdash; <em>Method</em>.</p>
 <p>This is a method because it will segfault if precompiled.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/granule.jl#LL4' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/granule.jl#LL4' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.angle' href='#SpaceLiDAR.angle'>#</a>
 <strong><code>SpaceLiDAR.angle</code></strong> &mdash; <em>Function</em>.</p>
 <p>Rough approximation of the track angle on a Euclidian lon/lat plot.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat-2/ICESat-2.jl#LL34' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat-2/ICESat-2.jl#LL34' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.angle!-Tuple{Any}' href='#SpaceLiDAR.angle!-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.angle!</code></strong> &mdash; <em>Method</em>.</p>
 <p>Calculatitudee angle of direction in degrees where North is 0° for a DataFrame.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/geom.jl#LL27' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/geom.jl#LL27' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.angle-Tuple{Any, Any}' href='#SpaceLiDAR.angle-Tuple{Any, Any}'>#</a>
 <strong><code>SpaceLiDAR.angle</code></strong> &mdash; <em>Method</em>.</p>
-<pre><code class="language-julia">angle(longitude::Vector{Number}, latitude::Vector{Number})
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">angle</span><span class="p">(</span><span class="n">longitude</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Number</span><span class="p">},</span><span class="w"> </span><span class="n">latitude</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Number</span><span class="p">})</span><span class="w"></span>
+</code></pre></div>
 <p>Calculate the angle of direction from previous points in degrees where North is 0°. Points are given as <code>longitude</code> and <code>latitude</code> pairs in their own vector. The angle for the first point is undefined and set to the second.</p>
 <p>Returns a <code>Vector{Number}</code> of angles</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/geom.jl#LL34-L42' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/geom.jl#LL34-L42' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.classify' href='#SpaceLiDAR.classify'>#</a>
 <strong><code>SpaceLiDAR.classify</code></strong> &mdash; <em>Function</em>.</p>
 <p>Retrieve all points as classified as ground in ATL08.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat-2/ATL03.jl#LL94' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat-2/ATL03.jl#LL94' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}' href='#SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.download_curl</code></strong> &mdash; <em>Method</em>.</p>
 <p>Hacked version of Base.download which adds cookies and (optional) netrc parsing.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/utils.jl#LL3' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/utils.jl#LL3' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.gedi_info-Tuple{Any}' href='#SpaceLiDAR.gedi_info-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.gedi_info</code></strong> &mdash; <em>Method</em>.</p>
 <p>Derive info based on file id.</p>
 <p>The id is built up as follows, see section 2.4 in the user guide GEDI02<em>A</em>2019110014613<em>O01991</em>T04905<em>02</em>001<em>01.h5 or newer (V2) GEDI02</em>A<em>2019242104318</em>O04046<em>01</em>T02343<em>02</em>003<em>02</em>V002.h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/GEDI/GEDI.jl#LL22-L29' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/GEDI/GEDI.jl#LL22-L29' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.granule_from_file-Tuple{AbstractString}' href='#SpaceLiDAR.granule_from_file-Tuple{AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.granule_from_file</code></strong> &mdash; <em>Method</em>.</p>
 <p>Generate granule from .h5 file.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/utils.jl#LL16' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/utils.jl#LL16' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.granules_from_folder-Tuple{AbstractString}' href='#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.granules_from_folder</code></strong> &mdash; <em>Method</em>.</p>
 <p>Generate granules from folder filled with .h5 files.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/utils.jl#LL36' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/utils.jl#LL36' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}' href='#SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}'>#</a>
 <strong><code>SpaceLiDAR.in_bbox</code></strong> &mdash; <em>Method</em>.</p>
 <p>Filter with bbox.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/utils.jl#LL56' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/utils.jl#LL56' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}' href='#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <p>Derive info based on file id.</p>
 <p>The id is built up as follows, see 1.2.5 in the user guide ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat-2/ICESat-2.jl#LL76-L81' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat-2/ICESat-2.jl#LL76-L81' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}' href='#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <p>Derive info based on file id.</p>
 <p>The id is built up as follows, see 1.2.5 in the user guide ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat/ICESat.jl#LL35-L40' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat/ICESat.jl#LL35-L40' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.netrc!-Tuple{Any, Any}' href='#SpaceLiDAR.netrc!-Tuple{Any, Any}'>#</a>
 <strong><code>SpaceLiDAR.netrc!</code></strong> &mdash; <em>Method</em>.</p>
 <p>Writes/updates netrc file for ICESat-2 and GEDI downloads.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/utils.jl#LL99' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/utils.jl#LL99' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat2_Granule{:ATL06}}' href='#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat2_Granule{:ATL06}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
-<pre><code class="language-julia">points(g::ICESat2_Granule{:ATL06})
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL06</span><span class="p">})</span><span class="w"></span>
+</code></pre></div>
 <p>Retrieve the points for a given ATL06 (Land Ice) granule as a list of namedtuples, one for each beam. The names of the tuples are based on the following fields:</p>
 <table>
 <thead>
@@ -812,11 +812,11 @@
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat-2/ATL06.jl#LL1-L21' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat-2/ATL06.jl#LL1-L21' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}' href='#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
-<pre><code class="language-julia">points(g::ICESat_Granule{:GLAH06})
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="ss">:GLAH06</span><span class="p">})</span><span class="w"></span>
+</code></pre></div>
 <p>Retrieve the points for a given GLAH06 (Land Ice) granule as a list of namedtuples The names of the tuples are based on the following fields:</p>
 <table>
 <thead>
@@ -853,7 +853,7 @@
 <td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>quality</code> <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></td>
+<td style="text-align: left;"><code>quality</code> [^1]</td>
 <td style="text-align: left;"><code>Data_40HZ/Quality/elev_use_flg</code></td>
 <td style="text-align: left;">&amp; <code>Data_40HZ/Quality/sigma_att_flg</code> = 0</td>
 <td style="text-align: left;"></td>
@@ -873,33 +873,26 @@
 </tbody>
 </table>
 <p>You can get the output in a <code>DataFrame</code> with <code>DataFrame(points(g)</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
+<p>[^1]: Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... &amp; Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.s3!' href='#SpaceLiDAR.s3!'>#</a>
 <strong><code>SpaceLiDAR.s3!</code></strong> &mdash; <em>Function</em>.</p>
 <p>Change default download locatio n to a S3 bucket.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/s3.jl#LL14' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/s3.jl#LL14' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.shift-NTuple{4, Any}' href='#SpaceLiDAR.shift-NTuple{4, Any}'>#</a>
 <strong><code>SpaceLiDAR.shift</code></strong> &mdash; <em>Method</em>.</p>
-<pre><code class="language-julia">shift(longitude, latitude, angle, distance)
-</code></pre>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">shift</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="p">)</span><span class="w"></span>
+</code></pre></div>
 <p>Shift <code>longitude</code> and <code>latitude</code> with <code>distance</code> m in direction <code>angle</code>, where North is 0°. Returns a tuple of the shifted coordinates: <code>(longitude, latitude)</code></p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/geom.jl#LL56-L61' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/geom.jl#LL56-L61' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.splitline' href='#SpaceLiDAR.splitline'>#</a>
 <strong><code>SpaceLiDAR.splitline</code></strong> &mdash; <em>Function</em>.</p>
 <p>Split a linestring if the next point is further than <code>distance</code>. Not using Haversine here, as we want to split on meridians and such.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/geom_utils.jl#LL35-L37' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/geom_utils.jl#LL35-L37' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.track_power-Tuple{Integer, String}' href='#SpaceLiDAR.track_power-Tuple{Integer, String}'>#</a>
 <strong><code>SpaceLiDAR.track_power</code></strong> &mdash; <em>Method</em>.</p>
 <p>Return whether track is a strong or weak beam. See Section 7.5 The Spacecraft Orientation Parameter of the ATL03 ATDB.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/c1a8b7da1115ba46c2febe2d103b5b508533d849/src/ICESat-2/ICESat-2.jl#LL40-L42' class='documenter-source'>source</a><br></p>
-<div class="footnote">
-<hr />
-<ol>
-<li id="fn:1">
-<p>Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... &amp; Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.&#160;<a class="footnote-backref" href="#fnref:1" title="Jump back to footnote 1 in the text">&#8617;</a></p>
-</li>
-</ol>
-</div>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/9f1d6d617ba2802f3fe3a89cabea7b5cba160087/src/ICESat-2/ICESat-2.jl#LL40-L42' class='documenter-source'>source</a><br></p>
 
 
 
