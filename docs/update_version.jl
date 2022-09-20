@@ -3,8 +3,6 @@
 # This enables a version dropdown to be present in all documentation.
 using JSON
 
-@info @__DIR__
-
 versions = read("versions.js", String)
 re = r"DOC_VERSIONS\s?=\s?\[([^][]*)]"
 m = match(re, versions)

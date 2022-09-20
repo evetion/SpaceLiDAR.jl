@@ -4,3 +4,6 @@ DocumenterMarkdown = "997ab1e6-3595-5248-9280-8efb232c3433"
 DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
 JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
 SpaceLiDAR = "29bf0bfc-420f-4fa5-b441-811fd9e6e11d"
+
+[compat]
+Documenter = "0.27"

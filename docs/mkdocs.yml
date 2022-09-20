@@ -39,9 +39,10 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.tabs
-    # - navigation.sections
+    - navigation.sections
     - navigation.expand
     - navigation.top
+    - toc.follow
 plugins:
   - search
   - autorefs
