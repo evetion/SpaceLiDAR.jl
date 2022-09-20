@@ -3,6 +3,8 @@
 # This enables a version dropdown to be present in all documentation.
 using JSON
 
+@info @__DIR__
+
 versions = read("versions.js", String)
 re = r"DOC_VERSIONS\s?=\s?\[([^][]*)]"
 m = match(re, versions)
@@ -16,10 +18,10 @@ else
     json = []
     for version in split(group, ",")
         if length(version) > 0
-            push!(json,Dict(
+            push!(json, Dict(
                 "version" => version,
                 "title" => version,
-                "aliases" => []
+                "aliases" => [],
             ))
         end
     end
