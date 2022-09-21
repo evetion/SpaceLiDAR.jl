@@ -1,10 +1,12 @@
 using Printf
 
-"""Hacked version of Base.download which adds cookies and (optional) netrc parsing."""
+"""
+Hacked version of Base.download which adds cookies and (optional) netrc parsing.
+"""
 function download_curl(url::AbstractString, filename::AbstractString)
     err = PipeBuffer()
-    pipe = pipeline(`curl -s -b cookie.txt -c cookie.txt --netrc-optional -S -g -L -f -o $filename $url`, stderr=err)
-    process = run(pipe, wait=false)
+    pipe = pipeline(`curl -s -b cookie.txt -c cookie.txt --netrc-optional -S -g -L -f -o $filename $url`, stderr = err)
+    process = run(pipe, wait = false)
     if !success(process)
         error_msg = readline(err)
         @error "Download failed: $error_msg"
@@ -13,7 +15,9 @@ function download_curl(url::AbstractString, filename::AbstractString)
     return filename
 end
 
-"""Generate granule from .h5 file."""
+"""
+Generate granule from .h5 file.
+"""
 function granule_from_file(filename::AbstractString)
     _, ext = splitext(filename)
     lowercase(ext) != ".h5" && error("Granule must be a .h5 file")
@@ -21,7 +25,7 @@ function granule_from_file(filename::AbstractString)
     name = basename(filename)
     if startswith(name, "ATL")
         info = icesat2_info(name)
-        return ICESat2_Granule(info.type, name, filename, (x_min = 0.,), info)
+        return ICESat2_Granule(info.type, name, filename, (x_min = 0.0,), info)
     elseif startswith(name, "GEDI")
         info = gedi_info(name)
         return GEDI_Granule(info.type, name, filename, info)
@@ -33,12 +37,17 @@ function granule_from_file(filename::AbstractString)
     end
 end
 
-"""Generate granules from folder filled with .h5 files."""
+"""
+Generate granules from folder filled with .h5 files.
+"""
 function granules_from_folder(foldername::AbstractString)
-    return [granule_from_file(joinpath(foldername, file)) for file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5"]
+    return [
+        granule_from_file(joinpath(foldername, file)) for
+        file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5"
+    ]
 end
 
-function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Granule
+function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Granule}
     local_granules = Vector{eltype(granules)}()
     for granule in granules
         file = joinpath(folder, granule.id)
@@ -53,7 +62,9 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where T <: Gra
 end
 
 
-"""Filter with bbox."""
+"""
+Filter with bbox.
+"""
 function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     subset(xyz, :x => x -> (bbox.min_x .<= x .<= bbox.max_x), :y => y -> (bbox.min_y .<= y .<= bbox.max_y))
 end
@@ -61,18 +72,22 @@ function in_bbox!(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{
     subset!(xyz, :x => x -> (bbox.min_x .<= x .<= bbox.max_x), :y => y -> (bbox.min_y .<= y .<= bbox.max_y))
 end
 
-function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where G <: Granule
+function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where {G<:Granule}
     box = bounds(g)
-    intersect((;box.min_x,box.min_y,box.max_x,box.max_y), bbox)
+    intersect((; box.min_x, box.min_y, box.max_x, box.max_y), bbox)
 end
 
-function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where G <: Granule
+function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where {G<:Granule}
     m = in_bbox.(g, Ref(bbox))
     g[m]
 end
 
 function bounds(table)
-    NamedTuple{(:min_x, :max_x, :min_y, :max_y, :min_z, :max_z)}((extrema(table.x)..., extrema(table.y)..., extrema(table.z)...))
+    NamedTuple{(:min_x, :max_x, :min_y, :max_y, :min_z, :max_z)}((
+        extrema(table.x)...,
+        extrema(table.y)...,
+        extrema(table.z)...,
+    ))
 end
 
 function write_granule_urls!(fn::String, granules::Vector{<:Granule})
@@ -94,9 +109,11 @@ function test(granule::Granule)
         @error "Granule at $(granule.url) failed with $e."
         return false
     end
-    end
+end
 
-"""Writes/updates netrc file for ICESat-2 and GEDI downloads."""
+"""
+Writes/updates netrc file for ICESat-2 and GEDI downloads.
+"""
 function netrc!(username, password)
     if Sys.iswindows()
         fn = joinpath(homedir(), "_netrc")

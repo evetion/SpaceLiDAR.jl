@@ -19,12 +19,20 @@ end
 function envelope_polygon(geom::GDF.AG.AbstractGeometry)
     e = GDF.AG.envelope(geom)
     polygon = GDF.AG.createpolygon()
-    ring = GDF.AG.createlinearring([(e.MinX, e.MinY), (e.MaxX, e.MinY), (e.MaxX, e.MaxY), (e.MinX, e.MaxY), (e.MinX, e.MinY)])
+    ring = GDF.AG.createlinearring([
+        (e.MinX, e.MinY),
+        (e.MaxX, e.MinY),
+        (e.MaxX, e.MaxY),
+        (e.MinX, e.MaxY),
+        (e.MinX, e.MinY),
+    ])
     GDF.AG.addgeom!(polygon, ring)
     polygon
 end
 
-"""Calculatitudee angle of direction in degrees where North is 0° for a DataFrame."""
+"""
+Calculatitudee angle of direction in degrees where North is 0° for a DataFrame.
+"""
 function angle!(t)
     # this assumes the DataFrame is ordered by time (ascending)
     t.angle = angle(t.x, t.y)
@@ -67,10 +75,10 @@ function shift(longitude, latitude, angle, distance)
 
     # Distances.jl only gives us Haversine, so this is the inverse
     ϕnew = asin(
-            sin(ϕ) * cos(δ) + cos(ϕ) * sin(δ) * cos(θ)
-        )
+        sin(ϕ) * cos(δ) + cos(ϕ) * sin(δ) * cos(θ),
+    )
     λnew = λ + atan(
-            sin(θ) * sin(δ) * cos(ϕ), cos(δ) - sin(ϕ) * sin(ϕnew)
+        sin(θ) * sin(δ) * cos(ϕ), cos(δ) - sin(ϕ) * sin(ϕnew),
     )
     return rad2deg(λnew), rad2deg(ϕnew)
 end

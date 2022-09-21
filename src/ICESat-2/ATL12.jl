@@ -1,14 +1,31 @@
+"""
+    points(g::ICESat2_Granule{:ATL12}, tracks=icesat2_tracks)
 
-function points(granule::ICESat2_Granule{:ATL12}, bbox=nothing, tracks=icesat2_tracks)
+Retrieve the points for a given ICESat-2 ATL12 (Ocean Surface Height) granule as a list of namedtuples, one for each beam.
+The names of the tuples are based on the following fields:
+
+| Column        | Field                         | Description                                           | Units                        |
+|:------------- |:----------------------------- |:----------------------------------------------------- |:---------------------------- |
+| `longitude`   | `ssh_segments/longitude`      | Longitude of segment center, WGS84, East=+            | decimal degrees              |
+| `latitude`    | `ssh_segments/latitude`       | Latitude of segment center, WGS84, North=+            | decimal degrees              |
+| `height`      | `ssh_segments/heights/h`      | Standard land-ice segment height                      | m above the WGS 84 ellipsoid |
+| `datetime`    | `ssh_segments/delta_time`     | + `ancillary_data/atlas_sdp_gps_epoch` + `gps_offset` | date-time                    |
+| `track`       | `gt1l` - `gt3r` groups        | -                                                     | -                            |
+| `strong_beam` | `-`                           | "strong" (true) or "weak" (false) laser power         | -                            |
+| `detector_id` | `atlas_spot_number attribute` | -                                                     | -                            |
+
+You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points(g)))` if you
+want to change the default arguments or `DataFrame(g)` with the default options.
+"""
+function points(granule::ICESat2_Granule{:ATL12}, tracks = icesat2_tracks)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
-        orientation = read(file, "orbit_info/sc_orient")[1]
 
         for track ∈ tracks
-            power = track_power(orientation, track)
-            if in(track, keys(file)) && in("ssh_segments", keys(file[track])) && in("heights", keys(file[track]["ssh_segments"]))
-                track_df = points(granule, file, track, power, t_offset)
+            if in(track, keys(file)) && in("ssh_segments", keys(file[track])) &&
+               in("heights", keys(file[track]["ssh_segments"]))
+                track_df = points(granule, file, track, t_offset)
                 push!(dfs, track_df)
             end
         end
@@ -16,13 +33,29 @@ function points(granule::ICESat2_Granule{:ATL12}, bbox=nothing, tracks=icesat2_t
     dfs
 end
 
-function points(::ICESat2_Granule{:ATL12}, file::HDF5.H5DataStore, track::AbstractString, power::AbstractString, t_offset::Real)
-    z = read(file, "$track/ssh_segments/heights/h")
-    x = read(file, "$track/ssh_segments/longitude")
-    y = read(file, "$track/ssh_segments/latitude")
+function points(
+    ::ICESat2_Granule{:ATL12},
+    file::HDF5.H5DataStore,
+    track::AbstractString,
+    t_offset::Real,
+)
+    height = read(file, "$track/ssh_segments/heights/h")
+    longitude = read(file, "$track/ssh_segments/longitude")
+    latitude = read(file, "$track/ssh_segments/latitude")
     t = read(file, "$track/ssh_segments/delta_time")
 
-    times = unix2datetime.(t .+ t_offset)
+    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
 
-    (x = x, y = y, z = z, t = times, track = Fill(track, length(times)), power = Fill(power, length(times)))
+    datetime = unix2datetime.(t .+ t_offset)
+
+    (
+        longitude = longitude,
+        latitude = latitude,
+        height = height,
+        datetime = datetime,
+        track = Fill(track, length(datetime)),
+        strong_beam = Fill(atlas_beam_type == "strong", length(datetime)),
+        detector_id = Fill(parse(Int8, spot_number), length(datetime)),
+    )
 end

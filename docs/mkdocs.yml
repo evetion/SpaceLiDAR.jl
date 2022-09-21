@@ -20,18 +20,24 @@ theme:
   name: material
   icon:
     logo: material/satellite-variant
+  font:
+    # text: Source Sans Pro
+    code: Fira Mono
   favicon: img/favicon.svg
   language: en
+  custom_dir: overrides
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
-      primary: blue grey
-      accent: indigo
+      primary: lime
+      accent: deep orange
       toggle:
         icon: material/lightbulb-outline
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: lime
+      accent: deep orange
       toggle:
         icon: material/lightbulb
         name: Switch to light mode
@@ -39,10 +45,15 @@ theme:
     - navigation.instant
     - navigation.tracking
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.expand
     - navigation.top
     - toc.follow
+    - toc.integrate
+    - announce.dismiss
+    - search.suggest
+    - search.highlight
 plugins:
   - search
   - autorefs
@@ -55,9 +66,13 @@ markdown_extensions:
   - tables
   - mdx_math
   - admonition
+  - footnotes
   - toc:
       permalink: true
-
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
 edit_uri: edit/master/docs/
 repo_name: evetion/SpaceLiDAR.jl
 extra:
@@ -70,4 +85,7 @@ extra:
     - icon: fontawesome/brands/gitter
       link: https://gitter.im/evetion/community
       name: Chat with me on Gitter
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/3vetion
+      name: Twitter
 copyright: Copyright &copy; 2021 Maarten Pronk, Deltares

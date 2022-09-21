@@ -1,13 +1,7 @@
-
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://evetion.github.io/SpaceLiDAR.jl/stable)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://evetion.github.io/SpaceLiDAR.jl/dev)
-[![CI](https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml)
-[![codecov](https://codecov.io/gh/evetion/SpaceLiDAR.jl/branch/master/graph/badge.svg?token=nztwnGtIcY)](https://codecov.io/gh/evetion/SpaceLiDAR.jl)
-
 # SpaceLiDAR
-A Julia toolbox for ICESat-2 and GEDI data.
+A Julia toolbox for ICESat, ICESat-2 and GEDI data.
 
-*This is a research package now, things are quick to change.*
+*This is a research package, things are quick to change.*
 
 
 Currently supports the following data products:
@@ -31,5 +25,3 @@ Results are used (indirectly) in the following papers:
 Vernimmen, Ronald, Aljosja Hooijer, and Maarten Pronk. 2020. ‘New ICESat-2 Satellite LiDAR Data Allow First Global Lowland DTM Suitable for Accurate Coastal Flood Risk Assessment’. Remote Sensing 12 (17): 2827. [https://doi.org/10/gg9dg6](https://doi.org/10/gg9dg6).
 
 Hooijer, A., and R. Vernimmen. 2021. ‘Global LiDAR Land Elevation Data Reveal Greatest Sea-Level Rise Vulnerability in the Tropics’. Nature Communications 12 (1): 3592. [https://doi.org/10/gkzf49](https://doi.org/10/gkzf49).
-
-
