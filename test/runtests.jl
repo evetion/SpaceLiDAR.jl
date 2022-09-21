@@ -128,12 +128,27 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
                 @test isapprox(Haversine()(o, p), d; rtol = 0.001 * d)
             end
         end
+
+        @testset "Angle" begin
+            fn8 = joinpath(@__DIR__, "data/ATL08_20201121151145_08920913_005_01.h5")
+            g8 = SpaceLiDAR.granule_from_file(fn8)
+            @test isapprox(SpaceLiDAR.angle(g8, 0), 88.0, atol = 1e-8)
+            @test isapprox(SpaceLiDAR.angle(g8, 88), 0.00, atol = 1e-8)
+
+            fng = joinpath(
+                @__DIR__,
+                "data/GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5",
+            )
+            gg = SpaceLiDAR.granule_from_file(fng)
+            @test isapprox(SpaceLiDAR.angle(gg, 0), 51.6443, atol = 1e-8)
+            @test isapprox(SpaceLiDAR.angle(gg, 51.6443), 0.00, atol = 1e-8)
+        end
     end
 
     @testset "Geoid" begin
-        df = DataFrame(x = [1.0], y = [2.0], z = [0.0])
+        df = DataFrame(longitude = [1.0], latitude = [2.0], height = [0.0])
         SpaceLiDAR.to_egm2008!(df)
-        @test df.z[1] ≈ -17.0154953
+        @test df.height[1] ≈ -17.0154953
     end
 
     @testset "Tables" begin

@@ -64,7 +64,7 @@ fn = "ATL03_20181110072251_06520101_003_01.h5"
 g = SpaceLiDAR.granule_from_file(fn)
 tlines = DataFrame(SpaceLiDAR.lines(g, step=10000))
 Table with 4 columns and 6 rows:
-     geom                       sun_angle  track        t
+     geom                       sun_angle  track        datetime
    ┌───────────────────────────────────────────────────────────────────────────
  1 │ wkbLineString25D geometry  38.3864    gt1l_weak    2018-11-10T07:28:01.688
  2 │ wkbLineString25D geometry  38.375     gt1r_strong  2018-11-10T07:28:02.266

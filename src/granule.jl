@@ -1,9 +1,7 @@
 using HDF5
 import Downloads
 
-"""
-This is a method because it will segfault if precompiled.
-"""
+# This is a method because it will segfault if precompiled.
 function _download(kwargs...)
     downloader = Downloads.Downloader()
     easy_hook =
@@ -21,6 +19,14 @@ function HDF5.h5open(granule::Granule)
     HDF5.h5open(granule.url, "r")
 end
 
+"""
+    download!(granule::Granule, folder=".")
+
+Download the file associated with `granule` to the `folder`, from an http(s) location
+if it doesn't already exists locally.
+
+Will require credentials (netrc) which can be set with [`netrc!`](@ref).
+"""
 function download!(granule::Granule, folder = ".")
     fn = joinpath(abspath(folder), granule.id)
     if isfile(fn)
@@ -28,9 +34,7 @@ function download!(granule::Granule, folder = ".")
         return fn
     end
     isfile(granule.url) && return granule
-    if startswith(granule.url, "s3://")
-        download_s3(granule.url, fn)
-    elseif startswith(granule.url, "http")
+    if startswith(granule.url, "http")
         _download(granule.url, fn)
     else
         error("Can't determine how to download $(granule.url)")
@@ -39,6 +43,11 @@ function download!(granule::Granule, folder = ".")
     granule
 end
 
+"""
+    rm(granule::Granule)
+
+Remove the file associated with `granule` from the local filesystem.
+"""
 function rm(granule::Granule)
     if isfile(granule.url)
         Base.rm(granule.url)
@@ -47,7 +56,12 @@ function rm(granule::Granule)
     end
 end
 
-function download!(granules::Vector{Granule}, folder::AbstractString)
+"""
+    download!(granules::Vector{<:Granule}, folder=".")
+
+Like [`download!`](@ref), but for a vector of `granules`.
+"""
+function download!(granules::Vector{Granule}, folder::AbstractString = ".")
     for granule in granules
         download!(granule, folder)
     end

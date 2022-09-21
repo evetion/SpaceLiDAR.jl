@@ -1,22 +1,10 @@
 using Printf
 
 """
-Hacked version of Base.download which adds cookies and (optional) netrc parsing.
-"""
-function download_curl(url::AbstractString, filename::AbstractString)
-    err = PipeBuffer()
-    pipe = pipeline(`curl -s -b cookie.txt -c cookie.txt --netrc-optional -S -g -L -f -o $filename $url`, stderr = err)
-    process = run(pipe, wait = false)
-    if !success(process)
-        error_msg = readline(err)
-        @error "Download failed: $error_msg"
-        Base.pipeline_error(process)
-    end
-    return filename
-end
+    granule_from_file(filename::AbstractString)
 
-"""
-Generate granule from .h5 file.
+Create a mission specific granule from a local .h5 filepath. For folder usage see
+[`granules_from_folder`](@ref).
 """
 function granule_from_file(filename::AbstractString)
     _, ext = splitext(filename)
@@ -38,7 +26,9 @@ function granule_from_file(filename::AbstractString)
 end
 
 """
-Generate granules from folder filled with .h5 files.
+    granules_from_folder(foldername::AbstractString)
+
+Create mission specific granules from a folder with .h5 files, using [`granule_from_file`](@ref).
 """
 function granules_from_folder(foldername::AbstractString)
     return [
@@ -47,6 +37,12 @@ function granules_from_folder(foldername::AbstractString)
     ]
 end
 
+"""
+    instantiate(granules::Vector{::Granule}, folder::AbstractString)
+
+For a given list of `granules` from [`find`](@ref), match the granules to the local files
+and return a new list of granules with the local filepaths if they exist.
+"""
 function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Granule}
     local_granules = Vector{eltype(granules)}()
     for granule in granules
@@ -62,9 +58,6 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Gran
 end
 
 
-"""
-Filter with bbox.
-"""
 function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     subset(xyz, :x => x -> (bbox.min_x .<= x .<= bbox.max_x), :y => y -> (bbox.min_y .<= y .<= bbox.max_y))
 end
@@ -99,7 +92,13 @@ function write_granule_urls!(fn::String, granules::Vector{<:Granule})
     abspath(fn)
 end
 
-function test(granule::Granule)
+"""
+    isvalid(g::Granule)
+
+Checks if a granule is has a valid, local and non-corrupt .h5 file. Can be combined with
+[`rm(::Granule)`](@ref) to remove invalid granules.
+"""
+function isvalid(granule::Granule)
     try
         HDF5.h5open(granule.url, "r") do file
             keys(file)
@@ -112,7 +111,11 @@ function test(granule::Granule)
 end
 
 """
-Writes/updates netrc file for ICESat-2 and GEDI downloads.
+    netrc!(username, password)
+
+Writes/updates a .netrc file for ICESat-2 and GEDI downloads. A .netrc is a plaintext
+file containing your username and password for NASA EarthData and DAACs, and can be automatically
+used by Julia using `Downloads` and tools like `wget`, `curl` among others.
 """
 function netrc!(username, password)
     if Sys.iswindows()

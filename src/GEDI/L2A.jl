@@ -31,7 +31,7 @@ The names of the tuples are based on the following fields:
 You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points(g)))` if you
 want to change the default arguments or `DataFrame(g)` with the default options.
 
-Data is `filtered` by default based on [^l3], except for the sensitivity field, which can be manually filtered to be above 0.9 and below or equal to 1.
+Data is `filtered` by default based on[^l3], except for the sensitivity field, which can be manually filtered to be above 0.9 and below or equal to 1.0 to match[^l3].
 
 [^l3]: Dubayah, R. O., S. B. Luthcke, T. J. Sabaka, J. B. Nicholas, S. Preaux, and M. A. Hofton. 2021. “GEDI L3 Gridded Land Surface Metrics, Version 2.” ORNL DAAC, November. https://doi.org/10.3334/ORNLDAAC/1952.
 """

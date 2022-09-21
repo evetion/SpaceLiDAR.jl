@@ -10,6 +10,12 @@ const blacklist = readlines(joinpath(@__DIR__, "blacklist.txt"))
 const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
 
 
+"""
+    ICESat2_Granule{product} <: Granule
+
+A granule of the ICESat-2 product `product`. Normally created automatically from
+either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
+"""
 mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
@@ -22,6 +28,22 @@ function Base.copy(g::ICESat2_Granule{product}) where {product}
     ICESat2_Granule(product, g.id, g.url, g.bbox, g.info)
 end
 
+"""
+    bounds(granule::ICESat2_Granule)
+
+Retrieves the bounding box of the granule.
+
+!!! warning
+    
+    This opens the .h5 file, so it is slow.
+
+# Example
+
+```julia
+julia> bounds(g)
+g = ICESat2_Granule()
+```
+"""
 function bounds(granule::ICESat2_Granule)
     HDF5.h5open(granule.url, "r") do file
         extent = attributes(file["METADATA/Extent"])
@@ -40,17 +62,31 @@ function bounds(granule::ICESat2_Granule)
 end
 
 """
-Rough approximation of the track angle on a Euclidian lon/lat plot.
+    angle(::ICESat2_Granule, latitude = 0.0)
+
+Rough approximation of the track angle of ICESat-2 at a given `latitude`.
+
+# Examples
+
+```julia
+julia> angle(g, 0.0)
+g = ICESat2_Granule(:ATL08, "ATL08_20181120173503_04550102_005_01.h5", "", (), ())
+```
 """
-function angle(::ICESat2_Granule, latitude = 0.0)
+function angle(g::ICESat2_Granule, latitude = 0.0)
     d = icesat2_inclination / (pi / 2)
-    cos(latitude / d) * icesat2_inclination
+    a = cos(latitude / d) * icesat2_inclination
+
+    info = icesat2_info(g.id)
+    if info.ascending
+        return a
+    else
+        return -a
+    end
 end
 
-"""
-Return whether track is a strong or weak beam.
-See Section 7.5 The Spacecraft Orientation Parameter of the ATL03 ATDB.
-"""
+# Return whether track is a strong or weak beam.
+# See Section 7.5 The Spacecraft Orientation Parameter of the ATL03 ATDB.
 function track_power(orientation::Integer, track::String)
     # Backward orientation, left beam is strong
     if orientation == 0
@@ -66,6 +102,11 @@ end
 
 Base.isfile(g::ICESat2_Granule) = Base.isfile(g.url)
 
+"""
+    Base.convert(product::Symbol, g::ICESat2_Granule{T})
+
+Converts the granule `g` to the product `product`, by guessing the correct name.
+"""
 function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g = ICESat2_Granule{product}(
         replace(replace(g.id, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
@@ -85,11 +126,12 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g
 end
 
-"""
-Derive info based on file id.
 
-The id is built up as follows, see 1.2.5 in the user guide
-ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5
+"""
+    info(g::ICESat2_Granule)
+
+Derive info based on the filename. The name is built up as follows:
+ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5. See section 1.2.5 in the user guide.
 """
 function info(g::ICESat2_Granule)
     icesat2_info(g.id)

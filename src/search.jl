@@ -9,6 +9,12 @@ Mission(x) = Mission{x}()
 
 const url = "https://cmr.earthdata.nasa.gov/search/granules.json"
 
+"""
+    find(mission::Mission, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+    find(:GEDI02_A, "002")  # searches *all* GEDI v2 granules
+
+Find granules for a given mission and bounding box.
+"""
 function find(
     ::Mission{:GEDI},
     product::String = "GEDI02_A",

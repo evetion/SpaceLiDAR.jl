@@ -12,7 +12,7 @@ The names of the tuples are based on the following fields:
 | `datetime`         | `DS_UTCTime_40`                 | Precise time of aquisiton                   | date-time                    |
 | `quality` [^1]     | `Quality/elev_use_flg`          | & `Quality/sigma_att_flg` = 0               |                              |
 |                    | & `Waveform/i_numPk` = 1        | & `Elevation_Corrections/d_satElevCorr` < 3 | 1=high quality               |
-| `clouds`           | `Elevation_Flags/elv_cloud_flg` | Cloud contamination                         | height above WGS84           |
+| `clouds`           | `Elevation_Flags/elv_cloud_flg` | Cloud contamination                         | -                            |
 | `height_reference` | `Geophysical/d_DEM_elv`         | Height of the (best available) DEM          | height above WGS84           |
 | `gain`             | `Waveform/i_gval_rcv`           | Gain value used for received pulse.         | -                            |
 | `reflectivity`     | `Reflectivity/d_reflctUC`       | Reflectivity, not corrected                 | -                            |

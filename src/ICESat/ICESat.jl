@@ -4,6 +4,12 @@ const j2000_offset = datetime2unix(DateTime(2000, 1, 1, 12, 0, 0))
 const icesat_inclination = 86.0  # actually 92, so this is 180. - 92.
 const icesat_fill = 1.7976931348623157E308
 
+"""
+    ICESat_Granule{product} <: Granule
+
+A granule of the ICESat product `product`. Normally created automatically from
+either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
+"""
 mutable struct ICESat_Granule{product} <: Granule
     id::String
     url::String
@@ -33,10 +39,10 @@ end
 Base.isfile(g::ICESat_Granule) = Base.isfile(g.url)
 
 """
-Derive info based on file id.
+    info(g::ICESat_Granule)
 
-The id is built up as follows, see 1.2.5 in the user guide
-ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5
+Derive info based on the filename. The name is built up as follows:
+ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5. See section 1.2.5 in the user guide.
 """
 function info(g::ICESat_Granule)
     return icesat_info(g.id)

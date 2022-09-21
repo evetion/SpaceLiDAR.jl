@@ -2,6 +2,7 @@
 - Extents support
 - Search using polygons
 - ICESat-2 S3 access
+- 20m resolution data in ICESat-2 ATL08 v05
 
 ## v0.2.0
 

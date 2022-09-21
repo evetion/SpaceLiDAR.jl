@@ -1,7 +1,7 @@
 site_name: SpaceLiDAR.jl
 repo_url: https://github.com/evetion/SpaceLiDAR.jl
-site_description: Description...
-site_author: evetion
+site_description: SpaceLiDAR.jl
+site_author: Maarten Pronk
 site_url: https://www.evetion.nl/SpaceLiDAR.jl/
 
 extra_css:
@@ -15,6 +15,24 @@ extra_javascript:
 docs_dir: "build"
 
 nav:
+  - Home: "index.md"
+  - Changelog: "changelog.md"
+  - Guides:
+      - "Downloading": "guides/downloads.md"
+      - "Track filtering": "guides/tracks.md"
+  - Tutorials:
+      - "Installation": "tutorial/installation.md"
+      - "Usage": "tutorial/usage.md"
+  - Topics:
+      - "ICESat": "topics/ICESat.md"
+      - "ICESat-2": "topics/ICESat-2.md"
+      - "GEDI": "topics/GEDI.md"
+  - Reference:
+      - "Search": "reference/search.md"
+      - "Granules": "reference/granules.md"
+      - "Data": "reference/data.md"
+      - "Utilities": "reference/utilities.md"
+      - "Index": "reference/api.md"
 
 theme:
   name: material
@@ -88,4 +106,4 @@ extra:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/3vetion
       name: Twitter
-copyright: Copyright &copy; 2021 Maarten Pronk, Deltares
+copyright: Copyright &copy; 2022 Maarten Pronk, Deltares

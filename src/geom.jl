@@ -25,22 +25,24 @@ GeoInterface.getcoord(::PointTrait, geom::Line, i) = geom.c[i]
 
 
 """
-Calculate the angle of direction in degrees where North is 0° for a DataFrame.
+    angle!(table)
+
+Sets the `angle` column in `table` as returned from [`points`](@ref). See [`angle`](@ref) for details.
 """
 function angle!(t)
     # this assumes the DataFrame is ordered by time (ascending)
-    t.angle = angle(t.x, t.y)
+    t.angle = angle(t.longitude, t.latitude)
     t
 end
 
 """
-    angle(longitude::Vector{Number}, latitude::Vector{Number})
+    angle(longitude::Vector{Real}, latitude::Vector{Real})
 
-Calculate the angle of direction from previous points in degrees where North is 0°.
+Calculate the angle of direction from previous points in [°] where North is 0°.
 Points are given as `longitude` and `latitude` pairs in their own vector.
 The angle for the first point is undefined and set to the second.
 
-Returns a `Vector{Number}` of angles
+Returns a `Vector{Real}` of angles
 """
 function angle(longitude, latitude)
     length(longitude) == length(latitude) || error("`longitude` and `latitude` should have the same length.")
@@ -58,8 +60,9 @@ end
 """
     shift(longitude, latitude, angle, distance)
 
-Shift `longitude` and `latitude` with `distance` m in direction `angle`, where North is 0°.
-Returns a tuple of the shifted coordinates: `(longitude, latitude)`
+Shift `longitude` and `latitude` with `distance` in [m] in direction `angle`, where North is 0°.
+Returns a tuple of the shifted coordinates: `(longitude, latitude)`. Useful for offsetting
+SpaceLiDAR points to the left or right of the track, in combination with [`angle`](@ref).
 """
 function shift(longitude, latitude, angle, distance)
     θ = deg2rad(angle)
