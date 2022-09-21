@@ -1,37 +1,31 @@
+using GeoInterface
+
 const earth_radius_m = 6378.137 * 1000
 
-function makeline(x, y, z)
-    mask = .~isnan.(z)
-    if sum(mask) > 1  # skip creating invalid lines with 0 or 1 point
-        line = GDF.AG.creategeom(GDF.AG.wkbLineString25D)
-        GDF.AG.addpoint!.(Ref(line), x[mask], y[mask], z[mask])
-        @assert AG.isvalid(line)
-    else
-        line = AG.createlinestring()
-    end
-    line
+abstract type Geometry end
+struct Line{T} <: Geometry where {T<:Real}
+    x::Vector{T}
+    y::Vector{T}
+    z::Vector{T}
+end
+struct Point{T} <: Geometry where {T<:Real}
+    c::Vector{T}
 end
 
-function makepoint(x, y, z)
-    GDF.AG.createpoint.(x, y, z)
-end
+GeoInterface.isgeometry(geom::Type{<:Geometry})::Bool = true
+GeoInterface.geomtrait(::Line) = LineStringTrait()
+GeoInterface.geomtrait(::Point) = PointTrait()
 
-function envelope_polygon(geom::GDF.AG.AbstractGeometry)
-    e = GDF.AG.envelope(geom)
-    polygon = GDF.AG.createpolygon()
-    ring = GDF.AG.createlinearring([
-        (e.MinX, e.MinY),
-        (e.MaxX, e.MinY),
-        (e.MaxX, e.MaxY),
-        (e.MinX, e.MaxY),
-        (e.MinX, e.MinY),
-    ])
-    GDF.AG.addgeom!(polygon, ring)
-    polygon
-end
+GeoInterface.ncoord(::LineStringTrait, geom::Line) = 3
+GeoInterface.ngeom(::LineStringTrait, geom::Line) = length(geom.x)
+GeoInterface.getgeom(::LineStringTrait, geom::Line, i) = Point([geom.x[i], geom.y[i], geom.z[i]])
+
+GeoInterface.ncoord(::PointTrait, geom::Point) = 3
+GeoInterface.getcoord(::PointTrait, geom::Line, i) = geom.c[i]
+
 
 """
-Calculatitudee angle of direction in degrees where North is 0° for a DataFrame.
+Calculate the angle of direction in degrees where North is 0° for a DataFrame.
 """
 function angle!(t)
     # this assumes the DataFrame is ordered by time (ascending)

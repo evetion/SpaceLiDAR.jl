@@ -3,8 +3,6 @@ module SpaceLiDAR
 using Dates
 using CategoricalArrays
 using FillArrays
-using GeoDataFrames
-const GDF = GeoDataFrames
 using HDF5
 using Tables
 using TableOperations: joinpartitions
@@ -13,9 +11,6 @@ include("granule.jl")
 include("utils.jl")
 include("search.jl")
 include("geom.jl")
-include("geom_utils.jl")
-# include("s3.jl")
-# include("geoarrays.jl")
 include("GEDI/GEDI.jl")
 include("GEDI/L2A.jl")
 include("ICESat-2/ICESat-2.jl")
@@ -26,8 +21,6 @@ include("ICESat-2/ATL12.jl")
 include("ICESat/ICESat.jl")
 include("ICESat/GLAH06.jl")
 include("ICESat/GLAH14.jl")
-# include("laz.jl")
-# include("interpolate.jl")
 include("geoid.jl")
 include("table.jl")
 
@@ -37,8 +30,6 @@ export test, granule_from_file, granules_from_folder, write_granule_urls!
 
 precompile(find, (Symbol, String, NamedTuple, String))
 precompile(find, (Symbol, String))
-precompile(GeoArrays.read, (String,))
-precompile(GeoArrays.read, (String, Bool))
 precompile(instantiate, (Vector{GEDI_Granule}, String))
 precompile(instantiate, (Vector{ICESat_Granule}, String))
 precompile(instantiate, (Vector{ICESat2_Granule}, String))

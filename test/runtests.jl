@@ -4,7 +4,7 @@ using Dates
 using Distances
 import Downloads
 using Random
-using GeoDataFrames
+using DataFrames
 using Tables
 
 const rng = MersenneTwister(54321)
@@ -77,7 +77,7 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         points = SpaceLiDAR.points(g6, step = 1000)
         @test length(points) == 6
         @test length(points[1].height) == 34
-        df = reduce(vcat, GeoDataFrames.DataFrame.(points))
+        df = reduce(vcat, DataFrame.(points))
         @test minimum(df.datetime) == Dates.DateTime("2022-04-04T10:43:41.629")
         @test all(in.(df.detector_id, Ref(1:6)))
     end
@@ -131,7 +131,7 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
     end
 
     @testset "Geoid" begin
-        df = GeoDataFrames.DataFrame(x = [1.0], y = [2.0], z = [0.0])
+        df = DataFrame(x = [1.0], y = [2.0], z = [0.0])
         SpaceLiDAR.to_egm2008!(df)
         @test df.z[1] ≈ -17.0154953
     end

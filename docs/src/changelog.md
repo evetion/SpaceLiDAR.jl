@@ -1,4 +1,7 @@
 ## Unreleased
+- Extents support
+- Search using polygons
+- ICESat-2 S3 access
 
 ## v0.2.0
 
@@ -10,6 +13,7 @@
 - Tables support, you can now do `DataFrame(granule)`, without having to call `points(granule)`.
 - Memory use improvements, by using SentinelArray of FillArray under the hood.
 - Dropped S3, GeoArrays and LAS/LAZ support.
+- Added GeoInterface support for lines/points and dropped GeoDataFrames
 - Expanded test coverage.
 
 ## v0.1.6

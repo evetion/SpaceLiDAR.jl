@@ -209,7 +209,7 @@ function lines(
         for track in tracks
             if in(track, keys(file))
                 for track_df ∈ points(granule, file, track, step, ground, canopy, filtered)
-                    line = makeline(track_df.longitude, track_df.latitude, track_df.height)
+                    line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
                     nt = (geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = granule.id)
                     push!(dfs, nt)
                 end

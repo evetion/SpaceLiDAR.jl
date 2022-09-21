@@ -142,7 +142,7 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
                 atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
 
                 height[height.==fill_value] .= NaN
-                line = makeline(longitude, latitude, height)
+                line = Line(longitude, latitude, height)
                 # i = div(length(t), 2) + 1
                 nt = (geom = line, track = track, strong_beam = atlas_beam_type == "strong", granule = granule.id)
                 push!(dfs, nt)

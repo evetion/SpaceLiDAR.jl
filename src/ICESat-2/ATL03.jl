@@ -49,7 +49,7 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks = icesat2_tracks, step =
         for track ∈ tracks
             if in(track, keys(file)) && in("heights", keys(file[track]))
                 track_df = points(granule, file, track, t_offset, step)
-                line = makeline(track_df.longitude, track_df.latitude, track_df.height)
+                line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
                 i = div(length(track_df.datetime), 2) + 1
                 nt = (
                     geom = line,
