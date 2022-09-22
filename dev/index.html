@@ -6,10 +6,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Description...">
+        <meta name="description" content="SpaceLiDAR.jl">
       
       
-        <meta name="author" content="evetion">
+        <meta name="author" content="Maarten Pronk">
       
       
         <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/">
@@ -38,8 +38,8 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CFira+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Fira Mono"}</style>
       
     
     
@@ -64,7 +64,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="deep-orange">
   
     
     
@@ -83,6 +83,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+              </button>
+            
+            
+<!-- Add announcement here, including arbitrary HTML -->
+The newly released v0.2.0 is a *breaking* release. Please see the <a
+    href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for
+details.
+
+          </div>
+          
+            <script>var content,el=document.querySelector("[data-md-component=announce]");el&&(content=el.querySelector(".md-typeset"),__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0))</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-component="outdated" hidden>
@@ -92,7 +111,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="." title="SpaceLiDAR.jl" class="md-header__button md-logo" aria-label="SpaceLiDAR.jl" data-md-component="logo">
       
@@ -124,7 +145,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
           
             <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
@@ -133,7 +154,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="lime" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
           
             <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
@@ -162,6 +183,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -192,14 +215,8 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
@@ -239,7 +256,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="guides/tracks/" class="md-tabs__link">
+      <a href="guides/downloads/" class="md-tabs__link">
         Guides
       </a>
     </li>
@@ -255,8 +272,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="reference/api/" class="md-tabs__link">
-        Reference
+      <a href="tutorial/installation/" class="md-tabs__link">
+        Tutorials
       </a>
     </li>
   
@@ -271,7 +288,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="topics/GEDI/" class="md-tabs__link">
+      <a href="topics/ICESat/" class="md-tabs__link">
         Topics
       </a>
     </li>
@@ -287,8 +304,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="tutorial/installation/" class="md-tabs__link">
-        Tutorial
+      <a href="reference/search/" class="md-tabs__link">
+        Reference
       </a>
     </li>
   
@@ -297,7 +314,13 @@
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -313,7 +336,9 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="." title="SpaceLiDAR.jl" class="md-nav__button md-logo" aria-label="SpaceLiDAR.jl" data-md-component="logo">
       
@@ -380,8 +405,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#papers" class="md-nav__link">
-    Papers
+  <a href="#supported-data-products" class="md-nav__link">
+    Supported data products
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    Documentation
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publications" class="md-nav__link">
+    Publications
   </a>
   
 </li>
@@ -443,8 +482,22 @@
   
   
     <li class="md-nav__item">
+      <a href="guides/downloads/" class="md-nav__link">
+        Downloading
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="guides/tracks/" class="md-nav__link">
-        Tracks
+        Track filtering
       </a>
     </li>
   
@@ -474,14 +527,14 @@
       
       
         <label class="md-nav__link" for="__nav_4">
-          Reference
+          Tutorials
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
-          Reference
+          Tutorials
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -491,8 +544,22 @@
   
   
     <li class="md-nav__item">
-      <a href="reference/api/" class="md-nav__link">
-        Api
+      <a href="tutorial/installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorial/usage/" class="md-nav__link">
+        Usage
       </a>
     </li>
   
@@ -539,8 +606,8 @@
   
   
     <li class="md-nav__item">
-      <a href="topics/GEDI/" class="md-nav__link">
-        GEDI
+      <a href="topics/ICESat/" class="md-nav__link">
+        ICESat
       </a>
     </li>
   
@@ -554,7 +621,7 @@
   
     <li class="md-nav__item">
       <a href="topics/ICESat-2/" class="md-nav__link">
-        ICESat 2
+        ICESat-2
       </a>
     </li>
   
@@ -567,8 +634,8 @@
   
   
     <li class="md-nav__item">
-      <a href="topics/ICESat/" class="md-nav__link">
-        ICESat
+      <a href="topics/GEDI/" class="md-nav__link">
+        GEDI
       </a>
     </li>
   
@@ -598,14 +665,14 @@
       
       
         <label class="md-nav__link" for="__nav_6">
-          Tutorial
+          Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Tutorial" data-md-level="1">
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Tutorial
+          Reference
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -615,8 +682,8 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/installation/" class="md-nav__link">
-        Installation
+      <a href="reference/search/" class="md-nav__link">
+        Search
       </a>
     </li>
   
@@ -629,8 +696,50 @@
   
   
     <li class="md-nav__item">
-      <a href="tutorial/usage/" class="md-nav__link">
-        Usage
+      <a href="reference/granules/" class="md-nav__link">
+        Granules
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/data/" class="md-nav__link">
+        Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/utilities/" class="md-nav__link">
+        Utilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/api/" class="md-nav__link">
+        Index
       </a>
     </li>
   
@@ -650,39 +759,6 @@
               </div>
             
             
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#papers" class="md-nav__link">
-    Papers
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           
             <div class="md-content" data-md-component="content">
@@ -696,12 +772,15 @@
   </a>
 
 
-<p><a href="https://evetion.github.io/SpaceLiDAR.jl/stable"><img alt="Stable" src="https://img.shields.io/badge/docs-stable-blue.svg" /></a> <a href="https://evetion.github.io/SpaceLiDAR.jl/dev"><img alt="Dev" src="https://img.shields.io/badge/docs-dev-blue.svg" /></a> <a href="https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml"><img alt="CI" src="https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml/badge.svg" /></a> <a href="https://codecov.io/gh/evetion/SpaceLiDAR.jl"><img alt="codecov" src="https://codecov.io/gh/evetion/SpaceLiDAR.jl/branch/master/graph/badge.svg?token=nztwnGtIcY" /></a></p>
 <p><a id='SpaceLiDAR'></a></p>
 <p><a id='SpaceLiDAR-1'></a></p>
 <h1 id="spacelidar">SpaceLiDAR<a class="headerlink" href="#spacelidar" title="Permanent link">&para;</a></h1>
-<p>A Julia toolbox for ICESat-2 and GEDI data.</p>
-<p><em>This is a research package now, things are quick to change.</em></p>
+<p>A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly <a href="tutorial/usage/#search-for-data">search</a>, download and <a href="tutorial/usage/#derive-points">load</a> filtered point data with relevant attributes from the <code>.h5</code> granules of each data product.</p>
+<p>For a quick overview, see the FOSS4G Pluto notebook <a href="tutorial/foss4g_2021.jl.html">here</a>.</p>
+<p><em>This is a research package, things are quick to change.</em></p>
+<p><a id='Supported-data-products'></a></p>
+<p><a id='Supported-data-products-1'></a></p>
+<h2 id="supported-data-products">Supported data products<a class="headerlink" href="#supported-data-products" title="Permanent link">&para;</a></h2>
 <p>Currently supports the following data products:</p>
 <table>
 <thead>
@@ -752,18 +831,26 @@
 <tr>
 <td style="text-align: right;">GEDI</td>
 <td style="text-align: right;">L2A v2</td>
-<td style="text-align: right;"><a href="https://lpdaac.usgs.gov/documents/998/GEDI02_User_Guide_V2.pdf">UG</a></td>
+<td style="text-align: right;"><a href="https://lpdaac.usgs.gov/documents/998/GEDI02_UserGuide_V21.pdf">UG</a></td>
 <td style="text-align: right;"><a href="https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf">ATBD</a></td>
 </tr>
 </tbody>
 </table>
-<p>For a quick overview, see the FOSS4G Pluto notebook <a href="tutorial/foss4g_2021.jl.html">here</a></p>
-<p><a id='Papers'></a></p>
-<p><a id='Papers-1'></a></p>
-<h2 id="papers">Papers<a class="headerlink" href="#papers" title="Permanent link">&para;</a></h2>
-<p>Results are used (indirectly) in the following papers:</p>
+<p><a id='Documentation'></a></p>
+<p><a id='Documentation-1'></a></p>
+<h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
+<p>This documentation is set up using the <a href="https://documentation.divio.com/">Divio</a> documentation system and thus split into <a href="tutorial/usage/">Tutorials</a>, <a href="guides/downloads/">Guides</a>, <a href="topics/GEDI/">Topics</a> and <a href="reference/search/">References</a>.</p>
+<p><a id='Publications'></a></p>
+<p><a id='Publications-1'></a></p>
+<h2 id="publications">Publications<a class="headerlink" href="#publications" title="Permanent link">&para;</a></h2>
+<p>The code produced for the following paper was the beginning of this package:</p>
+<blockquote>
 <p>Vernimmen, Ronald, Aljosja Hooijer, and Maarten Pronk. 2020. ‘New ICESat-2 Satellite LiDAR Data Allow First Global Lowland DTM Suitable for Accurate Coastal Flood Risk Assessment’. Remote Sensing 12 (17): 2827. <a href="https://doi.org/10/gg9dg6">https://doi.org/10/gg9dg6</a>.</p>
+</blockquote>
+<p>The DTM produced using ICESat-2 ATL08 data was in turn used for:</p>
+<blockquote>
 <p>Hooijer, A., and R. Vernimmen. 2021. ‘Global LiDAR Land Elevation Data Reveal Greatest Sea-Level Rise Vulnerability in the Tropics’. Nature Communications 12 (1): 3592. <a href="https://doi.org/10/gkzf49">https://doi.org/10/gkzf49</a>.</p>
+</blockquote>
 
 
 
@@ -811,7 +898,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2021 Maarten Pronk, Deltares
+      Copyright &copy; 2022 Maarten Pronk, Deltares
     </div>
   
   
@@ -836,6 +923,12 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4v322.5zM166.9 76.1h-50.4V512h50.4V76.1zm100.6 0h-50.4V512h50.4V76.1zM368 76h-50.4v247H368V76z"/></svg>
     </a>
   
+    
+    
+    <a href="https://twitter.com/3vetion" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
 </div>
       
     </div>
@@ -847,7 +940,7 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow"], "search": "assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="assets/javascripts/bundle.37e9125f.min.js"></script>

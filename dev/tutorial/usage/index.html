@@ -6,10 +6,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Description...">
+        <meta name="description" content="SpaceLiDAR.jl">
       
       
-        <meta name="author" content="evetion">
+        <meta name="author" content="Maarten Pronk">
       
       
         <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/tutorial/usage/">
@@ -38,8 +38,8 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CFira+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Fira Mono"}</style>
       
     
     
@@ -64,7 +64,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="deep-orange">
   
     
     
@@ -83,6 +83,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+              </button>
+            
+            
+<!-- Add announcement here, including arbitrary HTML -->
+The newly released v0.2.0 is a *breaking* release. Please see the <a
+    href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for
+details.
+
+          </div>
+          
+            <script>var content,el=document.querySelector("[data-md-component=announce]");el&&(content=el.querySelector(".md-typeset"),__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0))</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-component="outdated" hidden>
@@ -92,7 +111,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="SpaceLiDAR.jl" class="md-header__button md-logo" aria-label="SpaceLiDAR.jl" data-md-component="logo">
       
@@ -124,7 +145,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
           
             <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
@@ -133,7 +154,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="lime" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
           
             <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
@@ -162,6 +183,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -192,14 +215,8 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
@@ -237,40 +254,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../guides/tracks/" class="md-tabs__link">
+      <a href="../../guides/downloads/" class="md-tabs__link">
         Guides
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../reference/api/" class="md-tabs__link">
-        Reference
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../topics/GEDI/" class="md-tabs__link">
-        Topics
       </a>
     </li>
   
@@ -288,7 +273,39 @@
   
     <li class="md-tabs__item">
       <a href="../installation/" class="md-tabs__link md-tabs__link--active">
-        Tutorial
+        Tutorials
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../topics/ICESat/" class="md-tabs__link">
+        Topics
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../reference/search/" class="md-tabs__link">
+        Reference
       </a>
     </li>
   
@@ -297,7 +314,13 @@
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -313,7 +336,9 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="SpaceLiDAR.jl" class="md-nav__button md-logo" aria-label="SpaceLiDAR.jl" data-md-component="logo">
       
@@ -402,8 +427,22 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/downloads/" class="md-nav__link">
+        Downloading
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/tracks/" class="md-nav__link">
-        Tracks
+        Track filtering
       </a>
     </li>
   
@@ -422,25 +461,27 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
       
         <label class="md-nav__link" for="__nav_4">
-          Reference
+          Tutorials
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
-          Reference
+          Tutorials
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -450,9 +491,78 @@
   
   
     <li class="md-nav__item">
-      <a href="../../reference/api/" class="md-nav__link">
-        Api
+      <a href="../installation/" class="md-nav__link">
+        Installation
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Usage
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Usage
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#search-for-data" class="md-nav__link">
+    Search for data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#derive-points" class="md-nav__link">
+    Derive points
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#derive-linestrings" class="md-nav__link">
+    Derive linestrings
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -498,8 +608,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../topics/GEDI/" class="md-nav__link">
-        GEDI
+      <a href="../../topics/ICESat/" class="md-nav__link">
+        ICESat
       </a>
     </li>
   
@@ -513,7 +623,7 @@
   
     <li class="md-nav__item">
       <a href="../../topics/ICESat-2/" class="md-nav__link">
-        ICESat 2
+        ICESat-2
       </a>
     </li>
   
@@ -526,8 +636,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../topics/ICESat/" class="md-nav__link">
-        ICESat
+      <a href="../../topics/GEDI/" class="md-nav__link">
+        GEDI
       </a>
     </li>
   
@@ -546,27 +656,25 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
       
         <label class="md-nav__link" for="__nav_6">
-          Tutorial
+          Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Tutorial" data-md-level="1">
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Tutorial
+          Reference
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -576,8 +684,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
-        Installation
+      <a href="../../reference/search/" class="md-nav__link">
+        Search
       </a>
     </li>
   
@@ -588,21 +696,53 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Usage
+    <li class="md-nav__item">
+      <a href="../../reference/granules/" class="md-nav__link">
+        Granules
       </a>
-      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/data/" class="md-nav__link">
+        Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/utilities/" class="md-nav__link">
+        Utilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/api/" class="md-nav__link">
+        Index
+      </a>
     </li>
   
 
@@ -621,24 +761,6 @@
               </div>
             
             
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           
             <div class="md-content" data-md-component="content">
@@ -655,7 +777,9 @@
 <p><a id='Usage'></a></p>
 <p><a id='Usage-1'></a></p>
 <h1 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h1>
-<p>Search for data</p>
+<p><a id='Search-for-data'></a></p>
+<p><a id='Search-for-data-1'></a></p>
+<h2 id="search-for-data">Search for data<a class="headerlink" href="#search-for-data" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="w"></span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Find all ATL08 granules</span><span class="w"></span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">find</span><span class="p">(</span><span class="ss">:ICESat2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ATL08&quot;</span><span class="p">)</span><span class="w"></span>
@@ -689,21 +813,43 @@
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c"># Instantiate search results locally (useful for GEDI location indexing)</span><span class="w"></span>
 <a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="n">local_granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">instantiate</span><span class="p">(</span><span class="n">granules</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
-<p>Derive linestrings</p>
+<p><a id='Derive-points'></a></p>
+<p><a id='Derive-points-1'></a></p>
+<h2 id="derive-points">Derive points<a class="headerlink" href="#derive-points" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">using</span><span class="w"> </span><span class="n">DataFrames</span><span class="w"></span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ATL03_20181110072251_06520101_003_01.h5&quot;</span><span class="w"></span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5&quot;</span><span class="w"></span>
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">granule_from_file</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="w"></span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">tlines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">10000</span><span class="p">))</span><span class="w"></span>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">Table</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="n">rows</span><span class="o">:</span><span class="w"></span>
-<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">     </span><span class="n">geom</span><span class="w">                       </span><span class="n">sun_angle</span><span class="w">  </span><span class="n">track</span><span class="w">        </span><span class="n">t</span><span class="w"></span>
-<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">   </span><span class="n">┌───────────────────────────────────────────────────────────────────────────</span><span class="w"></span>
-<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.3864</span><span class="w">    </span><span class="n">gt1l_weak</span><span class="w">    </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">01.688</span><span class="w"></span>
-<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.375</span><span class="w">     </span><span class="n">gt1r_strong</span><span class="w">  </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">02.266</span><span class="w"></span>
-<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.2487</span><span class="w">    </span><span class="n">gt2l_weak</span><span class="w">    </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">04.474</span><span class="w"></span>
-<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.1424</span><span class="w">    </span><span class="n">gt2r_strong</span><span class="w">  </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">07.374</span><span class="w"></span>
-<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.2016</span><span class="w">    </span><span class="n">gt3l_weak</span><span class="w">    </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">05.051</span><span class="w"></span>
-<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.1611</span><span class="w">    </span><span class="n">gt3r_strong</span><span class="w">  </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">06.344</span><span class="w"></span>
-<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">GDF</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;lines.gpkg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tlines</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="mi">149680</span><span class="o">×</span><span class="mi">15</span><span class="w"> </span><span class="n">DataFrame</span><span class="w"></span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="n">Row</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">longitude</span><span class="w">  </span><span class="n">latitude</span><span class="w">  </span><span class="n">height</span><span class="w">    </span><span class="n">height_error</span><span class="w">  </span><span class="n">datetime</span><span class="w">                 </span><span class="n">intensity</span><span class="w">  </span><span class="n">sensitivity</span><span class="w">  </span><span class="n">surface</span><span class="w">  </span><span class="n">quality</span><span class="w">  </span><span class="n">nmo</span><span class="w"> </span><span class="o">⋯</span><span class="w"></span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="n">│</span><span class="w"> </span><span class="kt">Float64</span><span class="w">    </span><span class="kt">Float64</span><span class="w">   </span><span class="kt">Float32</span><span class="w">   </span><span class="kt">Float32</span><span class="w">       </span><span class="n">DateTime</span><span class="w">                 </span><span class="kt">Float32</span><span class="w">    </span><span class="kt">Float32</span><span class="w">      </span><span class="kt">Bool</span><span class="w">     </span><span class="kt">Bool</span><span class="w">     </span><span class="n">UIn</span><span class="w"> </span><span class="o">⋯</span><span class="w"></span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="n">────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────</span><span class="w"></span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">      </span><span class="mi">1</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.855</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2772</span><span class="w">  </span><span class="o">-</span><span class="mf">13.3536</span><span class="w">      </span><span class="mf">0.307976</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.047</span><span class="w">   </span><span class="mf">393.969</span><span class="w">   </span><span class="o">-</span><span class="mf">0.0671094</span><span class="w">      </span><span class="nb">true</span><span class="w">    </span><span class="nb">false</span><span class="w">      </span><span class="o">⋯</span><span class="w"></span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="mi">2</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.855</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2769</span><span class="w">  </span><span class="o">-</span><span class="mf">11.2522</span><span class="w">      </span><span class="mf">0.307978</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.055</span><span class="w">   </span><span class="mf">797.26</span><span class="w">     </span><span class="mf">0.533529</span><span class="w">       </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w"></span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="mi">3</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.856</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2767</span><span class="w">  </span><span class="o">-</span><span class="mf">13.775</span><span class="w">       </span><span class="mf">0.307981</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.063</span><span class="w">  </span><span class="mf">1010.39</span><span class="w">     </span><span class="mf">0.695938</span><span class="w">       </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w"></span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="mi">4</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.857</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2765</span><span class="w">  </span><span class="o">-</span><span class="mf">11.729</span><span class="w">       </span><span class="mf">0.307983</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.071</span><span class="w">   </span><span class="mf">852.614</span><span class="w">    </span><span class="mf">0.544849</span><span class="w">       </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w"></span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="mi">5</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.857</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2763</span><span class="w">  </span><span class="o">-</span><span class="mf">13.2443</span><span class="w">      </span><span class="mf">0.307985</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.080</span><span class="w">   </span><span class="mf">980.66</span><span class="w">     </span><span class="mf">0.620767</span><span class="w">       </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w">      </span><span class="o">⋯</span><span class="w"></span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="mi">6</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.858</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2761</span><span class="w">  </span><span class="o">-</span><span class="mf">12.1813</span><span class="w">      </span><span class="mf">0.307987</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.088</span><span class="w">   </span><span class="mf">937.441</span><span class="w">    </span><span class="mf">0.620531</span><span class="w">       </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w"></span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">      </span><span class="mi">7</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.859</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2758</span><span class="w">  </span><span class="o">-</span><span class="mf">11.9011</span><span class="w">      </span><span class="mf">0.30799</span><span class="w">   </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.096</span><span class="w">  </span><span class="mf">1235.02</span><span class="w">     </span><span class="mf">0.73815</span><span class="w">        </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w"></span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">      </span><span class="mi">8</span><span class="w"> </span><span class="n">│</span><span class="w">   </span><span class="mf">153.859</span><span class="w">  </span><span class="o">-</span><span class="mf">47.2756</span><span class="w">  </span><span class="o">-</span><span class="mf">12.3796</span><span class="w">      </span><span class="mf">0.307992</span><span class="w">  </span><span class="mi">2019</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="mi">30</span><span class="n">T10</span><span class="o">:</span><span class="mi">48</span><span class="o">:</span><span class="mf">21.104</span><span class="w">   </span><span class="mf">854.127</span><span class="w">    </span><span class="mf">0.545655</span><span class="w">       </span><span class="nb">true</span><span class="w">     </span><span class="nb">true</span><span class="w"></span>
+</code></pre></div>
+<p><a id='Derive-linestrings'></a></p>
+<p><a id='Derive-linestrings-1'></a></p>
+<h2 id="derive-linestrings">Derive linestrings<a class="headerlink" href="#derive-linestrings" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">using</span><span class="w"> </span><span class="n">DataFrames</span><span class="w"></span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ATL03_20181110072251_06520101_003_01.h5&quot;</span><span class="w"></span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">granule_from_file</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span><span class="w"></span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">tlines</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">lines</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">10000</span><span class="p">))</span><span class="w"></span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">Table</span><span class="w"> </span><span class="n">with</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">columns</span><span class="w"> </span><span class="n">and</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="n">rows</span><span class="o">:</span><span class="w"></span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">     </span><span class="n">geom</span><span class="w">                       </span><span class="n">sun_angle</span><span class="w">  </span><span class="n">track</span><span class="w">        </span><span class="n">datetime</span><span class="w"></span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">   </span><span class="n">┌───────────────────────────────────────────────────────────────────────────</span><span class="w"></span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.3864</span><span class="w">    </span><span class="n">gt1l_weak</span><span class="w">    </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">01.688</span><span class="w"></span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.375</span><span class="w">     </span><span class="n">gt1r_strong</span><span class="w">  </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">02.266</span><span class="w"></span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.2487</span><span class="w">    </span><span class="n">gt2l_weak</span><span class="w">    </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">04.474</span><span class="w"></span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.1424</span><span class="w">    </span><span class="n">gt2r_strong</span><span class="w">  </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">07.374</span><span class="w"></span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.2016</span><span class="w">    </span><span class="n">gt3l_weak</span><span class="w">    </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">05.051</span><span class="w"></span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="n">│</span><span class="w"> </span><span class="n">wkbLineString25D</span><span class="w"> </span><span class="n">geometry</span><span class="w">  </span><span class="mf">38.1611</span><span class="w">    </span><span class="n">gt3r_strong</span><span class="w">  </span><span class="mi">2018</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">10</span><span class="n">T07</span><span class="o">:</span><span class="mi">28</span><span class="o">:</span><span class="mf">06.344</span><span class="w"></span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">GDF</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;lines.gpkg&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">tlines</span><span class="p">)</span><span class="w"></span>
 </code></pre></div>
 
 
@@ -745,6 +891,21 @@
         </a>
       
       
+        
+        <a href="../../topics/ICESat/" class="md-footer__link md-footer__link--next" aria-label="Next: ICESat" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              ICESat
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
     </nav>
   
   <div class="md-footer-meta md-typeset">
@@ -752,7 +913,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2021 Maarten Pronk, Deltares
+      Copyright &copy; 2022 Maarten Pronk, Deltares
     </div>
   
   
@@ -777,6 +938,12 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4v322.5zM166.9 76.1h-50.4V512h50.4V76.1zm100.6 0h-50.4V512h50.4V76.1zM368 76h-50.4v247H368V76z"/></svg>
     </a>
   
+    
+    
+    <a href="https://twitter.com/3vetion" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
 </div>
       
     </div>
@@ -788,7 +955,7 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.37e9125f.min.js"></script>

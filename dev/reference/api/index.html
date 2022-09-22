@@ -6,10 +6,10 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Description...">
+        <meta name="description" content="SpaceLiDAR.jl">
       
       
-        <meta name="author" content="evetion">
+        <meta name="author" content="Maarten Pronk">
       
       
         <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/reference/api/">
@@ -19,7 +19,7 @@
     
     
       
-        <title>Api - SpaceLiDAR.jl</title>
+        <title>Index - SpaceLiDAR.jl</title>
       
     
     
@@ -38,8 +38,8 @@
         
         
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
-        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CFira+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Fira Mono"}</style>
       
     
     
@@ -64,7 +64,7 @@
     
     
     
-    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="indigo">
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="deep-orange">
   
     
     
@@ -83,6 +83,25 @@
     </div>
     <div data-md-component="announce">
       
+        <aside class="md-banner">
+          <div class="md-banner__inner md-grid md-typeset">
+            
+              <button class="md-banner__button md-icon" aria-label="Don't show this again">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+              </button>
+            
+            
+<!-- Add announcement here, including arbitrary HTML -->
+The newly released v0.2.0 is a *breaking* release. Please see the <a
+    href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for
+details.
+
+          </div>
+          
+            <script>var content,el=document.querySelector("[data-md-component=announce]");el&&(content=el.querySelector(".md-typeset"),__md_hash(content.innerHTML)===__md_get("__announce")&&(el.hidden=!0))</script>
+          
+        </aside>
+      
     </div>
     
       <div data-md-component="outdated" hidden>
@@ -92,7 +111,9 @@
     
       
 
-<header class="md-header" data-md-component="header">
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="SpaceLiDAR.jl" class="md-header__button md-logo" aria-label="SpaceLiDAR.jl" data-md-component="logo">
       
@@ -113,7 +134,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Api
+              Index
             
           </span>
         </div>
@@ -124,7 +145,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="blue-grey" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="lime" data-md-color-accent="deep-orange"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
           
             <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7M9 21v-1h6v1a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1m3-17a5 5 0 0 0-5 5c0 2.05 1.23 3.81 3 4.58V16h4v-2.42c1.77-.77 3-2.53 3-4.58a5 5 0 0 0-5-5Z"/></svg>
@@ -133,7 +154,7 @@
         
           
           
-          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="lime" data-md-color-accent="deep-orange"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
           
             <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7M9 21a1 1 0 0 0 1 1h4a1 1 0 0 0 1-1v-1H9v1Z"/></svg>
@@ -162,6 +183,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -192,14 +215,8 @@
     
   </nav>
   
-</header>
     
-    <div class="md-container" data-md-component="container">
       
-      
-        
-          
-            
 <nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
   <div class="md-tabs__inner md-grid">
     <ul class="md-tabs__list">
@@ -237,8 +254,40 @@
   
   
     <li class="md-tabs__item">
-      <a href="../../guides/tracks/" class="md-tabs__link">
+      <a href="../../guides/downloads/" class="md-tabs__link">
         Guides
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../tutorial/installation/" class="md-tabs__link">
+        Tutorials
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../topics/ICESat/" class="md-tabs__link">
+        Topics
       </a>
     </li>
   
@@ -255,40 +304,8 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
+      <a href="../search/" class="md-tabs__link md-tabs__link--active">
         Reference
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../topics/GEDI/" class="md-tabs__link">
-        Topics
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-
-
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../tutorial/installation/" class="md-tabs__link">
-        Tutorial
       </a>
     </li>
   
@@ -297,7 +314,13 @@
     </ul>
   </div>
 </nav>
-          
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
         
       
       <main class="md-main" data-md-component="main">
@@ -313,7 +336,9 @@
   
 
 
-<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="SpaceLiDAR.jl" class="md-nav__button md-logo" aria-label="SpaceLiDAR.jl" data-md-component="logo">
       
@@ -402,8 +427,22 @@
   
   
     <li class="md-nav__item">
+      <a href="../../guides/downloads/" class="md-nav__link">
+        Downloading
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../guides/tracks/" class="md-nav__link">
-        Tracks
+        Track filtering
       </a>
     </li>
   
@@ -422,27 +461,25 @@
 
   
   
-    
-  
   
     
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
       
         <label class="md-nav__link" for="__nav_4">
-          Reference
+          Tutorials
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Reference" data-md-level="1">
+      <nav class="md-nav" aria-label="Tutorials" data-md-level="1">
         <label class="md-nav__title" for="__nav_4">
           <span class="md-nav__icon md-icon"></span>
-          Reference
+          Tutorials
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -450,21 +487,25 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        Api
+    <li class="md-nav__item">
+      <a href="../../tutorial/installation/" class="md-nav__link">
+        Installation
       </a>
-      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/usage/" class="md-nav__link">
+        Usage
+      </a>
     </li>
   
 
@@ -510,8 +551,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../topics/GEDI/" class="md-nav__link">
-        GEDI
+      <a href="../../topics/ICESat/" class="md-nav__link">
+        ICESat
       </a>
     </li>
   
@@ -525,7 +566,7 @@
   
     <li class="md-nav__item">
       <a href="../../topics/ICESat-2/" class="md-nav__link">
-        ICESat 2
+        ICESat-2
       </a>
     </li>
   
@@ -538,8 +579,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../topics/ICESat/" class="md-nav__link">
-        ICESat
+      <a href="../../topics/GEDI/" class="md-nav__link">
+        GEDI
       </a>
     </li>
   
@@ -558,25 +599,27 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
       
         <label class="md-nav__link" for="__nav_6">
-          Tutorial
+          Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
       
-      <nav class="md-nav" aria-label="Tutorial" data-md-level="1">
+      <nav class="md-nav" aria-label="Reference" data-md-level="1">
         <label class="md-nav__title" for="__nav_6">
           <span class="md-nav__icon md-icon"></span>
-          Tutorial
+          Reference
         </label>
         <ul class="md-nav__list" data-md-scrollfix>
           
@@ -586,8 +629,8 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/installation/" class="md-nav__link">
-        Installation
+      <a href="../search/" class="md-nav__link">
+        Search
       </a>
     </li>
   
@@ -600,9 +643,61 @@
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/usage/" class="md-nav__link">
-        Usage
+      <a href="../granules/" class="md-nav__link">
+        Granules
       </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../data/" class="md-nav__link">
+        Data
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../utilities/" class="md-nav__link">
+        Utilities
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Index
+      </a>
+      
     </li>
   
 
@@ -621,24 +716,6 @@
               </div>
             
             
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-</nav>
-                  </div>
-                </div>
-              </div>
-            
           
           
             <div class="md-content" data-md-component="content">
@@ -656,243 +733,35 @@
 <p><a id='API-reference-1'></a></p>
 <h1 id="api-reference">API reference<a class="headerlink" href="#api-reference" title="Permanent link">&para;</a></h1>
 <ul>
-<li><a href="./#SpaceLiDAR._download-Tuple"><code>SpaceLiDAR._download</code></a></li>
-<li><a href="./#SpaceLiDAR.angle"><code>SpaceLiDAR.angle</code></a></li>
-<li><a href="./#SpaceLiDAR.angle-Tuple{Any, Any}"><code>SpaceLiDAR.angle</code></a></li>
-<li><a href="./#SpaceLiDAR.angle!-Tuple{Any}"><code>SpaceLiDAR.angle!</code></a></li>
-<li><a href="./#SpaceLiDAR.classify"><code>SpaceLiDAR.classify</code></a></li>
-<li><a href="./#SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}"><code>SpaceLiDAR.download_curl</code></a></li>
-<li><a href="./#SpaceLiDAR.gedi_info-Tuple{Any}"><code>SpaceLiDAR.gedi_info</code></a></li>
-<li><a href="./#SpaceLiDAR.granule_from_file-Tuple{AbstractString}"><code>SpaceLiDAR.granule_from_file</code></a></li>
-<li><a href="./#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}"><code>SpaceLiDAR.granules_from_folder</code></a></li>
-<li><a href="./#SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}"><code>SpaceLiDAR.in_bbox</code></a></li>
-<li><a href="./#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}"><code>SpaceLiDAR.info</code></a></li>
-<li><a href="./#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}"><code>SpaceLiDAR.info</code></a></li>
-<li><a href="./#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>SpaceLiDAR.netrc!</code></a></li>
-<li><a href="./#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat2_Granule{:ATL06}}"><code>SpaceLiDAR.points</code></a></li>
-<li><a href="./#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}"><code>SpaceLiDAR.points</code></a></li>
-<li><a href="./#SpaceLiDAR.s3!"><code>SpaceLiDAR.s3!</code></a></li>
-<li><a href="./#SpaceLiDAR.shift-NTuple{4, Any}"><code>SpaceLiDAR.shift</code></a></li>
-<li><a href="./#SpaceLiDAR.splitline"><code>SpaceLiDAR.splitline</code></a></li>
-<li><a href="./#SpaceLiDAR.track_power-Tuple{Integer, String}"><code>SpaceLiDAR.track_power</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.GEDI_Granule"><code>SpaceLiDAR.GEDI_Granule</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.ICESat2_Granule"><code>SpaceLiDAR.ICESat2_Granule</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.ICESat_Granule"><code>SpaceLiDAR.ICESat_Granule</code></a></li>
+<li><a href="../granules/#Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T"><code>Base.convert</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.angle!-Tuple{Any}"><code>SpaceLiDAR.angle!</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.bounds-Tuple{ICESat2_Granule}"><code>SpaceLiDAR.bounds</code></a></li>
+<li><a href="../data/#SpaceLiDAR.classify"><code>SpaceLiDAR.classify</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.download!"><code>SpaceLiDAR.download!</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.download!"><code>SpaceLiDAR.download!</code></a></li>
+<li><a href="../search/#SpaceLiDAR.find"><code>SpaceLiDAR.find</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.granule_from_file-Tuple{AbstractString}"><code>SpaceLiDAR.granule_from_file</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}"><code>SpaceLiDAR.granules_from_folder</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.info-Tuple{ICESat_Granule}"><code>SpaceLiDAR.info</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.info-Tuple{ICESat2_Granule}"><code>SpaceLiDAR.info</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.info-Tuple{GEDI_Granule}"><code>SpaceLiDAR.info</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.instantiate-Union{Tuple{T}, Tuple{Vector{T}, AbstractString}} where T&lt;:SpaceLiDAR.Granule"><code>SpaceLiDAR.instantiate</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.isvalid-Tuple{SpaceLiDAR.Granule}"><code>SpaceLiDAR.isvalid</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>SpaceLiDAR.netrc!</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL06}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH14}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points-Tuple{GEDI_Granule{:GEDI02_A}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH06}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../data/#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL08}}"><code>SpaceLiDAR.points</code></a></li>
+<li><a href="../granules/#SpaceLiDAR.rm-Tuple{SpaceLiDAR.Granule}"><code>SpaceLiDAR.rm</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.shift-NTuple{4, Any}"><code>SpaceLiDAR.shift</code></a></li>
+<li><a href="../utilities/#SpaceLiDAR.to_egm2008!-Tuple{Any}"><code>SpaceLiDAR.to_egm2008!</code></a></li>
 </ul>
-<p><a id='SpaceLiDAR._download-Tuple' href='#SpaceLiDAR._download-Tuple'>#</a>
-<strong><code>SpaceLiDAR._download</code></strong> &mdash; <em>Method</em>.</p>
-<p>This is a method because it will segfault if precompiled.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/granule.jl#LL4' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.angle' href='#SpaceLiDAR.angle'>#</a>
-<strong><code>SpaceLiDAR.angle</code></strong> &mdash; <em>Function</em>.</p>
-<p>Rough approximation of the track angle on a Euclidian lon/lat plot.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat-2/ICESat-2.jl#LL34' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.angle!-Tuple{Any}' href='#SpaceLiDAR.angle!-Tuple{Any}'>#</a>
-<strong><code>SpaceLiDAR.angle!</code></strong> &mdash; <em>Method</em>.</p>
-<p>Calculatitudee angle of direction in degrees where North is 0° for a DataFrame.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/geom.jl#LL27' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.angle-Tuple{Any, Any}' href='#SpaceLiDAR.angle-Tuple{Any, Any}'>#</a>
-<strong><code>SpaceLiDAR.angle</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">angle</span><span class="p">(</span><span class="n">longitude</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Number</span><span class="p">},</span><span class="w"> </span><span class="n">latitude</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Number</span><span class="p">})</span><span class="w"></span>
-</code></pre></div>
-<p>Calculate the angle of direction from previous points in degrees where North is 0°. Points are given as <code>longitude</code> and <code>latitude</code> pairs in their own vector. The angle for the first point is undefined and set to the second.</p>
-<p>Returns a <code>Vector{Number}</code> of angles</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/geom.jl#LL34-L42' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.classify' href='#SpaceLiDAR.classify'>#</a>
-<strong><code>SpaceLiDAR.classify</code></strong> &mdash; <em>Function</em>.</p>
-<p>Retrieve all points as classified as ground in ATL08.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat-2/ATL03.jl#LL94' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}' href='#SpaceLiDAR.download_curl-Tuple{AbstractString, AbstractString}'>#</a>
-<strong><code>SpaceLiDAR.download_curl</code></strong> &mdash; <em>Method</em>.</p>
-<p>Hacked version of Base.download which adds cookies and (optional) netrc parsing.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/utils.jl#LL3' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.gedi_info-Tuple{Any}' href='#SpaceLiDAR.gedi_info-Tuple{Any}'>#</a>
-<strong><code>SpaceLiDAR.gedi_info</code></strong> &mdash; <em>Method</em>.</p>
-<p>Derive info based on file id.</p>
-<p>The id is built up as follows, see section 2.4 in the user guide GEDI02<em>A</em>2019110014613<em>O01991</em>T04905<em>02</em>001<em>01.h5 or newer (V2) GEDI02</em>A<em>2019242104318</em>O04046<em>01</em>T02343<em>02</em>003<em>02</em>V002.h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/GEDI/GEDI.jl#LL22-L29' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.granule_from_file-Tuple{AbstractString}' href='#SpaceLiDAR.granule_from_file-Tuple{AbstractString}'>#</a>
-<strong><code>SpaceLiDAR.granule_from_file</code></strong> &mdash; <em>Method</em>.</p>
-<p>Generate granule from .h5 file.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/utils.jl#LL16' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.granules_from_folder-Tuple{AbstractString}' href='#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}'>#</a>
-<strong><code>SpaceLiDAR.granules_from_folder</code></strong> &mdash; <em>Method</em>.</p>
-<p>Generate granules from folder filled with .h5 files.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/utils.jl#LL36' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}' href='#SpaceLiDAR.in_bbox-Tuple{Any, NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}}'>#</a>
-<strong><code>SpaceLiDAR.in_bbox</code></strong> &mdash; <em>Method</em>.</p>
-<p>Filter with bbox.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/utils.jl#LL56' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}' href='#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat2_Granule}'>#</a>
-<strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
-<p>Derive info based on file id.</p>
-<p>The id is built up as follows, see 1.2.5 in the user guide ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat-2/ICESat-2.jl#LL76-L81' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}' href='#SpaceLiDAR.info-Tuple{SpaceLiDAR.ICESat_Granule}'>#</a>
-<strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
-<p>Derive info based on file id.</p>
-<p>The id is built up as follows, see 1.2.5 in the user guide ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat/ICESat.jl#LL35-L40' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.netrc!-Tuple{Any, Any}' href='#SpaceLiDAR.netrc!-Tuple{Any, Any}'>#</a>
-<strong><code>SpaceLiDAR.netrc!</code></strong> &mdash; <em>Method</em>.</p>
-<p>Writes/updates netrc file for ICESat-2 and GEDI downloads.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/utils.jl#LL99' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat2_Granule{:ATL06}}' href='#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat2_Granule{:ATL06}}'>#</a>
-<strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL06</span><span class="p">})</span><span class="w"></span>
-</code></pre></div>
-<p>Retrieve the points for a given ATL06 (Land Ice) granule as a list of namedtuples, one for each beam. The names of the tuples are based on the following fields:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: right;">Column</th>
-<th style="text-align: right;">Field</th>
-<th style="text-align: right;">Description</th>
-<th style="text-align: right;">Units</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: right;"><code>longitude</code></td>
-<td style="text-align: right;"><code>land_ice_segments/longitude</code></td>
-<td style="text-align: right;">Longitude of segment center, WGS84, East=+</td>
-<td style="text-align: right;">decimal degrees</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>latitude</code></td>
-<td style="text-align: right;"><code>land_ice_segments/latitude</code></td>
-<td style="text-align: right;">Latitude of segment center, WGS84, North=+</td>
-<td style="text-align: right;">decimal degrees</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>height</code></td>
-<td style="text-align: right;"><code>land_ice_segments/h_li</code></td>
-<td style="text-align: right;">Standard land-ice segment height</td>
-<td style="text-align: right;">m above the WGS 84 ellipsoid</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>height_error</code></td>
-<td style="text-align: right;"><code>land_ice_segments/sigma_geo_h</code></td>
-<td style="text-align: right;">Total vertical geolocation error</td>
-<td style="text-align: right;">m above the WGS 84 ellipsoid</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>datetime</code></td>
-<td style="text-align: right;"><code>land_ice_segments/delta_time</code></td>
-<td style="text-align: right;">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
-<td style="text-align: right;">date-time</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>quality</code></td>
-<td style="text-align: right;"><code>land_ice_segments/atl06_quality_summary</code></td>
-<td style="text-align: right;">Boolean flag indicating the best-quality subset</td>
-<td style="text-align: right;">1 = high quality</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>track</code></td>
-<td style="text-align: right;"><code>gt1l</code> - <code>gt3r</code> groups</td>
-<td style="text-align: right;">-</td>
-<td style="text-align: right;">-</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>power</code></td>
-<td style="text-align: right;"><code>-</code></td>
-<td style="text-align: right;">"strong" or "weak" laser power</td>
-<td style="text-align: right;">-</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>detector_id</code></td>
-<td style="text-align: right;"><code>atlas_spot_number attribute</code></td>
-<td style="text-align: right;">-</td>
-<td style="text-align: right;">-</td>
-</tr>
-<tr>
-<td style="text-align: right;"><code>height_reference</code></td>
-<td style="text-align: right;"><code>land_ice_segments/dem/dem_h</code></td>
-<td style="text-align: right;">Height of the (best available) DEM</td>
-<td style="text-align: right;">-</td>
-</tr>
-</tbody>
-</table>
-<p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat-2/ATL06.jl#LL1-L21' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}' href='#SpaceLiDAR.points-Tuple{SpaceLiDAR.ICESat_Granule{:GLAH06}}'>#</a>
-<strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="ss">:GLAH06</span><span class="p">})</span><span class="w"></span>
-</code></pre></div>
-<p>Retrieve the points for a given GLAH06 (Land Ice) granule as a list of namedtuples The names of the tuples are based on the following fields:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Variable</th>
-<th style="text-align: left;">Original Field</th>
-<th style="text-align: left;">Description</th>
-<th style="text-align: left;">Units</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><code>longitude</code></td>
-<td style="text-align: left;"><code>Data_40HZ/Geolocation/d_lon</code></td>
-<td style="text-align: left;">Longitude of segment center, WGS84, East=+</td>
-<td style="text-align: left;">decimal degrees</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>latitude</code></td>
-<td style="text-align: left;"><code>Data_40HZ/Geolocation/d_lat</code></td>
-<td style="text-align: left;">Latitude of segment center, WGS84, North=+</td>
-<td style="text-align: left;">decimal degrees</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>height</code></td>
-<td style="text-align: left;"><code>Data_40HZ/Elevation_Surfaces/d_elev</code></td>
-<td style="text-align: left;">+ <code>Data_40HZ/Elevation_Corrections/d_satElevCorr</code></td>
-<td style="text-align: left;">m above WGS84 ellipsoid</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>datetime</code></td>
-<td style="text-align: left;"><code>Data_40HZ/DS_UTCTime_40</code></td>
-<td style="text-align: left;">Precise time of aquisiton</td>
-<td style="text-align: left;">date-time</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>quality</code> [^1]</td>
-<td style="text-align: left;"><code>Data_40HZ/Quality/elev_use_flg</code></td>
-<td style="text-align: left;">&amp; <code>Data_40HZ/Quality/sigma_att_flg</code> = 0</td>
-<td style="text-align: left;"></td>
-</tr>
-<tr>
-<td style="text-align: left;"></td>
-<td style="text-align: left;">&amp; <code>Data_40HZ/Waveform/i_numPk</code> = 1</td>
-<td style="text-align: left;">&amp; <code>Data_40HZ.Elevation_Corrections/d_satElevCorr</code> &lt; 3</td>
-<td style="text-align: left;">1 = high quality</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>height_reference</code></td>
-<td style="text-align: left;"><code>land_ice_segments/dem/dem_h</code></td>
-<td style="text-align: left;">Height of the (best available) DEM</td>
-<td style="text-align: left;">height above WGS84</td>
-</tr>
-</tbody>
-</table>
-<p>You can get the output in a <code>DataFrame</code> with <code>DataFrame(points(g)</code>.</p>
-<p>[^1]: Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... &amp; Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.s3!' href='#SpaceLiDAR.s3!'>#</a>
-<strong><code>SpaceLiDAR.s3!</code></strong> &mdash; <em>Function</em>.</p>
-<p>Change default download locatio n to a S3 bucket.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/s3.jl#LL14' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.shift-NTuple{4, Any}' href='#SpaceLiDAR.shift-NTuple{4, Any}'>#</a>
-<strong><code>SpaceLiDAR.shift</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">shift</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="p">)</span><span class="w"></span>
-</code></pre></div>
-<p>Shift <code>longitude</code> and <code>latitude</code> with <code>distance</code> m in direction <code>angle</code>, where North is 0°. Returns a tuple of the shifted coordinates: <code>(longitude, latitude)</code></p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/geom.jl#LL56-L61' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.splitline' href='#SpaceLiDAR.splitline'>#</a>
-<strong><code>SpaceLiDAR.splitline</code></strong> &mdash; <em>Function</em>.</p>
-<p>Split a linestring if the next point is further than <code>distance</code>. Not using Haversine here, as we want to split on meridians and such.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/geom_utils.jl#LL35-L37' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.track_power-Tuple{Integer, String}' href='#SpaceLiDAR.track_power-Tuple{Integer, String}'>#</a>
-<strong><code>SpaceLiDAR.track_power</code></strong> &mdash; <em>Method</em>.</p>
-<p>Return whether track is a strong or weak beam. See Section 7.5 The Spacecraft Orientation Parameter of the ATL03 ATDB.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/691d08d08cf54ff8aec2a96a790267b80b62346d/src/ICESat-2/ICESat-2.jl#LL40-L42' class='documenter-source'>source</a><br></p>
 
 
 
@@ -918,7 +787,7 @@
     <nav class="md-footer__inner md-grid" aria-label="Footer" >
       
         
-        <a href="../../guides/tracks/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Tracks" rel="prev">
+        <a href="../utilities/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Utilities" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -927,26 +796,11 @@
               <span class="md-footer__direction">
                 Previous
               </span>
-              Tracks
+              Utilities
             </div>
           </div>
         </a>
       
-      
-        
-        <a href="../../topics/GEDI/" class="md-footer__link md-footer__link--next" aria-label="Next: GEDI" rel="next">
-          <div class="md-footer__title">
-            <div class="md-ellipsis">
-              <span class="md-footer__direction">
-                Next
-              </span>
-              GEDI
-            </div>
-          </div>
-          <div class="md-footer__button md-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
-          </div>
-        </a>
       
     </nav>
   
@@ -955,7 +809,7 @@
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2021 Maarten Pronk, Deltares
+      Copyright &copy; 2022 Maarten Pronk, Deltares
     </div>
   
   
@@ -980,6 +834,12 @@
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4v322.5zM166.9 76.1h-50.4V512h50.4V76.1zm100.6 0h-50.4V512h50.4V76.1zM368 76h-50.4v247H368V76z"/></svg>
     </a>
   
+    
+    
+    <a href="https://twitter.com/3vetion" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"/></svg>
+    </a>
+  
 </div>
       
     </div>
@@ -991,7 +851,7 @@
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.5bf1dace.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.37e9125f.min.js"></script>
