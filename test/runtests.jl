@@ -132,16 +132,16 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @testset "Angle" begin
             fn8 = joinpath(@__DIR__, "data/ATL08_20201121151145_08920913_005_01.h5")
             g8 = SpaceLiDAR.granule_from_file(fn8)
-            @test isapprox(SpaceLiDAR.angle(g8, 0), 88.0, atol = 1e-8)
-            @test isapprox(SpaceLiDAR.angle(g8, 88), 0.00, atol = 1e-8)
+            @test isapprox(SpaceLiDAR.track_angle(g8, 0), -1.992, atol = 1e-3)
+            @test isapprox(SpaceLiDAR.track_angle(g8, 88), -90.0, atol = 1e-3)
 
             fng = joinpath(
                 @__DIR__,
                 "data/GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5",
             )
             gg = SpaceLiDAR.granule_from_file(fng)
-            @test isapprox(SpaceLiDAR.angle(gg, 0), 51.6443, atol = 1e-8)
-            @test isapprox(SpaceLiDAR.angle(gg, 51.6443), 0.00, atol = 1e-8)
+            @test isapprox(SpaceLiDAR.track_angle(gg, 0), 38.249, atol = 1e-3)
+            @test isapprox(SpaceLiDAR.track_angle(gg, 51.6443), 86.075, atol = 1e-3)
         end
     end
 

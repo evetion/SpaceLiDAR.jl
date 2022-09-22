@@ -62,26 +62,30 @@ function bounds(granule::ICESat2_Granule)
 end
 
 """
-    angle(::ICESat2_Granule, latitude = 0.0)
+    track_angle(::ICESat2_Granule, latitude = 0.0)
 
-Rough approximation of the track angle of ICESat-2 at a given `latitude`.
+Rough approximation of the track angle (0° is North) of ICESat-2 at a given `latitude`.
 
 # Examples
 
-```julia
-julia> angle(g, 0.0)
-g = ICESat2_Granule(:ATL08, "ATL08_20181120173503_04550102_005_01.h5", "", (), ())
+```jlcon
+julia> g = ICESat2_Granule(:ATL08, "ATL08_20181120173503_04550102_005_01.h5", "", (;), (;))
+julia> track_angle(g, 0.0)
+-1.9923955416702257
 ```
 """
-function angle(g::ICESat2_Granule, latitude = 0.0)
-    d = icesat2_inclination / (pi / 2)
-    a = cos(latitude / d) * icesat2_inclination
+function track_angle(g::ICESat2_Granule, latitude = 0.0, nparts = 100)
+
+    latitudes, _, angles = SpaceLiDAR.greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
+    clamp!(angles, -90, 0)
+    v, i = findmin(abs.(latitudes .- min(abs(latitude), icesat2_inclination)))
+    a = angles[i]
 
     info = icesat2_info(g.id)
     if info.ascending
         return a
     else
-        return -a
+        return -180 - a
     end
 end
 
@@ -131,7 +135,7 @@ end
     info(g::ICESat2_Granule)
 
 Derive info based on the filename. The name is built up as follows:
-ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5. See section 1.2.5 in the user guide.
+`ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5`. See section 1.2.5 in the user guide.
 """
 function info(g::ICESat2_Granule)
     icesat2_info(g.id)
