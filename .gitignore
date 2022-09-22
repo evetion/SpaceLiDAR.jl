@@ -30,3 +30,5 @@ scripts
 /temp
 /output
 /data
+/src/old
+.env

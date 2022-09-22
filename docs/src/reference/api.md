@@ -2,7 +2,3 @@
 
 ```@index
 ```
-
-```@autodocs
-Modules = [SpaceLiDAR]
-```
