@@ -126,7 +126,7 @@ function points(
     sensitivity = file["$track/sensitivity"][1:step:end]::Vector{Float32}
     sun_angle = file["$track/solar_elevation"][1:step:end]::Vector{Float32}
 
-    power = occursin("Full power", attrs(file["$track"])["description"]::String)
+    power = occursin("Full power", read_attribute(file["$track"], "description")::String)
 
     # Quality flags as defined by [^1]
     m = trues(length(q))

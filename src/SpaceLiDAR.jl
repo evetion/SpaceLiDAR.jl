@@ -6,6 +6,7 @@ using FillArrays
 using HDF5
 using Tables
 using TableOperations: joinpartitions
+using DataFrames
 
 include("granule.jl")
 include("utils.jl")

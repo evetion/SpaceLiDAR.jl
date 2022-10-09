@@ -95,8 +95,8 @@ function points(
     dem = read(file, "$track/geophys_corr/dem_h")::Vector{Float32}
     demd = map_counts(dem, segment_counts)[1:step:end]
 
-    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
-    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+    atlas_beam_type = read_attribute(file["$track"], "atlas_beam_type")::String
+    spot_number = read_attribute(file["$track"], "atlas_spot_number")::String
 
     times = unix2datetime.(t .+ t_offset)
 

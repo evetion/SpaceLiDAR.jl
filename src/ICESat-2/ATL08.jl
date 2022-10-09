@@ -139,7 +139,7 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
                 latitude = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
                 # t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
                 # times = unix2datetime.(t .+ t_offset)
-                atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+                atlas_beam_type = attributes(file["$track"])["atlas_beam_type"]::String
 
                 height[height.==fill_value] .= NaN
                 line = Line(longitude, latitude, height)

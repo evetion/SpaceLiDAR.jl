@@ -1,4 +1,5 @@
 using Printf
+using DataFrames
 
 """
     granule_from_file(filename::AbstractString)
@@ -59,10 +60,18 @@ end
 
 
 function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
-    subset(xyz, :x => x -> (bbox.min_x .<= x .<= bbox.max_x), :y => y -> (bbox.min_y .<= y .<= bbox.max_y))
+    subset(
+        xyz,
+        :longitude => x -> (bbox.min_x .<= x .<= bbox.max_x),
+        :latitude => y -> (bbox.min_y .<= y .<= bbox.max_y),
+    )
 end
 function in_bbox!(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
-    subset!(xyz, :x => x -> (bbox.min_x .<= x .<= bbox.max_x), :y => y -> (bbox.min_y .<= y .<= bbox.max_y))
+    subset!(
+        xyz,
+        :longitude => x -> (bbox.min_x .<= x .<= bbox.max_x),
+        :latitude => y -> (bbox.min_y .<= y .<= bbox.max_y),
+    )
 end
 
 function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where {G<:Granule}
@@ -77,9 +86,9 @@ end
 
 function bounds(table)
     NamedTuple{(:min_x, :max_x, :min_y, :max_y, :min_z, :max_z)}((
-        extrema(table.x)...,
-        extrema(table.y)...,
-        extrema(table.z)...,
+        extrema(table.longitude)...,
+        extrema(table.latitude)...,
+        extrema(table.height)...,
     ))
 end
 
