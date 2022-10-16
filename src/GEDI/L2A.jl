@@ -1,7 +1,38 @@
 const t_offset = 1514764800  # Time delta since Jan 1 00:00 2018.
 
-function bounds(::GEDI_Granule)
-    (min_x = -180.0, max_x = 180.0, min_y = -63.0, max_y = 63.0, min_z = -1000.0, max_z = 25000.0)
+"""
+    bounds(granule::GEDI_Granule)
+
+Return the bounds of the GEDI granule.
+
+!!! warning
+    
+    This opens the .h5 file to read all tracks, so it is very slow.
+"""
+function bounds(granule::GEDI_Granule)
+    min_xs = Inf
+    min_ys = Inf
+    max_xs = -Inf
+    max_ys = -Inf
+    HDF5.h5open(granule.url, "r") do file
+        for track ∈ gedi_tracks
+            if in(track, keys(file))
+                min_x, max_x = extrema(file["$track/lon_lowestmode"][:])
+                min_y, max_y = extrema(file["$track/lat_lowestmode"][:])
+                min_xs = min(min_xs, min_x)
+                min_ys = min(min_ys, min_y)
+                max_xs = max(max_xs, max_x)
+                max_ys = max(max_ys, max_y)
+            end
+        end
+        ntb = (
+            min_x = min_xs,
+            min_y = min_ys,
+            max_x = max_xs,
+            max_y = max_ys,
+        )
+        ntb
+    end
 end
 
 """

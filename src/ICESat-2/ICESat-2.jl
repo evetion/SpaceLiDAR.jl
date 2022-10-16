@@ -50,13 +50,10 @@ function bounds(granule::ICESat2_Granule)
         nt = (; collect(Symbol(x) => read(extent[x]) for x in keys(extent))...)
         ntb = (
             min_x = nt.westBoundLongitude,
-            max_x = nt.eastBoundLongitude,
             min_y = nt.southBoundLatitude,
+            max_x = nt.eastBoundLongitude,
             max_y = nt.northBoundLatitude,
-            min_z = -1000,
-            max_z = 8000,
         )
-        granule.bbox = ntb
         ntb
     end
 end
@@ -81,7 +78,6 @@ function track_angle(g::ICESat2_Granule, latitude::Real = 0.0, nparts = 100)
     v, i = findmin(f -> abs(f - min(abs(latitude), icesat2_inclination)), latitudes)
     a = angles[i]
 
-    @info g
     info = icesat2_info(g.id)
     if info.ascending
         return a

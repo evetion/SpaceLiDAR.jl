@@ -48,7 +48,7 @@ end
 
 Remove the file associated with `granule` from the local filesystem.
 """
-function rm(granule::Granule)
+function Base.rm(granule::Granule)
     if isfile(granule.url)
         Base.rm(granule.url)
     else
@@ -67,6 +67,6 @@ function download!(granules::Vector{Granule}, folder::AbstractString = ".")
     end
 end
 
-function filesize(granule::T) where {T<:Granule}
+function Base.filesize(granule::T) where {T<:Granule}
     filesize(granule.url)
 end

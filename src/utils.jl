@@ -59,19 +59,26 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Gran
 end
 
 
-function in_bbox(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+function in_bbox(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     subset(
         xyz,
         :longitude => x -> (bbox.min_x .<= x .<= bbox.max_x),
         :latitude => y -> (bbox.min_y .<= y .<= bbox.max_y),
     )
 end
-function in_bbox!(xyz, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+function in_bbox!(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     subset!(
         xyz,
         :longitude => x -> (bbox.min_x .<= x .<= bbox.max_x),
         :latitude => y -> (bbox.min_y .<= y .<= bbox.max_y),
     )
+end
+
+function intersect(
+    a::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}},
+    b::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}},
+)
+    !(b.min_x > a.max_x || b.max_x < a.min_x || b.min_y > a.max_y || b.max_y < a.min_y)
 end
 
 function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where {G<:Granule}

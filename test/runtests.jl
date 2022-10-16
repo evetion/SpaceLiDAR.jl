@@ -47,6 +47,14 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(find(:GEDI, "GEDI02_A", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
     end
 
+    @testset "granules" begin
+        gs = SpaceLiDAR.granules_from_folder("data")
+        @test length(gs) == 7
+        fgs = SpaceLiDAR.in_bbox(gs, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
+        @test length(fgs) == 2
+        @info SpaceLiDAR.bounds.(fgs)
+    end
+
     @testset "GLAH06" begin
         fn = joinpath(@__DIR__, "data/GLAH06_634_2131_002_0084_4_01_0001.H5")
         g = SpaceLiDAR.granule_from_file(fn)
@@ -69,7 +77,10 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test points[end].track[1] == "gt3r"
         lines = SpaceLiDAR.lines(g3, step = 1000)
         @test length(lines) == 6
-        SpaceLiDAR.classify(g3)
+        c = SpaceLiDAR.classify(g3)
+        df = reduce(vcat, DataFrame.(c))
+        SpaceLiDAR.materialize!(df)
+        @test df.classification isa Vector{String}
     end
     @testset "ATL06" begin
         fn6 = joinpath(@__DIR__, "data/ATL06_20220404104324_01881512_005_01.h5")
@@ -158,6 +169,12 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test Tables.columnaccess(g3)
         t = Tables.columntable(g3)
         @test length(t.longitude) == 4295820
+
+        df = DataFrame(t)
+        SpaceLiDAR.materialize!(df)
+        SpaceLiDAR.in_bbox(df, (min_x = 0.0, min_y = 0.0, max_x = 1.0, max_y = 1.0))
+        SpaceLiDAR.in_bbox!(df, (min_x = 0.0, min_y = 0.0, max_x = 1.0, max_y = 1.0))
+        @test length(df.longitude) == 0
 
         fn14 = joinpath(@__DIR__, "data/GLAH14_634_1102_001_0071_0_01_0001.H5")
         g14 = SpaceLiDAR.granule_from_file(fn14)
