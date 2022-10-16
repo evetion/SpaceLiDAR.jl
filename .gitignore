@@ -32,3 +32,6 @@ scripts
 /data
 /src/old
 .env
+*.pq
+*.parquet
+*.fgb

@@ -11,6 +11,7 @@ end
 struct Point{T} <: Geometry where {T<:Real}
     c::Vector{T}
 end
+Point(x, y, z) = Point([x, y, z])
 
 GeoInterface.isgeometry(geom::Type{<:Geometry})::Bool = true
 GeoInterface.geomtrait(::Line) = LineStringTrait()
@@ -21,7 +22,8 @@ GeoInterface.ngeom(::LineStringTrait, geom::Line) = length(geom.x)
 GeoInterface.getgeom(::LineStringTrait, geom::Line, i) = Point([geom.x[i], geom.y[i], geom.z[i]])
 
 GeoInterface.ncoord(::PointTrait, geom::Point) = 3
-GeoInterface.getcoord(::PointTrait, geom::Line, i) = geom.c[i]
+GeoInterface.getcoord(::PointTrait, geom::Point, i) = geom.c[i]
+
 
 
 """

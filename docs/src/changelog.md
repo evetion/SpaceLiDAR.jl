@@ -4,6 +4,11 @@
 - ICESat-2 S3 access
 - 20m resolution data in ICESat-2 ATL08 v05
 
+## v0.2.1
+- Unified `bounds` of granules
+- Fixed `getcoord` for `Point` and added `Point(x, y, z)` constructor
+- Updated utils to make use of DataFrames with correct column names
+
 ## v0.2.0
 
 !!! danger

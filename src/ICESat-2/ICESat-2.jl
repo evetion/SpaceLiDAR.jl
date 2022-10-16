@@ -50,13 +50,10 @@ function bounds(granule::ICESat2_Granule)
         nt = (; collect(Symbol(x) => read(extent[x]) for x in keys(extent))...)
         ntb = (
             min_x = nt.westBoundLongitude,
-            max_x = nt.eastBoundLongitude,
             min_y = nt.southBoundLatitude,
+            max_x = nt.eastBoundLongitude,
             max_y = nt.northBoundLatitude,
-            min_z = -1000,
-            max_z = 8000,
         )
-        granule.bbox = ntb
         ntb
     end
 end
@@ -74,11 +71,11 @@ julia> track_angle(g, 0.0)
 -1.9923955416702257
 ```
 """
-function track_angle(g::ICESat2_Granule, latitude = 0.0, nparts = 100)
+function track_angle(g::ICESat2_Granule, latitude::Real = 0.0, nparts = 100)
 
     latitudes, _, angles = SpaceLiDAR.greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
     clamp!(angles, -90, 0)
-    v, i = findmin(abs.(latitudes .- min(abs(latitude), icesat2_inclination)))
+    v, i = findmin(f -> abs(f - min(abs(latitude), icesat2_inclination)), latitudes)
     a = angles[i]
 
     info = icesat2_info(g.id)
@@ -86,6 +83,24 @@ function track_angle(g::ICESat2_Granule, latitude = 0.0, nparts = 100)
         return a
     else
         return -180 - a
+    end
+end
+function track_angle(g::ICESat2_Granule, latitude::Vector{Real}, nparts = 100)
+    latitudes, _, angles = SpaceLiDAR.greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
+    clamp!(angles, -90, 0)
+
+    latitude2 = abs.(latitude)
+    a = zeros(length(latitude2))
+    for I in eachindex(latitude2)
+        v, i = findmin(f -> abs(f - min(latitude2[I], icesat2_inclination)), latitudes)
+        a[I] = angles[i]
+    end
+
+    info = icesat2_info(g.id)
+    if info.ascending
+        return a
+    else
+        return -180 .- a
     end
 end
 

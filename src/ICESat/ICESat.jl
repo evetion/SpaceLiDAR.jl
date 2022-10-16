@@ -26,11 +26,9 @@ function bounds(granule::ICESat_Granule)
         nt = attributes(file)
         ntb = (
             min_x = parse(Float64, read(nt["geospatial_lon_min"])),
-            max_x = parse(Float64, read(nt["geospatial_lon_max"])),
             min_y = parse(Float64, read(nt["geospatial_lat_min"])),
+            max_x = parse(Float64, read(nt["geospatial_lon_max"])),
             max_y = parse(Float64, read(nt["geospatial_lat_max"])),
-            min_z = -1000,
-            max_z = 8000,
         )
         return ntb
     end
