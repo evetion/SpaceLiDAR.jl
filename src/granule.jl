@@ -1,5 +1,6 @@
 using HDF5
 import Downloads
+using HTTP
 
 # This is a method because it will segfault if precompiled.
 function _download(kwargs...)
@@ -35,7 +36,8 @@ function download!(granule::Granule, folder = ".")
     end
     isfile(granule.url) && return granule
     if startswith(granule.url, "http")
-        _download(granule.url, fn)
+        HTTP.download(granule.url, fn);
+        #_download(granule.url, fn)
     else
         error("Can't determine how to download $(granule.url)")
     end
