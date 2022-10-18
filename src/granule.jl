@@ -1,15 +1,15 @@
 using HDF5
 import Downloads
-using HTTP
 
 # This is a method because it will segfault if precompiled.
 function _download(kwargs...)
     downloader = Downloads.Downloader()
-    downloader.easy_hook =
+    easy_hook =
         (easy, _) -> begin
             Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_NETRC, Downloads.Curl.CURL_NETRC_OPTIONAL)
             Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_COOKIEFILE, "")
         end
+    downloader.easy_hook = easy_hook
 
     Downloads.download(kwargs...; downloader = downloader)
 end
