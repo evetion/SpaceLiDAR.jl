@@ -71,7 +71,7 @@ function points(
             height = Vector{Float32}[],
             height_error = Vector{Float64}[],
             datetime = Vector{Int8}[],
-            quality = Vector{Float32[],
+            quality = Vector{Float32}[],
             track = Fill(track, 0),
             strong_beam = Fill(atlas_beam_type == "strong", 0),
             detector_id = Fill(parse(Int8, spot_number), 0),
