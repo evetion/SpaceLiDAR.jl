@@ -10,7 +10,6 @@ function _download(kwargs...)
             Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_COOKIEFILE, "")
         end
     downloader.easy_hook = easy_hook
-
     Downloads.download(kwargs...; downloader = downloader)
 end
 
@@ -36,8 +35,7 @@ function download!(granule::Granule, folder = ".")
     end
     isfile(granule.url) && return granule
     if startswith(granule.url, "http")
-        HTTP.download(granule.url, fn);
-        #_download(granule.url, fn)
+        _download(granule.url, fn)
     else
         error("Can't determine how to download $(granule.url)")
     end
