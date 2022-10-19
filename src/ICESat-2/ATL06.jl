@@ -62,17 +62,20 @@ function points(
     if isnothing(start)
         @warn "no ATL06 data found within bbox"
        
+        spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+        atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+
         nt = (;
-            longitude = [],
-            latitude = [],
-            height = [],
-            height_error = [],
-            datetime = [],
-            quality = [],
-            track = [],
-            strong_beam = [],
-            detector_id = [],
-            height_reference = [],
+            longitude = Vector{Float32}[],
+            latitude = Vector{Float32}[],
+            height = Vector{Float32}[],
+            height_error = Vector{Float64}[],
+            datetime = Vector{Int8}[],
+            quality = Vector{Float32[],
+            track = Fill(track, 0),
+            strong_beam = Fill(atlas_beam_type == "strong", 0),
+            detector_id = Fill(parse(Int8, spot_number), 0),
+            height_reference = Vector{Float32}[],
         )
         return nt
     end
