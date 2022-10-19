@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1)
+    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf))
 
 Retrieve the points for a given ICESat-2 ATL06 (Land Ice) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
