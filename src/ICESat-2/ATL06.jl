@@ -66,12 +66,12 @@ function points(
         atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
 
         nt = (;
-            longitude = Vector{Float32}[],
-            latitude = Vector{Float32}[],
+            longitude = Vector{Float64}[],
+            latitude = Vector{Float64}[],
             height = Vector{Float32}[],
             height_error = Vector{Float64}[],
-            datetime = Vector{Int8}[],
-            quality = Vector{Float32}[],
+            datetime =Vector{Dates.DateTime}[],
+            quality = BitVector[],
             track = Fill(track, 0),
             strong_beam = Fill(atlas_beam_type == "strong", 0),
             detector_id = Fill(parse(Int8, spot_number), 0),
