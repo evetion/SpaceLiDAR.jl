@@ -40,22 +40,32 @@ function points(
     return dfs
 end
 
-
 function points(
     ::ICESat2_Granule{:ATL06},
     file::HDF5.H5DataStore,
     track::AbstractString,
     t_offset::Float64,
     step = 1,
+    bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf)
 )
-    z = file["$track/land_ice_segments/h_li"][1:step:end]::Vector{Float32}
-    sigma_geo_h = file["$track/land_ice_segments/sigma_geo_h"][1:step:end]::Vector{Float32}
-    h_li_sigma = file["$track/land_ice_segments/h_li_sigma"][1:step:end]::Vector{Float32}
     x = file["$track/land_ice_segments/longitude"][1:step:end]::Vector{Float64}
     y = file["$track/land_ice_segments/latitude"][1:step:end]::Vector{Float64}
-    t = file["$track/land_ice_segments/delta_time"][1:step:end]::Vector{Float64}
-    q = file["$track/land_ice_segments/atl06_quality_summary"][1:step:end]::Vector{Int8}
-    dem = file["$track/land_ice_segments/dem/dem_h"][1:step:end]::Vector{Float32}
+
+    # find index of points inside of bbox
+    ind = (x .> min_x) .& (y .> min_y) .& (x .< max_x) .& (y .< max_y)
+    start = findfirst(ind)
+    stop = findlast(ind)
+    
+    # only include x and y data within bbox
+    x = x[start:step:stop]
+    y = y[start:step:stop]
+
+    z = file["$track/land_ice_segments/h_li"][start:step:stop]::Vector{Float32}
+    sigma_geo_h = file["$track/land_ice_segments/sigma_geo_h"][start:step:stop]::Vector{Float32}
+    h_li_sigma = file["$track/land_ice_segments/h_li_sigma"][start:step:stop]::Vector{Float32}
+    t = file["$track/land_ice_segments/delta_time"][start:step:stop]::Vector{Float64}
+    q = file["$track/land_ice_segments/atl06_quality_summary"][start:step:stop]::Vector{Int8}
+    dem = file["$track/land_ice_segments/dem/dem_h"][start:step:stop]::Vector{Float32}
     spot_number = attrs(file["$track"])["atlas_spot_number"]::String
     atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
     times = unix2datetime.(t .+ t_offset)
