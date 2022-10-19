@@ -74,7 +74,7 @@ function points(
             detector_id = [],
             height_reference = [],
         )
-        return
+        return nt
     end
 
     # only include x and y data within bbox
