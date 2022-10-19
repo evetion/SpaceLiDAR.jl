@@ -33,7 +33,9 @@ function points(
         for (i, track) in enumerate(tracks)
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
                 track_nt = points(granule, file, track, t_offset, step, bbox)
-                track_nt.height[track_nt.height.==fill_value] .= NaN
+                if !isempty(track_nt.height)
+                    track_nt.height[track_nt.height.==fill_value] .= NaN
+                end
                 push!(dfs, track_nt)
             end
         end
