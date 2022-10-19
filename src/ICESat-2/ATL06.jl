@@ -33,10 +33,6 @@ function points(
         for (i, track) in enumerate(tracks)
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
                 track_nt = points(granule, file, track, t_offset, step, bbox)
-                if ismissing(track_nt)
-                    dfs = missing
-                    return
-                end
                 track_nt.height[track_nt.height.==fill_value] .= NaN
                 push!(dfs, track_nt)
             end
@@ -63,7 +59,19 @@ function points(
     
     if isnothing(start)
         @warn "no ATL06 data found within bbox"
-        nt = missing
+       
+        nt = (;
+            longitude = [],
+            latitude = [],
+            height = [],
+            height_error = [],
+            datetime = [],
+            quality = [],
+            track = [],
+            strong_beam = [],
+            detector_id = [],
+            height_reference = [],
+        )
         return
     end
 
