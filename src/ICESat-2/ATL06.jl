@@ -25,13 +25,18 @@ function points(
     granule::ICESat2_Granule{:ATL06};
     tracks = icesat2_tracks,
     step = 1,
+    bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf),
 )
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         for (i, track) in enumerate(tracks)
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
-                track_nt = points(granule, file, track, t_offset, step)
+                track_nt = points(granule, file, track, t_offset, step, bbox)
+                if isnothing(track_nt)
+                    dfs = nothing
+                    return
+                end
                 track_nt.height[track_nt.height.==fill_value] .= NaN
                 push!(dfs, track_nt)
             end
@@ -46,16 +51,22 @@ function points(
     track::AbstractString,
     t_offset::Float64,
     step = 1,
-    bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf)
+    bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf),
 )
-    x = file["$track/land_ice_segments/longitude"][1:step:end]::Vector{Float64}
-    y = file["$track/land_ice_segments/latitude"][1:step:end]::Vector{Float64}
+    x = file["$track/land_ice_segments/longitude"][:]::Vector{Float64}
+    y = file["$track/land_ice_segments/latitude"][:]::Vector{Float64}
 
     # find index of points inside of bbox
-    ind = (x .> min_x) .& (y .> min_y) .& (x .< max_x) .& (y .< max_y)
+    ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
     start = findfirst(ind)
     stop = findlast(ind)
     
+    if isnothing(start)
+        @warn "no ATL06 data found within bbox"
+        nt = nothing
+        return
+    end
+
     # only include x and y data within bbox
     x = x[start:step:stop]
     y = y[start:step:stop]
