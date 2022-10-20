@@ -39,7 +39,7 @@ function find(
     version::String = "005",
 )
     # https://cmr.earthdata.nasa.gov/search/granules.json?provider=NSIDC_ECS&page_size=2000&sort_key[]=-start_date&sort_key[]=producer_granule_id&short_name=ATL03&version=2&version=02&version=002&temporal[]=2018-10-13T00:00:00Z,2020-01-13T08:13:50Z&bounding_box=-180,-90,180,90
-    granules = earthdata_search(product, bbox, version)
+    granules = earthdata_search(Mission(:ICESat2), product, bbox, version)
     map(
         x -> ICESat2_Granule(
             Symbol(product),
@@ -86,6 +86,7 @@ function earthdata_search(
 )
     page_size = 2000
     page_num = 1
+    
     q = Dict(
         "provider" => provider,
         "page_num" => page_num,
@@ -94,6 +95,42 @@ function earthdata_search(
         "version" => version,
         "bounding_box" => "$(bbox.min_x),$(bbox.min_y),$(bbox.max_x),$(bbox.max_y)",
     )
+    
+    r = HTTP.get(url, query = q)
+    cgranules = parse_cmr_json(r)
+    granules = copy(cgranules)
+    while length(cgranules) == page_size
+        @warn "Found more than $page_size granules, requesting another $page_size..."
+        q["page_num"] += 1
+        r = HTTP.get(url, query = q)
+        cgranules = parse_cmr_json(r)
+        append!(granules, cgranules)
+    end
+    granules
+end
+
+# this provides interm access to ICESat2 data hosted on earthdatacloud
+function earthdata_search(
+    ::Mission{:ICESat2},
+    product::String,
+    bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}},
+    version::String;
+    #provider = "NSIDC_ECS",
+    concept_id = "C2153572614-NSIDC_CPRD",
+)
+    page_size = 2000
+    page_num = 1
+    
+    q = Dict(
+        "concept_id" => concept_id,
+       # "provider" => provider,
+        "page_num" => page_num,
+        "page_size" => page_size,
+        "short_name" => product,
+        "version" => version,
+        "bounding_box" => "$(bbox.min_x),$(bbox.min_y),$(bbox.max_x),$(bbox.max_y)",
+    )
+    
     r = HTTP.get(url, query = q)
     cgranules = parse_cmr_json(r)
     granules = copy(cgranules)
