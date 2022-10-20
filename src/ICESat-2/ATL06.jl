@@ -60,7 +60,7 @@ function points(
     stop = findlast(ind)
     
     if isnothing(start)
-        @warn "no ATL06 data found within bbox"
+        @warn "no data found within bbox: $(file.filename)"
        
         spot_number = attrs(file["$track"])["atlas_spot_number"]::String
         atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
