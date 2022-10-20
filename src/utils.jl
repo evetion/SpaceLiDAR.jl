@@ -143,7 +143,6 @@ function netrc!(username, password)
     open(fn, "a") do f
         write(f, "\n")
         write(f, "machine urs.earthdata.nasa.gov login $username password $(password)\n")
-        write(f, "machine n5eil01u.ecs.nsidc.org login $username password $(password)\n")
     end
     fn
 end
