@@ -39,7 +39,13 @@ function find(
     version::String = "005",
 )
     # https://cmr.earthdata.nasa.gov/search/granules.json?provider=NSIDC_ECS&page_size=2000&sort_key[]=-start_date&sort_key[]=producer_granule_id&short_name=ATL03&version=2&version=02&version=002&temporal[]=2018-10-13T00:00:00Z,2020-01-13T08:13:50Z&bounding_box=-180,-90,180,90
-    granules = earthdata_search(Mission(:ICESat2), product, bbox, version)
+    if product == "ATL06"
+        # is seems that only ATL06 is currently hosted on earthdatacloud
+        granules = earthdata_search(Mission(:ICESat2), product, bbox, version)
+    else
+        granules = earthdata_search(product, bbox, version)
+    end
+
     map(
         x -> ICESat2_Granule(
             Symbol(product),
