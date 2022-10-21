@@ -20,12 +20,13 @@ mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
     s3::String
+    bbox::NamedTuple
     info::NamedTuple
 end
 ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule(product, g.id, g.url, g.s3, g.info)
+    ICESat2_Granule(product, g.id, g.url, g.s3, g.bbox, g.info)
 end
 
 """

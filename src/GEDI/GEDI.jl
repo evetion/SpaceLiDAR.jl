@@ -14,12 +14,13 @@ mutable struct GEDI_Granule{product} <: Granule
     id::AbstractString
     url::AbstractString
     s3::String
+    bbox::NamedTuple
     info::NamedTuple
 end
 GEDI_Granule(product, args...) = GEDI_Granule{product}(args...)
 
 function Base.copy(g::GEDI_Granule{product}) where {product}
-    GEDI_Granule(product, g.id, g.url, g.s3, g.info)
+    GEDI_Granule(product, g.id, g.url, g.s3, g.bbox, g.info)
 end
 
 

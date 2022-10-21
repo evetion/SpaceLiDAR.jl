@@ -2,8 +2,8 @@ using HTTP
 using JSON
 
 const world = (min_x = -180.0, min_y = -90.0, max_x = 180.0, max_y = 90.0)
-
 struct Mission{x}
+    
 end
 Mission(x) = Mission{x}()
 
@@ -29,6 +29,7 @@ function find(
             x["filename"],
             x["https"],
             x["s3"],
+            (min_x = missing, min_y = missing, max_x = missing, max_y = missing),
             gedi_info(x["filename"]),
         ),
         granules)
@@ -47,6 +48,7 @@ function find(
             x["filename"],
             x["https"],
             x["s3"],
+            (min_x = missing, min_y = missing, max_x = missing, max_y = missing),
             icesat2_info(x["filename"]),
         ),
         granules)
@@ -66,6 +68,7 @@ function find(
             x["filename"],
             x["https"],
             x["s3"],
+            (min_x = missing, min_y = missing, max_x = missing, max_y = missing),
             icesat_info(x["filename"]),
         ),
         granules)
