@@ -9,7 +9,7 @@ const fill_value = 3.4028235f38
 const blacklist = readlines(joinpath(@__DIR__, "blacklist.txt"))
 const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
 
-
+ 
 """
     ICESat2_Granule{product} <: Granule
 
@@ -23,6 +23,7 @@ mutable struct ICESat2_Granule{product} <: Granule
     bbox::NamedTuple
     info::NamedTuple
 end
+
 ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
@@ -131,6 +132,7 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g = ICESat2_Granule{product}(
         replace(replace(g.id, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         replace(replace(g.url, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
+        replace(replace(g.s3, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         g.bbox,
         g.info,
     )
