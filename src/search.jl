@@ -1,9 +1,13 @@
 using HTTP
 using JSON
+using Downloads
+using TimeZones
+using Dates
+using JSON3
 
 const world = (min_x = -180.0, min_y = -90.0, max_x = 180.0, max_y = 90.0)
 struct Mission{x}
-    
+
 end
 Mission(x) = Mission{x}()
 
@@ -81,22 +85,22 @@ function parse_cmr_json(r)
     f = [granule_info(row[1]) for row in eachrow(get(data, "items", Dict()))]
 end
 
-function granule_info(item::Dict{String, Any})
+function granule_info(item::Dict{String,Any})
     https = ""
     s3 = ""
     filename = ""
-    for row in eachrow(get(get(item,"umm",Dict()),"RelatedUrls",Dict()))
-        if get(row[1],"Type",nothing) == "GET DATA" 
-            https = get(row[1],"URL","")
-        elseif get(row[1],"Type",nothing) == "GET DATA VIA DIRECT ACCESS"
-            s3 = get(row[1],"URL","")
+    for row in eachrow(get(get(item, "umm", Dict()), "RelatedUrls", Dict()))
+        if get(row[1], "Type", nothing) == "GET DATA"
+            https = get(row[1], "URL", "")
+        elseif get(row[1], "Type", nothing) == "GET DATA VIA DIRECT ACCESS"
+            s3 = get(row[1], "URL", "")
         end
     end
 
     # this is necessary to provide a filename as the url does not always exist
-    for row in eachrow(get(get(get(item,"umm",Dict()),"DataGranule",nothing),  "Identifiers", nothing))
-        if get(row[1],"IdentifierType",nothing) ==  "ProducerGranuleId"
-            filename = get(row[1],"Identifier","")
+    for row in eachrow(get(get(get(item, "umm", Dict()), "DataGranule", nothing), "Identifiers", nothing))
+        if get(row[1], "IdentifierType", nothing) == "ProducerGranuleId"
+            filename = get(row[1], "Identifier", "")
         end
     end
 
@@ -116,7 +120,7 @@ function earthdata_search(
 )
     page_size = 2000
     page_num = 1
-    
+
     q = Dict(
         "provider" => provider,
         "page_num" => page_num,
@@ -137,4 +141,29 @@ function earthdata_search(
         append!(granules, cgranules)
     end
     granules
+end
+
+
+function earthdata_cloud_s3(daac = "nsidc")
+    body = sprint() do output
+        return Downloads.request(
+            "https://data.$daac.earthdatacloud.nasa.gov/s3credentials";
+            output = output,
+        )
+    end
+    return JSON3.read(body)
+end
+
+function earthdata_s3_env!(env = ENV)
+    dict = earthdata_cloud_s3()
+    time =
+        ZonedDateTime(dict.expiration, dateformat"y-m-d H:M:S+z") -
+        now(TimeZone("UTC"))
+    @warn "AWS tokens expire in $(floor(time, Dates.Minute)) from now."
+    env["AWS_ACCESS_KEY_ID"] = dict.accessKeyId
+    env["AWS_SECRET_ACCESS_KEY"] = dict.secretAccessKey
+    env["AWS_SESSION_TOKEN"] = dict.sessionToken
+    env["AWS_SESSION_EXPIRES"] = dict.expiration
+    env["AWS_DEFAULT_REGION"] = "us-west-2"
+    return env
 end
