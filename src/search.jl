@@ -29,7 +29,7 @@ function find(
             x["filename"],
             x["https"],
             x["s3"],
-            (min_x = missing, min_y = missing, max_x = missing, max_y = missing),
+            (min_x = [], min_y = [], max_x = [], max_y = []),
             gedi_info(x["filename"]),
         ),
         granules)
@@ -48,7 +48,7 @@ function find(
             x["filename"],
             x["https"],
             x["s3"],
-            (min_x = missing, min_y = missing, max_x = missing, max_y = missing),
+            (min_x = [], min_y = [], max_x = [], max_y = []),
             icesat2_info(x["filename"]),
         ),
         granules)
@@ -68,7 +68,7 @@ function find(
             x["filename"],
             x["https"],
             x["s3"],
-            (min_x = missing, min_y = missing, max_x = missing, max_y = missing),
+            (min_x = [], min_y = [], max_x = [], max_y = []),
             icesat_info(x["filename"]),
         ),
         granules)
