@@ -19,13 +19,13 @@ either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@
 mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
-    bbox::NamedTuple
+    s3::String
     info::NamedTuple
 end
 ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info)
+    ICESat2_Granule(product, g.id, g.url, g.s3, g.info)
 end
 
 """

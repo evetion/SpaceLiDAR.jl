@@ -13,12 +13,13 @@ either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@
 mutable struct ICESat_Granule{product} <: Granule
     id::String
     url::String
+    s3::String
     info::NamedTuple
 end
 ICESat_Granule(product, args...) = ICESat_Granule{product}(args...)
 
 function Base.copy(g::ICESat_Granule{product}) where {product}
-    return ICESat_Granule(product, g.id, copy(g.url), copy(g.info))
+    return ICESat_Granule(product, g.id, copy(g.url), copy(g.s3), copy(g.info))
 end
 
 function bounds(granule::ICESat_Granule)

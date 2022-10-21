@@ -13,12 +13,13 @@ either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@
 mutable struct GEDI_Granule{product} <: Granule
     id::AbstractString
     url::AbstractString
+    s3::String
     info::NamedTuple
 end
 GEDI_Granule(product, args...) = GEDI_Granule{product}(args...)
 
 function Base.copy(g::GEDI_Granule{product}) where {product}
-    GEDI_Granule(product, g.id, g.url, g.info)
+    GEDI_Granule(product, g.id, g.url, g.s3, g.info)
 end
 
 
