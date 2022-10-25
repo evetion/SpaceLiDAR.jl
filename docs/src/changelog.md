@@ -4,6 +4,10 @@
 - ICESat-2 S3 access
 - 20m resolution data in ICESat-2 ATL08 v05
 
+## v0.2.2
+- Fixed ICESat-2 download (please remove `n5eil01u.ecs.nsidc.org` from your `.netrc` file)
+- Linked to [Zenodo](https://zenodo.org/badge/latestdoi/241095197) for DOI citations
+
 ## v0.2.1
 - Unified `bounds` of granules
 - Fixed `getcoord` for `Point` and added `Point(x, y, z)` constructor

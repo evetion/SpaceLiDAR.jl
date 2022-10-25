@@ -3,12 +3,10 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://evetion.github.io/SpaceLiDAR.jl/dev)
 [![CI](https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/evetion/SpaceLiDAR.jl/actions/workflows/CI.yml)
 [![codecov](https://codecov.io/gh/evetion/SpaceLiDAR.jl/branch/master/graph/badge.svg?token=nztwnGtIcY)](https://codecov.io/gh/evetion/SpaceLiDAR.jl)
-
+[![DOI](https://zenodo.org/badge/241095197.svg)](https://zenodo.org/badge/latestdoi/241095197)
 
 # SpaceLiDAR
 A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly search, download and load filtered point data with relevant attributes from the `.h5` granules of each data product.
-
-*This is a research package, things are quick to change.*
 
 Currently supports the following data products:
 
@@ -22,7 +20,9 @@ Currently supports the following data products:
 |ICESat-2| ATL12 v5 | [UG](https://nsidc.org/sites/nsidc.org/files/ATL12-V005-UserGuide.pdf) | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL12_ATBD_r005.pdf) |
 |GEDI| L2A v2 | [UG](https://lpdaac.usgs.gov/documents/998/GEDI02_UserGuide_V21.pdf) | [ATBD](https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf) |
 
-For a quick overview, see the FOSS4G Pluto notebook [here](https://www.evetion.nl/SpaceLiDAR.jl/dev/tutorial/foss4g_2021.jl.html)
+For a overview with code examples, see the FOSS4G Pluto notebook [here](https://www.evetion.nl/SpaceLiDAR.jl/dev/tutorial/foss4g_2021.jl.html)
+
+If you use SpaceLiDAR.jl in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197).
 
 # Install
 ```julia

@@ -1,9 +1,8 @@
+[![DOI](https://zenodo.org/badge/241095197.svg)](https://zenodo.org/badge/latestdoi/241095197)
 # SpaceLiDAR
-A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly [search](tutorial/usage.md#search-for-data), download and [load](tutorial/usage.md#derive-points) filtered point data with relevant attributes from the `.h5` granules of each data product.
+A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly [search](tutorial/usage.md#search-for-data), download and [load](tutorial/usage.md#derive-points) filtered point data with relevant attributes from the `.h5` granules of each data product. For an overview with code examples, see the FOSS4G Pluto notebook [here](tutorial/foss4g_2021.jl.html).
 
-For a quick overview, see the FOSS4G Pluto notebook [here](tutorial/foss4g_2021.jl.html).
-
-*This is a research package, things are quick to change.*
+If you use SpaceLiDAR in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197).
 
 ## Supported data products
 Currently supports the following data products:
