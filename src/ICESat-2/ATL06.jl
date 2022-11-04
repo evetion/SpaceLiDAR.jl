@@ -87,7 +87,7 @@ function points(
         y = y[start:step:stop]
     else
         start = 1
-        stop = length(["$track/land_ice_segments/longitude"])
+        stop = length(file["$track/land_ice_segments/longitude"])
         x = file["$track/land_ice_segments/longitude"][start:step:stop]::Vector{Float64}
         y = file["$track/land_ice_segments/latitude"][start:step:stop]::Vector{Float64}
     end
