@@ -51,38 +51,46 @@ function points(
     step = 1,
     bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf),
 )
-    x = file["$track/land_ice_segments/longitude"][:]::Vector{Float64}
-    y = file["$track/land_ice_segments/latitude"][:]::Vector{Float64}
+    # subset by bbox ?
+    if any(isfinite.(values(bbox)))
+        x = file["$track/land_ice_segments/longitude"][:]::Vector{Float64}
+        y = file["$track/land_ice_segments/latitude"][:]::Vector{Float64}
 
-    # find index of points inside of bbox
-    ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
-    start = findfirst(ind)
-    stop = findlast(ind)
-    
-    if isnothing(start)
-        @warn "no data found within bbox: $(file.filename)"
-       
-        spot_number = attrs(file["$track"])["atlas_spot_number"]::String
-        atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+        # find index of points inside of bbox
+        ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
+        start = findfirst(ind)
+        stop = findlast(ind)
 
-        nt = (;
-            longitude = Vector{Float64}[],
-            latitude = Vector{Float64}[],
-            height = Vector{Float32}[],
-            height_error = Vector{Float64}[],
-            datetime =Vector{Dates.DateTime}[],
-            quality = BitVector[],
-            track = Fill(track, 0),
-            strong_beam = Fill(atlas_beam_type == "strong", 0),
-            detector_id = Fill(parse(Int8, spot_number), 0),
-            height_reference = Vector{Float32}[],
-        )
-        return nt
+        if isnothing(start)
+            @warn "no data found within bbox: $(file.filename)"
+        
+            spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+            atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+
+            nt = (;
+                longitude = Vector{Float64}[],
+                latitude = Vector{Float64}[],
+                height = Vector{Float32}[],
+                height_error = Vector{Float64}[],
+                datetime =Vector{Dates.DateTime}[],
+                quality = BitVector[],
+                track = Fill(track, 0),
+                strong_beam = Fill(atlas_beam_type == "strong", 0),
+                detector_id = Fill(parse(Int8, spot_number), 0),
+                height_reference = Vector{Float32}[],
+            )
+            return nt
+        end
+
+        # only include x and y data within bbox
+        x = x[start:step:stop]
+        y = y[start:step:stop]
+    else
+        start = 1
+        stop = length(["$track/land_ice_segments/longitude"])
+        x = file["$track/land_ice_segments/longitude"][start:step:stop]::Vector{Float64}
+        y = file["$track/land_ice_segments/latitude"][start:step:stop]::Vector{Float64}
     end
-
-    # only include x and y data within bbox
-    x = x[start:step:stop]
-    y = y[start:step:stop]
 
     z = file["$track/land_ice_segments/h_li"][start:step:stop]::Vector{Float32}
     sigma_geo_h = file["$track/land_ice_segments/sigma_geo_h"][start:step:stop]::Vector{Float32}
