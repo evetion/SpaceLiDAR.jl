@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf))
+    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox::Union{Nothing,NamedTuple{}} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL06 (Land Ice) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -25,7 +25,7 @@ function points(
     granule::ICESat2_Granule{:ATL06};
     tracks = icesat2_tracks,
     step = 1,
-    bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf),
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
 )
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
@@ -49,10 +49,10 @@ function points(
     track::AbstractString,
     t_offset::Float64,
     step = 1,
-    bbox = (min_x = -Inf, min_y = -Inf, max_x = Inf, max_y = Inf),
+    bbox = bbox::Union{Nothing,NamedTuple{}} = nothing,
 )
     # subset by bbox ?
-    if any(isfinite.(values(bbox)))
+    if !isnothing(bbox)
         x = file["$track/land_ice_segments/longitude"][:]::Vector{Float64}
         y = file["$track/land_ice_segments/latitude"][:]::Vector{Float64}
 
@@ -86,8 +86,8 @@ function points(
         x = x[start:step:stop]
         y = y[start:step:stop]
     else
-        start = 1
-        stop = length(file["$track/land_ice_segments/longitude"])
+        start = firstindex(file["$track/land_ice_segments/longitude"])
+        stop = lastindex(file["$track/land_ice_segments/longitude"])
         x = file["$track/land_ice_segments/longitude"][start:step:stop]::Vector{Float64}
         y = file["$track/land_ice_segments/latitude"][start:step:stop]::Vector{Float64}
     end
