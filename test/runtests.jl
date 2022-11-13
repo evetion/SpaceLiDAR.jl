@@ -63,7 +63,7 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points.latitude) == 287
         @test points.quality[1] == true
         points = SpaceLiDAR.points(g; step = 4, bbox = bbox)
-        @test length(points.latitude) = 74
+        @test length(points.longitude) == 74
     end
     @testset "GLAH14" begin
         fn = joinpath(@__DIR__, "data/GLAH14_634_1102_001_0071_0_01_0001.H5")
