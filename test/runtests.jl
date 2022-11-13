@@ -58,12 +58,18 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
     @testset "GLAH06" begin
         fn = joinpath(@__DIR__, "data/GLAH06_634_2131_002_0084_4_01_0001.H5")
         g = SpaceLiDAR.granule_from_file(fn)
-        points = SpaceLiDAR.points(g)
+        bbox = (min_x = 131., min_y = -40, max_x = 132, max_y = -30)
+        points = SpaceLiDAR.points(g; bbox = bbox)
+        @test length(points.latitude) == 287
+        @test points.quality[1] == true
+        points = SpaceLiDAR.points(g; step = 4, bbox = bbox)
+        @test length(points.latitude) = 74
     end
     @testset "GLAH14" begin
         fn = joinpath(@__DIR__, "data/GLAH14_634_1102_001_0071_0_01_0001.H5")
         g = SpaceLiDAR.granule_from_file(fn)
         points = SpaceLiDAR.points(g)
+        @test length(points) == 6
     end
 
     @testset "ATL03" begin
