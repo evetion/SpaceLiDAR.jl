@@ -65,7 +65,7 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         points = SpaceLiDAR.points(g; step = 4, bbox = bbox)
         @test length(points.longitude) == 74
     end
-    
+
     @testset "GLAH14" begin
         fn = joinpath(@__DIR__, "data/GLAH14_634_1102_001_0071_0_01_0001.H5")
         g = SpaceLiDAR.granule_from_file(fn)
@@ -80,17 +80,21 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
     end
 
     @testset "ATL03" begin
-        fn3 = joinpath(@__DIR__, "data/ATL03_20201121151145_08920913_005_01.h5")
-        g3 = SpaceLiDAR.granule_from_file(fn3)
-        points = SpaceLiDAR.points(g3)
+        fn = joinpath(@__DIR__, "data/ATL03_20201121151145_08920913_005_01.h5")
+        g = SpaceLiDAR.granule_from_file(fn)
+        points = SpaceLiDAR.points(g)
         @test length(points) == 6
         @test points[1].strong_beam[1] == true
         @test points[1].track[1] == "gt1l"
         @test points[end].strong_beam[1] == false
         @test points[end].track[1] == "gt3r"
-        lines = SpaceLiDAR.lines(g3, step = 1000)
+        bbox = (min_x = 174., min_y = -50., max_x = 176., max_y = -30.)
+        points = SpaceLiDAR.points(g, step = 1, bbox = bbox)
+        @test length(points) == 6
+        @test  length(points[1].longitude) == 1158412
+        lines = SpaceLiDAR.lines(g, step = 1000)
         @test length(lines) == 6
-        c = SpaceLiDAR.classify(g3)
+        c = SpaceLiDAR.classify(g)
         df = reduce(vcat, DataFrame.(c))
         SpaceLiDAR.materialize!(df)
         @test df.classification isa Vector{String}
