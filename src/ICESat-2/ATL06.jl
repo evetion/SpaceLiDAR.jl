@@ -27,20 +27,20 @@ function points(
     step = 1,
     bbox::Union{Nothing,NamedTuple{}} = nothing,
 )
-    dfs = Vector{NamedTuple}()
+    nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
-        for (i, track) in enumerate(tracks)
+        t_offset = file["ancillary_data/atlas_sdp_gps_epoch"][1]::Float64 + gps_offset
+        for track ∈ tracks
             if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
                 track_nt = points(granule, file, track, t_offset, step, bbox)
                 if !isempty(track_nt.height)
                     track_nt.height[track_nt.height.==fill_value] .= NaN
                 end
-                push!(dfs, track_nt)
+                push!(nts, track_nt)
             end
         end
     end
-    return dfs
+    return nts
 end
 
 function points(
@@ -50,7 +50,8 @@ function points(
     t_offset::Float64,
     step = 1,
     bbox = bbox::Union{Nothing,NamedTuple{}} = nothing,
-)
+    )
+
     # subset by bbox ?
     if !isnothing(bbox)
         x = file["$track/land_ice_segments/longitude"][:]::Vector{Float64}
@@ -105,7 +106,7 @@ function points(
     sigma_geo_h[sigma_geo_h.==fill_value] .= NaN
     h_li_sigma[h_li_sigma.==fill_value] .= NaN
 
-    nt = (;
+    nt = (
         longitude = x,
         latitude = y,
         height = z,
