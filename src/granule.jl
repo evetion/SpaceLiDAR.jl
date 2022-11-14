@@ -35,7 +35,9 @@ function download!(granule::Granule, folder = ".")
     end
     isfile(granule.url) && return granule
     if startswith(granule.url, "http")
-        _download(granule.url, fn)
+        tmp = tempname(folder; cleanup=true)
+        _download(granule.url, tmp)
+        mv(tmp,fn)
     else
         error("Can't determine how to download $(granule.url)")
     end
