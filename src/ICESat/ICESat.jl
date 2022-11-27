@@ -10,15 +10,16 @@ const icesat_fill = 1.7976931348623157E308
 A granule of the ICESat product `product`. Normally created automatically from
 either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
 """
-mutable struct ICESat_Granule{product} <: Granule
+Base.@kwdef mutable struct ICESat_Granule{product} <: Granule
     id::String
     url::String
     info::NamedTuple
+    polygons::MultiPolygonType = MultiPolygonType()
 end
 ICESat_Granule(product, args...) = ICESat_Granule{product}(args...)
 
 function Base.copy(g::ICESat_Granule{product}) where {product}
-    return ICESat_Granule(product, g.id, copy(g.url), copy(g.info))
+    return ICESat_Granule(product, g.id, copy(g.url), copy(g.info), copy(g.polygons))
 end
 
 function bounds(granule::ICESat_Granule)
