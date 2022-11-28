@@ -8,7 +8,7 @@ The names of the tuples are based on the following fields:
 |:------------------ |:------------------------------- |:------------------------------------------- |:---------------------------- |
 | `longitude`        | `/Geolocation/d_lon`            | Longitude of segment center, WGS84, East=+  | decimal degrees              |
 | `latitude`         | `Geolocation/d_lat`             | Latitude of segment center, WGS84, North=+  | decimal degrees              |
-| `height`           | `Elevation_Surfaces/d_elev`     | + `Elevation_Corrections/d_satElevCorr`     | valid above WGS84 ellipsoid      |
+| `height`           | `Elevation_Surfaces/d_elev`     | + `Elevation_Corrections/d_satElevCorr`     | m above WGS84 ellipsoid      |
 | `datetime`         | `DS_UTCTime_40`                 | Precise time of aquisiton                   | date-time                    |
 | `quality` [^1]     | `Quality/elev_use_flg`          | & `Quality/sigma_att_flg` = 0               |                              |
 |                    | & `Waveform/i_numPk` = 1        | & `Elevation_Corrections/d_satElevCorr` < 3 | 1=high quality               |
