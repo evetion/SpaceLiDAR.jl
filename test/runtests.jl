@@ -141,6 +141,11 @@ download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points) == 16
         lines = SpaceLiDAR.lines(gg, step = 1000)
         @test length(lines) == 8
+        bbox = (min_x = 160., min_y = -46., max_x = 170., max_y = -38.)
+        points = SpaceLiDAR.points(gg; step = 10, bbox = bbox, canopy = true)
+        @test length(points[1].longitude) == 1166
+        @test length(points[6].latitude) == 1168
+        @test length(points) == 16
     end
     @testset "Geometry" begin
         @testset "shift" begin
