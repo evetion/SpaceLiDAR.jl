@@ -15,6 +15,8 @@ end
 
 abstract type Granule end
 
+MultiPolygonType = Vector{Vector{Vector{Vector{Float64}}}}
+
 function HDF5.h5open(granule::Granule)
     HDF5.h5open(granule.url, "r")
 end

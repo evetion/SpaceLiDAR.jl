@@ -16,16 +16,17 @@ const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
 A granule of the ICESat-2 product `product`. Normally created automatically from
 either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
 """
-mutable struct ICESat2_Granule{product} <: Granule
+Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
     bbox::NamedTuple
     info::NamedTuple
+    polygons::MultiPolygonType = MultiPolygonType()
 end
 ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info)
+    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info, g.polygons)
 end
 
 """
@@ -132,6 +133,7 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
         replace(replace(g.url, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         g.bbox,
         g.info,
+        g.polygons,
     )
     # Check other version
     if !isfile(g)

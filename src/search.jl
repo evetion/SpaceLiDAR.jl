@@ -28,6 +28,7 @@ function find(
             x["producer_granule_id"],
             get(get(x, "links", [Dict()])[1], "href", ""),
             gedi_info(x["producer_granule_id"]),
+            parse_polygon(x),
         ),
         granules)
 end
@@ -47,6 +48,7 @@ function find(
             get(get(x, "links", [Dict()])[1], "href", ""),
             NamedTuple(),
             icesat2_info(x["producer_granule_id"]),
+            parse_polygon(x),
         ),
         granules)
 end
@@ -65,8 +67,27 @@ function find(
             x["producer_granule_id"],
             get(get(x, "links", [Dict()])[1], "href", ""),
             icesat_info(x["producer_granule_id"]),
+            parse_polygon(x),
         ),
         granules)
+end
+
+function parse_polygon(r, T = Float64)
+    polygons = get(r, "polygons", [])
+    o = Vector{Vector{Vector{Vector{T}}}}()
+    for polygon in polygons
+        po = Vector{Vector{Vector{T}}}()
+        for ring in polygon
+            ro = Vector{Vector{T}}()
+            c = map(Base.Fix1(parse, T), split(ring, " "))
+            for i = 1:2:length(c)
+                push!(ro, [c[i], c[i+1]])
+            end
+            push!(po, ro)
+        end
+        push!(o, po)
+    end
+    return o
 end
 
 function parse_cmr_json(r)
