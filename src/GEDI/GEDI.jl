@@ -11,16 +11,15 @@ A granule of the GEDI product `product`. Normally created automatically from
 either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
 """
 mutable struct GEDI_Granule{product} <: Granule
-    id::AbstractString
-    url::AbstractString
-    s3::String
+    id::String
+    url::String
     bbox::NamedTuple
     info::NamedTuple
+    GEDI_Granule(product, id, url, bbox, info) = new{Symbol(product)}(id, url, bbox, info)
 end
-GEDI_Granule(product, args...) = GEDI_Granule{product}(args...)
 
 function Base.copy(g::GEDI_Granule{product}) where {product}
-    GEDI_Granule(product, g.id, g.url, g.s3, g.bbox, g.info)
+    GEDI_Granule(product, g.id, g.url, g.bbox, g.info)
 end
 
 

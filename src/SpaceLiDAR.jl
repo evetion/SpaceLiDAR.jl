@@ -7,7 +7,6 @@ using HDF5
 using Tables
 using TableOperations: joinpartitions
 using DataFrames
-using JSON3
 
 include("granule.jl")
 include("utils.jl")

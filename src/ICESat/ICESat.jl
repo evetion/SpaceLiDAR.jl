@@ -10,17 +10,17 @@ const icesat_fill = 1.7976931348623157E308
 A granule of the ICESat product `product`. Normally created automatically from
 either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
 """
-mutable struct ICESat_Granule{product} <: Granule
+mutable struct ICESat_Granule{T} <: Granule
     id::String
     url::String
-    s3::String
     bbox::NamedTuple
     info::NamedTuple
+    ICESat_Granule(product, id, url, bbox, info) =
+        new{Symbol(product)}(id, url, bbox, info)
 end
-ICESat_Granule(product, args...) = ICESat_Granule{product}(args...)
 
 function Base.copy(g::ICESat_Granule{product}) where {product}
-    return ICESat_Granule(product, g.id, g.url, g.s3, g.bbox, g.info)
+    return ICESat_Granule(product, g.id, g.url, g.bbox, g.info)
 end
 
 function bounds(granule::ICESat_Granule)

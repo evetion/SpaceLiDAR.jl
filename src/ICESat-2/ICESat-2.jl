@@ -19,15 +19,13 @@ either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@
 mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
-    s3::String
     bbox::NamedTuple
     info::NamedTuple
+    ICESat2_Granule(product, id, url, bbox, info) = new{Symbol(product)}(id, url, bbox, info)
 end
 
-ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
-
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule(product, g.id, g.url, g.s3, g.bbox, g.info)
+    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info)
 end
 
 """
@@ -129,10 +127,9 @@ Base.isfile(g::ICESat2_Granule) = Base.isfile(g.url)
 Converts the granule `g` to the product `product`, by guessing the correct name.
 """
 function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
-    g = ICESat2_Granule{product}(
+    g = ICESat2_Granule(product,
         replace(replace(g.id, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         replace(replace(g.url, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
-        replace(replace(g.s3, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         g.bbox,
         g.info,
     )
@@ -142,7 +139,7 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
         url = replace(g.url, "01.h5" => "02.h5")
         if isfile(url)
             @warn "Used newer version available"
-            g = ICESat2_Granule{product}(g.id, url, g.bbox, g.info)
+            g = ICESat2_Granule(product, g.id, url, g.bbox, g.info)
         end
     end
     g
