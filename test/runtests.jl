@@ -70,10 +70,7 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
         fgs = SL.in_bbox(gs, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
         @test length(fgs) == 2
-<<<<<<< HEAD
         SL.bounds.(fgs)
-=======
->>>>>>> origin/master
     end
 
     @testset "GLAH06" begin
