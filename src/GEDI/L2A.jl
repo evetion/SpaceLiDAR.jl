@@ -43,11 +43,9 @@ function points(
 )
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-
-        for (i, track) ∈ enumerate(tracks)
+        for track in tracks
             if in(track, keys(file))
                 for track_nt ∈ points(granule, file, track, step, bbox, ground, canopy, filtered)
-
                     if !isempty(track_nt.height)
                         track_nt.height[track_nt.height.==fill_value] .= NaN
                     end
@@ -69,8 +67,7 @@ function points(
     ground = true,
     canopy = false,
     filtered = true,
-    )
-    
+)
     if !isnothing(bbox)
         # find data that falls withing bbox
         if ground
@@ -81,7 +78,7 @@ function points(
             start_grd = findfirst(ind)
             stop_grd = findlast(ind)
         end
-        
+
         if canopy
             x_can = file["$track/lon_highestreturn"][:]::Vector{Float64}
             y_can = file["$track/lat_highestreturn"][:]::Vector{Float64}
@@ -101,18 +98,18 @@ function points(
                 stop = maximum([stop_grd, stop_can])
             end
 
-        elseif  ground
+        elseif ground
             start = start_grd
             stop = stop_grd
         elseif canopy
             start = start_can
             stop = stop_can
         end
-        
+
         if isnothing(start)
             # no data found
-            @warn "no data found within bbox: $(file.filename)"
-        
+            @warn "no data found within bbox of track $track in $(file.filename)"
+
             power = occursin("Full power", read_attribute(file["$track"], "description")::String)
 
             if canopy
@@ -132,7 +129,7 @@ function points(
                     classification = Fill("high_canopy", 0),
                     sun_angle = Vector{Float32}[],
                     height_reference = Vector{Float32}[],
-                    )
+                )
             end
 
             if ground
@@ -155,7 +152,6 @@ function points(
                 )
             end
 
-            # 
             if canopy && ground
                 return nt_canopy, nt_ground
             elseif canopy
@@ -175,7 +171,7 @@ function points(
             x_can = x_can[start:step:stop]
             y_can = y_can[start:step:stop]
 
-        elseif  ground
+        elseif ground
             x_grd = x_grd[start:step:stop]
             y_grd = y_grd[start:step:stop]
 
@@ -191,14 +187,14 @@ function points(
             x_grd = file["$track/lon_lowestmode"][start:step:stop]::Vector{Float64}
             y_grd = file["$track/lat_lowestmode"][start:step:stop]::Vector{Float64}
         end
-        
+
         if canopy
             x_can = file["$track/lon_highestreturn"][start:step:stop]::Vector{Float64}
             y_can = file["$track/lat_highestreturn"][start:step:stop]::Vector{Float64}
         end
     end
 
-    # now that we have the start and stop extents 
+    # now that we have the start and stop extents
     height_error = file["$track/elevation_bin0_error"][start:step:stop]::Vector{Float32}
     height_reference = file["$track/digital_elevation_model"][start:step:stop]::Vector{Float32}
     height_reference[height_reference.==-999999.0] .= NaN
@@ -235,7 +231,8 @@ function points(
     for algorithm = 1:6
         zcross[aid.==algorithm] = file["$track/rx_processing_a$algorithm/zcross"][start:step:stop][aid.==algorithm]
         toploc[aid.==algorithm] = file["$track/rx_processing_a$algorithm/toploc"][start:step:stop][aid.==algorithm]
-        algrun[aid.==algorithm] = file["$track/rx_processing_a$algorithm/rx_algrunflag"][start:step:stop][aid.==algorithm]
+        algrun[aid.==algorithm] =
+            file["$track/rx_processing_a$algorithm/rx_algrunflag"][start:step:stop][aid.==algorithm]
     end
 
     sensitivity = file["$track/sensitivity"][start:step:stop]::Vector{Float32}
@@ -300,7 +297,6 @@ function points(
         )
     end
 
-    # 
     if canopy && ground
         nt_canopy, nt_ground
     elseif canopy

@@ -24,10 +24,10 @@ You can get the output in a `DataFrame` with `DataFrame(points(g))`.
 [^1]: Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... & Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.
 """
 function points(
-    granule::ICESat_Granule{:GLAH14}; 
+    granule::ICESat_Granule{:GLAH14};
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing
-    )
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
 
     HDF5.h5open(granule.url, "r") do file
         if !isnothing(bbox)
@@ -41,7 +41,7 @@ function points(
             stop = findlast(ind)
 
             if isnothing(start)
-                @warn "no data found within bbox: $(file.filename)"
+                @warn "no data found within bbox of track $track in $(file.filename)"
 
                 gt = (
                     longitude = Vector{Float64}[],
@@ -66,7 +66,7 @@ function points(
             start = 1
             stop = length(file["Data_40HZ/Geolocation/d_lon"])
             x = file["Data_40HZ/Geolocation/d_lon"][start:step:stop]::Vector{Float64}
-            y = file["Data_40HZ/Geolocation/d_lat"][start:step:stop]::Vector{Float64}      
+            y = file["Data_40HZ/Geolocation/d_lat"][start:step:stop]::Vector{Float64}
         end
 
         valid = (x .!= icesat_fill) .& (y .!= icesat_fill)
@@ -92,7 +92,7 @@ function points(
         height_ref = file["Data_40HZ/Geophysical/d_DEM_elv"][start:step:stop][valid]::Vector{Float64}
 
         # SHOULD WE FILL WITH NAN OR MISSINGS ?
-        height_ref[height_ref .== icesat_fill] .= NaN
+        height_ref[height_ref.==icesat_fill] .= NaN
 
         datetime = unix2datetime.(datetime .+ j2000_offset)
 
@@ -100,7 +100,7 @@ function points(
         pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(x, y, height_ref))
         height_ref = [x[3] for x in pts]::Vector{Float64}
 
-        pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(x, y,height))
+        pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(x, y, height))
         height = [x[3] for x in pts]::Vector{Float64}
 
         gt = (
@@ -115,9 +115,7 @@ function points(
                       (sigma_att_flg .== 0) .&
                       (i_numPk .== 1) .&
                       (height_correction .< 3),
-            clouds = Bool.(clouds),
-
-            height_reference = height_ref,
+            clouds = Bool.(clouds), height_reference = height_ref,
             gain = gain_value,
             reflectivity = ref_flag,
             attitude = sigma_att_flg,

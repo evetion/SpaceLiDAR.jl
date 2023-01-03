@@ -50,7 +50,7 @@ function points(
     t_offset::Float64,
     step = 1,
     bbox = bbox::Union{Nothing,NamedTuple{}} = nothing,
-    )
+)
 
     # subset by bbox ?
     if !isnothing(bbox)
@@ -63,8 +63,8 @@ function points(
         stop = findlast(ind)
 
         if isnothing(start)
-            @warn "no data found within bbox: $(file.filename)"
-        
+            @warn "no data found within bbox of track $track in $(file.filename)"
+
             spot_number = attrs(file["$track"])["atlas_spot_number"]::String
             atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
 
@@ -73,7 +73,7 @@ function points(
                 latitude = Vector{Float64}[],
                 height = Vector{Float32}[],
                 height_error = Vector{Float64}[],
-                datetime =Vector{Dates.DateTime}[],
+                datetime = Vector{Dates.DateTime}[],
                 quality = BitVector[],
                 track = Fill(track, 0),
                 strong_beam = Fill(atlas_beam_type == "strong", 0),

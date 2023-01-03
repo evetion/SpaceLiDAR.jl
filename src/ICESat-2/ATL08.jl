@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true))
+    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true, bbox::Union{Nothing,NamedTuple{}} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL08 (Land and Vegetation Height) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -26,14 +26,21 @@ The names of the tuples are based on the following fields:
 You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points(g)))` if you
 want to change the default arguments or `DataFrame(g)` with the default options.
 """
-function points(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step = 1, canopy = false, ground = true)
+function points(
+    granule::ICESat2_Granule{:ATL08};
+    tracks = icesat2_tracks,
+    step = 1,
+    canopy = false,
+    ground = true,
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track in tracks
             if in(track, keys(file)) && in("land_segments", keys(file[track]))
-                for track_nt in points(granule, file, track, t_offset, step, canopy, ground)
+                for track_nt in points(granule, file, track, t_offset, step, canopy, ground, bbox)
                     track_nt.height[track_nt.height.==fill_value] .= NaN
                     push!(dfs, track_nt)
                 end
@@ -51,25 +58,75 @@ function points(
     step = 1,
     canopy = false,
     ground = true,
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
 )
+
+    # subset by bbox
+    if !isnothing(bbox)
+        x = file["$track/land_segments/longitude"][1:step:end]::Vector{Float32}
+        y = file["$track/land_segments/latitude"][1:step:end]::Vector{Float32}
+
+        # find index of points inside of bbox
+        ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
+        start = findfirst(ind)
+        stop = findlast(ind)
+
+        if isnothing(start)
+            @warn "no data found within bbox of track $track in $(file.filename)"
+
+            atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+            spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+
+            nt = (;
+                longitude = Float64[],
+                latitude = Float64[],
+                height = Float32[],
+                height_error = Float64[],
+                datetime = DateTime[],
+                quality = BitVector[],
+                phr = BitVector[],
+                sensitivity = Float32[],
+                scattered = Int16[],
+                saturated = Int16[],
+                clouds = BitVector[],
+                track = Fill(track, 0),
+                strong_beam = Fill(atlas_beam_type == "strong", 0),
+                classification = Fill("ground", 0),
+                height_reference = Vector{Float32}[],
+                detector_id = Fill(parse(Int8, spot_number), 0),
+            )
+
+            return (nt,)
+        end
+
+        # only include x and y data within bbox
+        x = x[start:step:stop]
+        y = y[start:step:stop]
+    else
+        start = 1
+        stop = length(file["$track/land_segments/longitude"])
+        x = file["$track/land_segments/longitude"][start:step:stop]::Vector{Float32}
+        y = file["$track/land_segments/latitude"][start:step:stop]::Vector{Float32}
+    end
+
     if ground
-        zt = file["$track/land_segments/terrain/h_te_mean"][1:step:end]::Vector{Float32}
-        tu = file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Vector{Float32}
+        zt = file["$track/land_segments/terrain/h_te_mean"][start:step:stop]::Vector{Float32}
+        tu = file["$track/land_segments/terrain/h_te_uncertainty"][start:step:stop]::Vector{Float32}
     end
     if canopy
-        zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][1:step:end]::Vector{Float32}
-        cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Vector{Float32}
+        zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][start:step:stop]::Vector{Float32}
+        cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][start:step:stop]::Vector{Float32}
     end
-    x = file["$track/land_segments/longitude"][1:step:end]::Vector{Float32}
-    y = file["$track/land_segments/latitude"][1:step:end]::Vector{Float32}
-    t = file["$track/land_segments/delta_time"][1:step:end]::Vector{Float64}
-    sensitivity = file["$track/land_segments/snr"][1:step:end]::Vector{Float32}
-    clouds = file["$track/land_segments/layer_flag"][1:step:end]::Vector{Int8}
-    scattered = file["$track/land_segments/msw_flag"][1:step:end]::Vector{Int8}
-    saturated = file["$track/land_segments/sat_flag"][1:step:end]::Vector{Int8}
-    q = file["$track/land_segments/terrain_flg"][1:step:end]::Vector{Int32}
-    phr = file["$track/land_segments/ph_removal_flag"][1:step:end]::Vector{Int8}
-    dem = file["$track/land_segments/dem_h"][1:step:end]::Vector{Float32}
+    x = file["$track/land_segments/longitude"][start:step:stop]::Vector{Float32}
+    y = file["$track/land_segments/latitude"][start:step:stop]::Vector{Float32}
+    t = file["$track/land_segments/delta_time"][start:step:stop]::Vector{Float64}
+    sensitivity = file["$track/land_segments/snr"][start:step:stop]::Vector{Float32}
+    clouds = file["$track/land_segments/layer_flag"][start:step:stop]::Vector{Int8}
+    scattered = file["$track/land_segments/msw_flag"][start:step:stop]::Vector{Int8}
+    saturated = file["$track/land_segments/sat_flag"][start:step:stop]::Vector{Int8}
+    q = file["$track/land_segments/terrain_flg"][start:step:stop]::Vector{Int32}
+    phr = file["$track/land_segments/ph_removal_flag"][start:step:stop]::Vector{Int8}
+    dem = file["$track/land_segments/dem_h"][start:step:stop]::Vector{Float32}
     times = unix2datetime.(t .+ t_offset)
     atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
     spot_number = attrs(file["$track"])["atlas_spot_number"]::String
@@ -153,22 +210,22 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
 end
 
 function atl03_mapping(granule::ICESat2_Granule{:ATL08})
-    dfs = Vector{NamedTuple}()
+    nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         for track ∈ icesat2_tracks
             if in(track, keys(file)) && in("signal_photons", keys(file[track]))
-                df = atl03_mapping(file, track)
-                push!(dfs, df)
+                nt = atl03_mapping(file, track)
+                push!(nts, nt)
             end
         end
     end
-    dfs
+    nts
 end
 
 function atl03_mapping(granule::ICESat2_Granule{:ATL08}, track::AbstractString)
     HDF5.h5open(granule.url, "r") do file
         if in(track, keys(file)) && in("signal_photons", keys(file[track]))
-            df = atl03_mapping(file, track)
+            atl03_mapping(file, track)
         end
     end
 end

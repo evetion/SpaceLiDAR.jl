@@ -24,12 +24,12 @@ You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points
 want to change the default arguments or `DataFrame(g)` with the default options.
 """
 function points(
-    granule::ICESat2_Granule{:ATL03}; 
+    granule::ICESat2_Granule{:ATL03};
     tracks = icesat2_tracks,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing
-    )
-    
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
+
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = file["ancillary_data/atlas_sdp_gps_epoch"][1]::Float64 + gps_offset
@@ -48,11 +48,11 @@ function points(
 end
 
 function lines(
-    granule::ICESat2_Granule{:ATL03}, 
-    tracks = icesat2_tracks; 
+    granule::ICESat2_Granule{:ATL03},
+    tracks = icesat2_tracks;
     step = 100,
-    bbox::Union{Nothing,NamedTuple{}} = nothing
-    )
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
 
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
@@ -84,8 +84,8 @@ function points(
     track::AbstractString,
     t_offset::Float64,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing
-    )
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
 
     if !isnothing(bbox)
         x = file["$track/heights/lon_ph"][:]::Vector{Float64}
@@ -97,7 +97,7 @@ function points(
         stop = findlast(ind)
 
         if isnothing(start)
-            @warn "no data found within bbox: $(file.filename)"
+            @warn "no data found within bbox of track $track in $(file.filename)"
             spot_number = attrs(file["$track"])["atlas_spot_number"]::String
             atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
 
@@ -128,17 +128,17 @@ function points(
         x = file["$track/heights/lon_ph"][start:step:stop]::Vector{Float64}
         y = file["$track/heights/lat_ph"][start:step:stop]::Vector{Float64}
     end
-    
+
     height = file["$track/heights/h_ph"][start:step:stop]::Vector{Float32}
     datetime = file["$track/heights/delta_time"][start:step:stop]::Vector{Float64}
 
     # NOT SURE WHY ONLY THE FIRST CONFIDENCE FLAG WAS CHOSEN.. MIGHT NEED TO REVISIT
-    signal_confidence = file["$track/heights/signal_conf_ph"][1,start:step:stop]::Vector{Int8}
+    signal_confidence = file["$track/heights/signal_conf_ph"][1, start:step:stop]::Vector{Int8}
     quality = file["$track/heights/quality_ph"][start:step:stop]::Vector{Int8}
 
     # Mapping between segment and photon
     seg_cnt = file["$track/geolocation/segment_ph_cnt"][:]::Vector{Int32}
-    ph_ind = segment2photon(seg_cnt)
+    ph_ind = count2index(seg_cnt)
     ph_ind = ph_ind[start:step:stop]
 
     # extract data posted at segment frequency and map to photon frequency
@@ -233,19 +233,34 @@ function create_mapping(dfsegment, unique_segments)
     index_map
 end
 
-# fast map between segment and photon
-function segment2photon(seg_cnt)
-    seg_cnt_cumulative = [0; cumsum(seg_cnt)]
-    ph_cnt = collect(1:seg_cnt_cumulative[end])
-    ph_ind = zeros(Int64, size(ph_cnt))
-    
-    for i = 1:(lastindex(seg_cnt_cumulative)-1)
-        start = seg_cnt_cumulative[i] + 1
-        stop = seg_cnt_cumulative[i+1]
-        
-        if stop >= start
-            ph_ind[start:stop] .= i
-        end
+"""
+    count2index(counts)
+
+Fast map between (segment) counts and (photon) indices.
+
+```jldoctest
+SL.count2index(Int32[1, 2, 0, 5])
+
+# output
+
+8-element Vector{Int32}:
+ 1
+ 2
+ 2
+ 4
+ 4
+ 4
+ 4
+ 4
+```
+"""
+function count2index(counts)
+    c = fill(zero(eltype(counts)), sum(counts))
+    ref = 1
+    for i in eachindex(counts)
+        count = counts[i]
+        c[ref:ref+count-1] .= i
+        ref += count
     end
-    return ph_ind
+    c
 end
