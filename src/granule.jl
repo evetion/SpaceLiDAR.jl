@@ -1,5 +1,6 @@
 using HDF5
 import Downloads
+import AWSS3
 
 # This is a method because it will segfault if precompiled.
 function _download(kwargs...)
@@ -11,6 +12,19 @@ function _download(kwargs...)
         end
     downloader.easy_hook = easy_hook
     Downloads.download(kwargs...; downloader = downloader)
+end
+
+function _s3_download(url, fn)
+    bucket, path = split(last(split(url, "//")), "/"; limit = 2)
+    aws = AWSS3.global_aws_config(
+        creds = AWSS3.AWSCredentials(
+            get(ENV, "AWS_ACCESS_KEY_ID", ""),
+            get(ENV, "AWS_SECRET_ACCESS_KEY", ""),
+            get(ENV, "AWS_SESSION_TOKEN", ""),
+        );
+        region = "us-west-2",
+    )
+    AWSS3.s3_get_file(aws, bucket, path, fn)
 end
 
 abstract type Granule end
@@ -36,6 +50,8 @@ function download!(granule::Granule, folder = ".")
     isfile(granule.url) && return granule
     if startswith(granule.url, "http")
         _download(granule.url, fn)
+    elseif startswith(granule.url, "s3")
+        _s3_download(granule.url, fn)
     else
         error("Can't determine how to download $(granule.url)")
     end
