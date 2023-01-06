@@ -15,7 +15,6 @@ mutable struct GEDI_Granule{product} <: Granule
     url::String
     bbox::NamedTuple
     info::NamedTuple
-    GEDI_Granule(product, id, url, bbox, info) = new{Symbol(product)}(id, url, bbox, info)
 end
 
 function Base.copy(g::GEDI_Granule{product}) where {product}

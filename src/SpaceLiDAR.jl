@@ -10,7 +10,6 @@ using DataFrames
 
 include("granule.jl")
 include("utils.jl")
-include("search.jl")
 include("geom.jl")
 include("GEDI/GEDI.jl")
 include("GEDI/L2A.jl")
@@ -24,6 +23,7 @@ include("ICESat/GLAH06.jl")
 include("ICESat/GLAH14.jl")
 include("geoid.jl")
 include("table.jl")
+include("search.jl")
 
 export find, download!, netrc!, instantiate, info, angle, angle!, shift
 export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!

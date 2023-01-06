@@ -15,8 +15,6 @@ mutable struct ICESat_Granule{T} <: Granule
     url::String
     bbox::NamedTuple
     info::NamedTuple
-    ICESat_Granule(product, id, url, bbox, info) =
-        new{Symbol(product)}(id, url, bbox, info)
 end
 
 function Base.copy(g::ICESat_Granule{product}) where {product}

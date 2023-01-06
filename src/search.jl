@@ -1,6 +1,5 @@
 using HTTP
 using Downloads
-using TimeZones
 using Dates
 using JSON3
 
@@ -19,72 +18,89 @@ Search granules for a given mission and bounding box.
 """
 function search(
     ::Mission{:GEDI},
-    product::String = "GEDI02_A";
+    product::Symbol = :GEDI02_A;
     bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
     version::Int = 2,
     provider::String = "LPDAAC_ECS",
-)
-    granules = earthdata_search(short_name = product, bounding_box = bbox, version = version, provider = provider)
+)::Vector{GEDI_Granule}
+    granules =
+        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+    filter!(g -> !isnothing(g.https_url), granules)
     map(
-        x -> GEDI_Granule(
-            Symbol(product),
+        x -> GEDI_Granule{product}(
             x.filename,
             x.https_url,
-            x.info,
-            gedi_info(x.filename),
-        ),
-        granules)::Vector{GEDI_Granule{Symbol(product)}}
+            (;),
+            gedi_info(x.filename)),
+        granules,
+    )
 end
 
 function search(
     ::Mission{:ICESat2},
-    product::String = "ATL03";
+    product::Symbol = :ATL03;
     bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
     version::Int = 5,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
-)
-    granules = earthdata_search(short_name = product, bounding_box = bbox, version = version, provider = provider)
+)::Vector{ICESat2_Granule}
+    granules =
+        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+    s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
-        x -> ICESat2_Granule(
-            Symbol(product),
+        x -> ICESat2_Granule{product}(
             x.filename,
             s3 ? x.s3_url : x.https_url,
-            x.info,
+            (;),
             icesat2_info(x.filename),
         ),
-        granules)::Vector{ICESat2_Granule{Symbol(product)}}
+        granules,
+    )
 end
 
 function search(
     ::Mission{:ICESat},
-    product::String = "GLAH14";
+    product::Symbol = :GLAH14;
     bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
     version::Int = 34,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
-)
-    # https://cmr.earthdata.nasa.gov/search/granules.json?provider=NSIDC_ECS&page_size=2000&sort_key[]=-start_date&sort_key[]=producer_granule_id&short_name=ATL03&version=2&version=02&version=002&temporal[]=2018-10-13T00:00:00Z,2020-01-13T08:13:50Z&bounding_box=-180,-90,180,90
-    granules = earthdata_search(short_name = product, bounding_box = bbox, version = version, provider = provider)
+)::Vector{ICESat_Granule}
+    granules =
+        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+    s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
-        x -> ICESat_Granule(
-            Symbol(product),
+        x -> ICESat_Granule{product}(
             x.filename,
             s3 ? x.s3_url : x.https_url,
             (;),
             icesat_info(x.filename),
         ),
-        granules)::Vector{ICESat_Granule{Symbol(product)}}
+        granules)
 end
 
-search(mission::Mission, product::AbstractString, bbox::NamedTuple, version::String) =
-    search(mission, product; bbox = bbox, version = parse(Int, version))
-search(mission::Mission, product::AbstractString, bbox::NamedTuple) =
-    search(mission, product; bbox = bbox)
+# search(mission::Symbol, product::AbstractString, bbox::NamedTuple, version::String) =
+# search(Mission(mission), Symbol(product); bbox = bbox, version = parse(Int, version))
+# search(mission::Symbol, product::AbstractString, bbox::NamedTuple) =
+# search(Mission(mission), Symbol(product); bbox = bbox)
 
-@deprecate find(mission::Symbol, args...) search(mission, args...)
-function search(mission::Symbol, args...; kwargs...)
-    search(Mission(mission), args...; kwargs...)
+@deprecate find(mission::Symbol, product::AbstractString, bbox, version) search(
+    mission,
+    Symbol(product);
+    bbox = bbox,
+    version = parse(Int, version),
+)
+@deprecate find(mission::Symbol, product::AbstractString, bbox) search(
+    mission,
+    Symbol(product);
+    bbox = bbox,
+)
+@deprecate find(mission::Symbol, product::AbstractString) search(
+    mission,
+    Symbol(product),
+)
+function search(mission::Symbol, product::Symbol, args...; kwargs...)
+    search(Mission(mission), product, args...; kwargs...)
 end
 
 function parse_cmr_json(r)
@@ -101,7 +117,7 @@ function granule_info(item)::NamedTuple
     s3 = filter(u -> startswith(u.href, "s3:"), urls)
     s3_url = length(s3) > 0 ? s3[1].href : nothing
 
-    (; filename, https_url, s3_url, info = (;))
+    (; filename, https_url = https_url, s3_url = s3_url)
 end
 
 function parse_cmr_ummjson(r)
@@ -114,7 +130,6 @@ function granule_info_umm(item)::NamedTuple
     rurls = item.umm.RelatedUrls
     urls = filter(x -> get(x, "MimeType", "") in ("application/x-hdf5", "application/x-hdfeos"), rurls)
 
-    @info urls
     https = filter(u -> startswith(u.URL, "http"), urls)
     https_url = length(https) > 0 ? https[1].URL : nothing
     s3 = filter(u -> startswith(u.URL, "s3:"), urls)
@@ -122,21 +137,20 @@ function granule_info_umm(item)::NamedTuple
 
     filename = item.meta["native-id"]
 
-    (; filename, https_url, s3_url, info = (;))
+    (; filename, https_url = https_url, s3_url = s3_url)
 end
 
 function earthdata_search(;
     short_name::String,
     bounding_box::Union{Nothing,NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}} = nothing,
     version::Union{Nothing,Int} = nothing,
-    provider::Union{Nothing,String} = "NSIDC_CPRD",  # NSIDC_ECS
+    provider::Union{Nothing,String} = "NSIDC_CPRD",
     all_pages::Bool = true,
     page_size = 2000,
     page_num = 1,
     umm = false,
     verbose = 0,
 )
-
     q = Dict(
         "page_num" => page_num,
         "page_size" => page_size,
@@ -152,38 +166,39 @@ function earthdata_search(;
     r = HTTP.get(qurl, query = q, verbose = verbose)
     parsef = umm ? parse_cmr_ummjson : parse_cmr_json
     cgranules = parsef(r)
-    granules = copy(cgranules)
-    while length(cgranules) == page_size && all_pages
+    granules = Vector{NamedTuple}()
+    @info typeof(granules)
+    append!(granules, cgranules)
+    @info typeof(granules)
+    while (length(cgranules) == page_size) && all_pages
         @warn "Found more than $page_size granules, requesting another $page_size..."
         q["page_num"] += 1
-        r = HTTP.get(url, query = q)
+        r = HTTP.get(qurl, query = q, verbose = verbose)
         cgranules = parsef(r)
         append!(granules, cgranules)
     end
     granules
 end
 
-
-function earthdata_cloud_s3(daac = "nsidc")
+function get_s3_credentials(daac = "nsidc")
     body = sprint() do output
         return Downloads.request(
             "https://data.$daac.earthdatacloud.nasa.gov/s3credentials";
             output = output,
         )
     end
-    return JSON3.read(body)
+    body = JSON3.read(body)
+    AWSS3.AWSCredentials(
+        body.accessKeyId,
+        body.secretAccessKey,
+        body.sessionToken,
+        expiry = DateTime(body.expiration, dateformat"y-m-d H:M:S+z"),
+    )
 end
 
-function earthdata_s3_env!(env = ENV)
-    dict = earthdata_cloud_s3()
-    time =
-        ZonedDateTime(dict.expiration, dateformat"y-m-d H:M:S+z") -
-        now(TimeZone("UTC"))
-    @warn "AWS tokens expire in $(floor(time, Dates.Minute)) from now."
-    env["AWS_ACCESS_KEY_ID"] = dict.accessKeyId
-    env["AWS_SECRET_ACCESS_KEY"] = dict.secretAccessKey
-    env["AWS_SESSION_TOKEN"] = dict.sessionToken
-    env["AWS_SESSION_EXPIRES"] = dict.expiration
-    env["AWS_DEFAULT_REGION"] = "us-west-2"
-    return env
+function set_env!(creds::AWSS3.AWSCredentials, env = ENV)
+    env["AWS_ACCESS_KEY_ID"] = creds.access_key_id
+    env["AWS_SECRET_ACCESS_KEY"] = creds.secret_key
+    env["AWS_SESSION_TOKEN"] = creds.token
+    env["AWS_SESSION_EXPIRES"] = creds.expiry
 end
