@@ -30,8 +30,8 @@ function search(
         x -> GEDI_Granule{product}(
             x.filename,
             x.https_url,
-            (;),
-            gedi_info(x.filename)),
+            gedi_info(x.filename),
+            x.polygons),
         granules,
     )
 end
@@ -51,9 +51,8 @@ function search(
         x -> ICESat2_Granule{product}(
             x.filename,
             s3 ? x.s3_url : x.https_url,
-            (;),
             icesat2_info(x.filename),
-        ),
+            x.polygons),
         granules,
     )
 end
@@ -73,8 +72,8 @@ function search(
         x -> ICESat_Granule{product}(
             x.filename,
             s3 ? x.s3_url : x.https_url,
-            (;),
             icesat_info(x.filename),
+            x.polygons,
         ),
         granules)
 end
@@ -103,6 +102,23 @@ function search(mission::Symbol, product::Symbol, args...; kwargs...)
     search(Mission(mission), product, args...; kwargs...)
 end
 
+function parse_polygon(polygons, T = Float64)
+    o = Vector{Vector{Vector{Vector{T}}}}()
+    for polygon in polygons
+        po = Vector{Vector{Vector{T}}}()
+        for ring in polygon
+            ro = Vector{Vector{T}}()
+            c = map(Base.Fix1(parse, T), split(ring, " "))
+            for i = 1:2:length(c)
+                push!(ro, [c[i], c[i+1]])
+            end
+            push!(po, ro)
+        end
+        push!(o, po)
+    end
+    return o
+end
+
 function parse_cmr_json(r)
     data = JSON3.read(r.body)
     map(granule_info, get(get(data, "feed", Dict()), "entry", []))
@@ -117,7 +133,10 @@ function granule_info(item)::NamedTuple
     s3 = filter(u -> startswith(u.href, "s3:"), urls)
     s3_url = length(s3) > 0 ? s3[1].href : nothing
 
-    (; filename, https_url = https_url, s3_url = s3_url)
+    mp = get(item, "polygons", [])
+    polygons = parse_polygon(mp)
+
+    (; filename, https_url, s3_url, polygons)
 end
 
 function parse_cmr_ummjson(r)

@@ -10,15 +10,15 @@ const gedi_inclination = 51.6443
 A granule of the GEDI product `product`. Normally created automatically from
 either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
 """
-mutable struct GEDI_Granule{product} <: Granule
-    id::String
-    url::String
-    bbox::NamedTuple
+Base.@kwdef mutable struct GEDI_Granule{product} <: Granule
+    id::AbstractString
+    url::AbstractString
     info::NamedTuple
+    polygons::MultiPolygonType = MultiPolygonType()
 end
 
 function Base.copy(g::GEDI_Granule{product}) where {product}
-    GEDI_Granule(product, g.id, g.url, g.bbox, g.info)
+    GEDI_Granule{product}(copy(g.id), copy(g.url), copy(g.info), copy(g.polygons))
 end
 
 

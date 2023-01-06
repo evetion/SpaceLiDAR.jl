@@ -40,6 +40,8 @@ end
 
 abstract type Granule end
 
+MultiPolygonType = Vector{Vector{Vector{Vector{Float64}}}}
+
 function HDF5.h5open(granule::Granule)
     HDF5.h5open(granule.url, "r")
 end
@@ -59,13 +61,15 @@ function download!(granule::Granule, folder = ".")
         return granule
     end
     isfile(granule.url) && return granule
+    tmp = tempname(abspath(folder))
     if startswith(granule.url, "http")
-        _download(granule.url, fn)
+        _download(granule.url, tmp)
     elseif startswith(granule.url, "s3")
-        _s3_download(granule.url, fn)
+        _s3_download(granule.url, tmp)
     else
         error("Can't determine how to download $(granule.url)")
     end
+    mv(tmp, fn)
     granule.url = fn
     granule
 end

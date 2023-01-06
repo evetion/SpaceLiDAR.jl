@@ -9,23 +9,22 @@ const fill_value = 3.4028235f38
 const blacklist = readlines(joinpath(@__DIR__, "blacklist.txt"))
 const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
 
- 
+
 """
     ICESat2_Granule{product} <: Granule
 
 A granule of the ICESat-2 product `product`. Normally created automatically from
 either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
 """
-mutable struct ICESat2_Granule{product} <: Granule
+Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
-    bbox::NamedTuple
     info::NamedTuple
-    ICESat2_Granule(product, id, url, bbox, info) = new{Symbol(product)}(id, url, bbox, info)
+    polygons::MultiPolygonType = MultiPolygonType()
 end
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info)
+    ICESat2_Granule{product}(copy(g.id), copy(g.url), copy(g.bbox), copy(g.info), copy(g.polygons))
 end
 
 """
@@ -127,11 +126,11 @@ Base.isfile(g::ICESat2_Granule) = Base.isfile(g.url)
 Converts the granule `g` to the product `product`, by guessing the correct name.
 """
 function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
-    g = ICESat2_Granule(product,
+    g = ICESat2_Granule{product}(
         replace(replace(g.id, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         replace(replace(g.url, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
-        g.bbox,
         g.info,
+        g.polygons,
     )
     # Check other version
     if !isfile(g)
