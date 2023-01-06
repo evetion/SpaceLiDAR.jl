@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks, step=1)
+    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks; step=1, bbox::Union{Nothing,NamedTuple{}} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL03 (Global Geolocated Photon Data) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -23,32 +23,44 @@ The names of the tuples are based on the following fields:
 You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points(g)))` if you
 want to change the default arguments or `DataFrame(g)` with the default options.
 """
-function points(granule::ICESat2_Granule{:ATL03}; tracks = icesat2_tracks, step = 1)
-    dfs = Vector{NamedTuple}()
+function points(
+    granule::ICESat2_Granule{:ATL03};
+    tracks = icesat2_tracks,
+    step = 1,
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
+
+    nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        t_offset = file["ancillary_data/atlas_sdp_gps_epoch"][1]::Float64 + gps_offset
 
         for track ∈ tracks
             if in(track, keys(file)) && in("heights", keys(file[track]))
-                track_df = points(granule, file, track, t_offset, step)
-                push!(dfs, track_df)
+                track_nt = points(granule, file, track, t_offset, step, bbox)
+                if !isempty(track_nt.height)
+                    track_nt.height[track_nt.height.==fill_value] .= NaN
+                end
+                push!(nts, track_nt)
             end
         end
     end
-    for df in dfs
-        df.height[df.height.==fill_value] .= NaN
-    end
-    dfs
+    return nts
 end
 
-function lines(granule::ICESat2_Granule{:ATL03}; tracks = icesat2_tracks, step = 100)
-    dfs = Vector{NamedTuple}()
+function lines(
+    granule::ICESat2_Granule{:ATL03},
+    tracks = icesat2_tracks;
+    step = 100,
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
+)
+
+    nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track ∈ tracks
             if in(track, keys(file)) && in("heights", keys(file[track]))
-                track_df = points(granule, file, track, t_offset, step)
+                track_df = points(granule, file, track, t_offset, step, bbox)
                 line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
                 i = div(length(track_df.datetime), 2) + 1
                 nt = (
@@ -59,11 +71,11 @@ function lines(granule::ICESat2_Granule{:ATL03}; tracks = icesat2_tracks, step =
                     t = track_df.datetime[i],
                     granule = granule.id,
                 )
-                push!(dfs, nt)
+                push!(nts, nt)
             end
         end
     end
-    dfs
+    nts
 end
 
 function points(
@@ -72,61 +84,99 @@ function points(
     track::AbstractString,
     t_offset::Float64,
     step = 1,
+    bbox::Union{Nothing,NamedTuple{}} = nothing,
 )
-    z = file["$track/heights/h_ph"][1:step:end]::Vector{Float32}
-    x = file["$track/heights/lon_ph"][1:step:end]::Vector{Float64}
-    y = file["$track/heights/lat_ph"][1:step:end]::Vector{Float64}
-    t = file["$track/heights/delta_time"][1:step:end]::Vector{Float64}
-    c = file["$track/heights/signal_conf_ph"][1, 1:step:end]::Vector{Int8}
-    q = file["$track/heights/quality_ph"][1:step:end]::Vector{Int8}
 
-    # Segment calc
-    segment_counts = read(file, "$track/geolocation/segment_ph_cnt")::Vector{Int32}
+    if !isnothing(bbox)
+        x = file["$track/heights/lon_ph"][:]::Vector{Float64}
+        y = file["$track/heights/lat_ph"][:]::Vector{Float64}
 
-    segment = read(file, "$track/geolocation/segment_id")::Vector{Int32}
-    segments = map_counts(segment, segment_counts)[1:step:end]
+        # find index of points inside of bbox
+        ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
+        start = findfirst(ind)
+        stop = findlast(ind)
 
-    sun_angle = read(file, "$track/geolocation/solar_elevation")::Vector{Float32}
-    sun_angles = map_counts(sun_angle, segment_counts)[1:step:end]
+        if isnothing(start)
+            @warn "no data found within bbox of track $track in $(file.filename)"
+            spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+            atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
 
-    u = read(file, "$track/geolocation/sigma_h")::Vector{Float32}
-    uu = map_counts(u, segment_counts)[1:step:end]
+            nt = (
+                longitude = Vector{Float64}[],
+                latitude = Vector{Float64}[],
+                height = Vector{Float32}[],
+                quality = Vector{Int8}[],
+                uncertainty = Vector{Float32}[],
+                datetime = Vector{Dates.DateTime}[],
+                confidence = Vector{Int8}[],
+                segment = Vector{Int32}[],
+                track = Fill(track, 0),
+                strong_beam = Fill(atlas_beam_type == "strong", 0),
+                sun_angle = Vector{Float32}[],
+                detector_id = Fill(parse(Int8, spot_number), 0),
+                height_reference = Vector{Float32}[],
+            )
+            return nt
+        end
 
-    dem = read(file, "$track/geophys_corr/dem_h")::Vector{Float32}
-    demd = map_counts(dem, segment_counts)[1:step:end]
+        # only include x and y data within bbox
+        x = x[start:step:stop]
+        y = y[start:step:stop]
+    else
+        start = 1
+        stop = length(file["$track/heights/lon_ph"])
+        x = file["$track/heights/lon_ph"][start:step:stop]::Vector{Float64}
+        y = file["$track/heights/lat_ph"][start:step:stop]::Vector{Float64}
+    end
 
-    atlas_beam_type = read_attribute(file["$track"], "atlas_beam_type")::String
-    spot_number = read_attribute(file["$track"], "atlas_spot_number")::String
+    height = file["$track/heights/h_ph"][start:step:stop]::Vector{Float32}
+    datetime = file["$track/heights/delta_time"][start:step:stop]::Vector{Float64}
 
-    times = unix2datetime.(t .+ t_offset)
+    # NOT SURE WHY ONLY THE FIRST CONFIDENCE FLAG WAS CHOSEN.. MIGHT NEED TO REVISIT
+    signal_confidence = file["$track/heights/signal_conf_ph"][1, start:step:stop]::Vector{Int8}
+    quality = file["$track/heights/quality_ph"][start:step:stop]::Vector{Int8}
 
-    (
+    # Mapping between segment and photon
+    seg_cnt = file["$track/geolocation/segment_ph_cnt"][:]::Vector{Int32}
+    ph_ind = count2index(seg_cnt)
+    ph_ind = ph_ind[start:step:stop]
+
+    # extract data posted at segment frequency and map to photon frequency
+    segment = file["$track/geolocation/segment_id"][:]::Vector{Int32}
+    segment = segment[ph_ind]
+
+    sun_angle = file["$track/geolocation/solar_elevation"][:]::Vector{Float32}
+    sun_angle = sun_angle[ph_ind]
+
+    uncertainty = file["$track/geolocation/sigma_h"][:]::Vector{Float32}
+    uncertainty = uncertainty[ph_ind]
+
+    height_ref = file["$track/geophys_corr/dem_h"][:]::Vector{Float32}
+    height_ref = height_ref[ph_ind]
+
+    # extract attributes
+    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+
+    # convert from unix time to julia date time
+    datetime = unix2datetime.(datetime .+ t_offset)
+
+    nt = (
         longitude = x,
         latitude = y,
-        height = z,
-        quality = q,
-        uncertainty = uu,
-        datetime = times,
-        confidence = c,
-        segment = segments,
-        track = Fill(track, length(times)),
-        strong_beam = Fill(atlas_beam_type == "strong", length(times)),
-        sun_angle = sun_angles,
-        detector_id = Fill(parse(Int8, spot_number), length(times)),
-        height_reference = demd,
+        height = height,
+        quality = quality,
+        uncertainty = uncertainty,
+        datetime = datetime,
+        confidence = signal_confidence,
+        segment = segment,
+        track = Fill(track, length(datetime)),
+        strong_beam = Fill(atlas_beam_type == "strong", length(datetime)),
+        sun_angle = sun_angle,
+        detector_id = Fill(parse(Int8, spot_number), length(datetime)),
+        height_reference = height_ref,
     )
-end
-
-function map_counts(values, counts)
-    c = fill(zero(eltype(values)), sum(counts))
-    ref = 1
-    for i in eachindex(counts)
-        value = values[i]
-        count = counts[i]
-        c[ref:ref+count-1] .= value
-        ref += count
-    end
-    c
+    return nt
 end
 
 """
@@ -181,4 +231,36 @@ function create_mapping(dfsegment, unique_segments)
         end
     end
     index_map
+end
+
+"""
+    count2index(counts)
+
+Fast map between (segment) counts and (photon) indices.
+
+```jldoctest
+SL.count2index(Int32[1, 2, 0, 5])
+
+# output
+
+8-element Vector{Int32}:
+ 1
+ 2
+ 2
+ 4
+ 4
+ 4
+ 4
+ 4
+```
+"""
+function count2index(counts)
+    c = fill(zero(eltype(counts)), sum(counts))
+    ref = 1
+    for i in eachindex(counts)
+        count = counts[i]
+        c[ref:ref+count-1] .= i
+        ref += count
+    end
+    c
 end

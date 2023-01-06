@@ -155,7 +155,7 @@ function info(g::ICESat2_Granule)
     icesat2_info(g.id)
 end
 
-# Granule regions 1-14. Region 4 (North Pole) and region 11 (Sout Pole) are both ascending descending
+# Granule regions 1-14. Region 4 (North Pole) and region 11 (South Pole) are both ascending descending
 const ascending_segments = [true, true, true, true, false, false, false, false, false, false, true, true, true, true]
 const descending_segments = [false, false, false, true, true, true, true, true, true, true, true, false, false, false]
 
