@@ -19,14 +19,12 @@ either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@
 Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
     id::String
     url::String
-    bbox::NamedTuple
     info::NamedTuple
     polygons::MultiPolygonType = MultiPolygonType()
 end
-ICESat2_Granule(product, args...) = ICESat2_Granule{product}(args...)
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule(product, g.id, g.url, g.bbox, g.info, g.polygons)
+    ICESat2_Granule{product}(copy(g.id), copy(g.url), copy(g.bbox), copy(g.info), copy(g.polygons))
 end
 
 """
@@ -131,7 +129,6 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g = ICESat2_Granule{product}(
         replace(replace(g.id, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
         replace(replace(g.url, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
-        g.bbox,
         g.info,
         g.polygons,
     )
@@ -141,7 +138,7 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
         url = replace(g.url, "01.h5" => "02.h5")
         if isfile(url)
             @warn "Used newer version available"
-            g = ICESat2_Granule{product}(g.id, url, g.bbox, g.info)
+            g = ICESat2_Granule(product, g.id, url, g.bbox, g.info)
         end
     end
     g

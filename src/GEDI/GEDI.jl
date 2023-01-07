@@ -16,10 +16,9 @@ Base.@kwdef mutable struct GEDI_Granule{product} <: Granule
     info::NamedTuple
     polygons::MultiPolygonType = MultiPolygonType()
 end
-GEDI_Granule(product, args...) = GEDI_Granule{product}(args...)
 
 function Base.copy(g::GEDI_Granule{product}) where {product}
-    GEDI_Granule(product, g.id, g.url, g.info, g.polygons)
+    GEDI_Granule{product}(copy(g.id), copy(g.url), copy(g.info), copy(g.polygons))
 end
 
 

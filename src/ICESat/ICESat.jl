@@ -16,10 +16,9 @@ Base.@kwdef mutable struct ICESat_Granule{product} <: Granule
     info::NamedTuple
     polygons::MultiPolygonType = MultiPolygonType()
 end
-ICESat_Granule(product, args...) = ICESat_Granule{product}(args...)
 
 function Base.copy(g::ICESat_Granule{product}) where {product}
-    return ICESat_Granule(product, g.id, copy(g.url), copy(g.info), copy(g.polygons))
+    return ICESat_Granule{product}(copy(g.id), copy(g.url), copy(g.info), copy(g.polygons))
 end
 
 function bounds(granule::ICESat_Granule)
