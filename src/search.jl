@@ -186,9 +186,7 @@ function earthdata_search(;
     parsef = umm ? parse_cmr_ummjson : parse_cmr_json
     cgranules = parsef(r)
     granules = Vector{NamedTuple}()
-    @info typeof(granules)
     append!(granules, cgranules)
-    @info typeof(granules)
     while (length(cgranules) == page_size) && all_pages
         @warn "Found more than $page_size granules, requesting another $page_size..."
         q["page_num"] += 1

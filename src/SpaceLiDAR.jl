@@ -7,6 +7,7 @@ using HDF5
 using Tables
 using TableOperations: joinpartitions
 using DataFrames
+using TimeZones
 
 include("granule.jl")
 include("utils.jl")
