@@ -21,7 +21,7 @@
         <link rel="next" href="../api/">
       
       <link rel="icon" href="../../img/favicon.svg">
-      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.2">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-9.0.3">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.f56500e0.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6b71719e.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.2505c338.min.css">
@@ -407,12 +407,15 @@ details.
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
       
       
       
-      
-        <label class="md-nav__link" for="__nav_3">
+        <label class="md-nav__link" for="__nav_3" tabindex="0" aria-expanded="false">
           Guides
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -469,12 +472,15 @@ details.
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
       
       
       
-      
-        <label class="md-nav__link" for="__nav_4">
+        <label class="md-nav__link" for="__nav_4" tabindex="0" aria-expanded="false">
           Tutorials
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -531,12 +537,15 @@ details.
     <li class="md-nav__item md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      
+        
+      
+      <input class="md-nav__toggle md-toggle md-toggle--indeterminate" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
       
       
       
-      
-        <label class="md-nav__link" for="__nav_5">
+        <label class="md-nav__link" for="__nav_5" tabindex="0" aria-expanded="false">
           Topics
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -609,12 +618,13 @@ details.
     <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
+      
+      
+      <input class="md-nav__toggle md-toggle " data-md-toggle="__nav_6" type="checkbox" id="__nav_6" checked>
       
       
       
-      
-        <label class="md-nav__link" for="__nav_6">
+        <label class="md-nav__link" for="__nav_6" tabindex="0" aria-expanded="true">
           Reference
           <span class="md-nav__icon md-icon"></span>
         </label>
@@ -739,49 +749,49 @@ details.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">angle!</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
 </code></pre></div>
 <p>Sets the <code>angle</code> column in <code>table</code> as returned from <a href="../data/#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH06}}"><code>points</code></a>. See <a href="@ref"><code>angle</code></a> for details.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/geom.jl#LL29-L33' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/geom.jl#LL29-L33' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.shift-NTuple{4, Any}' href='#SpaceLiDAR.shift-NTuple{4, Any}'>#</a>
 <strong><code>SpaceLiDAR.shift</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">shift</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="p">)</span>
 </code></pre></div>
 <p>Shift <code>longitude</code> and <code>latitude</code> with <code>distance</code> in [m] in direction <code>angle</code>, where North is 0°. Returns a tuple of the shifted coordinates: <code>(longitude, latitude)</code>. Useful for offsetting SpaceLiDAR points to the left or right of the track, in combination with <a href="@ref"><code>angle</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/geom.jl#LL116-L122' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/geom.jl#LL116-L122' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.to_egm2008!-Tuple{Any}' href='#SpaceLiDAR.to_egm2008!-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.to_egm2008!</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">to_egm2008!</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
 </code></pre></div>
 <p>Converts ellipsoid heights to geoid heights using the EGM2008 geoid model. Assumes a table as generated from <a href="../data/#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH06}}"><code>points</code></a> with columns <code>:latitude</code>, <code>:longitude</code>, and <code>:height</code>. Will overwrite the <code>:height</code> column with the geoid height.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/geoid.jl#LL4-L10' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/geoid.jl#LL4-L10' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.granule_from_file-Tuple{AbstractString}' href='#SpaceLiDAR.granule_from_file-Tuple{AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.granule_from_file</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">granule_from_file</span><span class="p">(</span><span class="n">filename</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
 </code></pre></div>
 <p>Create a mission specific granule from a local .h5 filepath. For folder usage see <a href="./#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}"><code>granules_from_folder</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/utils.jl#LL4-L9' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/utils.jl#LL4-L9' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.granules_from_folder-Tuple{AbstractString}' href='#SpaceLiDAR.granules_from_folder-Tuple{AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.granules_from_folder</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">granules_from_folder</span><span class="p">(</span><span class="n">foldername</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
 </code></pre></div>
 <p>Create mission specific granules from a folder with .h5 files, using <a href="./#SpaceLiDAR.granule_from_file-Tuple{AbstractString}"><code>granule_from_file</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/utils.jl#LL29-L33' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/utils.jl#LL29-L33' class='documenter-source'>source</a><br></p>
 <p>&lt;a id='SpaceLiDAR.instantiate-Union{Tuple{T}, Tuple{Vector{T}, AbstractString}} where T&lt;:SpaceLiDAR.Granule' href='#SpaceLiDAR.instantiate-Union{Tuple{T}, Tuple{Vector{T}, AbstractString}} where T&lt;:SpaceLiDAR.Granule'&gt;#</a>
 <strong><code>SpaceLiDAR.instantiate</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">instantiate</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">::</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
 </code></pre></div>
 <p>For a given list of <code>granules</code> from <a href="@ref"><code>find</code></a>, match the granules to the local files and return a new list of granules with the local filepaths if they exist.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/utils.jl#LL41-L46' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/utils.jl#LL41-L46' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.isvalid-Tuple{SpaceLiDAR.Granule}' href='#SpaceLiDAR.isvalid-Tuple{SpaceLiDAR.Granule}'>#</a>
 <strong><code>SpaceLiDAR.isvalid</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">isvalid</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Checks if a granule is has a valid, local and non-corrupt .h5 file. Can be combined with <a href="../granules/#Base.Filesystem.rm-Tuple{SpaceLiDAR.Granule}"><code>rm(::Granule)</code></a> to remove invalid granules.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/utils.jl#LL111-L116' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/utils.jl#LL111-L116' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.netrc!-Tuple{Any, Any}' href='#SpaceLiDAR.netrc!-Tuple{Any, Any}'>#</a>
 <strong><code>SpaceLiDAR.netrc!</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">netrc!</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
 </code></pre></div>
 <p>Writes/updates a .netrc file for ICESat-2 and GEDI downloads. A .netrc is a plaintext file containing your username and password for NASA EarthData and DAACs, and can be automatically used by Julia using <code>Downloads</code> and tools like <code>wget</code>, <code>curl</code> among others.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4695caf32621bceb59f668485a598a6867ec3aef/src/utils.jl#LL129-L135' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/451158422cb51975bc809cce99e78d4b262ff005/src/utils.jl#LL129-L135' class='documenter-source'>source</a><br></p>
 
 
 
@@ -850,10 +860,10 @@ details.
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.12658920.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.e5c33ebb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.5cf534bf.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ba449ae6.min.js"></script>
       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
       
