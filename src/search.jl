@@ -11,6 +11,7 @@ Mission(x) = Mission{x}()
 prefix(::Mission{:ICESat}) = "GLAH"
 prefix(::Mission{:ICESat2}) = "ATL"
 prefix(::Mission{:GEDI}) = "GEDI"
+mission(::Mission{T}) where {T} = T
 
 const url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
@@ -27,7 +28,7 @@ function search(
     version::Int = 2,
     provider::String = "LPDAAC_ECS",
 )::Vector{GEDI_Granule}
-    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong $product for $m."))
+    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     granules =
         earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
@@ -50,7 +51,7 @@ function search(
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat2_Granule}
-    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong $product for $m."))
+    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     granules =
         earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
@@ -73,7 +74,7 @@ function search(
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat_Granule}
-    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong $product for $m."))
+    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     granules =
         earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
@@ -87,6 +88,9 @@ function search(
         ),
         granules)
 end
+
+search(::Mission{X}, product, args...; kwargs...) where {X} =
+    throw(ArgumentError("Mission $X not supported. Currently supported are :ICESat, :ICESat2, and :GEDI."))
 
 # search(mission::Symbol, product::AbstractString, bbox::NamedTuple, version::String) =
 # search(Mission(mission), Symbol(product); bbox = bbox, version = parse(Int, version))

@@ -64,10 +64,12 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(granules[1].polygons) > 0
 
         @test_throws ArgumentError find(:ICESat2, "GLAH14")
+        @test_throws ArgumentError find(:Foo, "GLAH14")
     end
 
     @testset "download" begin
         if "EARTHDATA_USER" in keys(ENV)
+            @info "Setting up Earthdata credentials for Github Actions"
             SpaceLiDAR.netrc!(
                 get(ENV, "EARTHDATA_USER", ""),
                 get(ENV, "EARTHDATA_PW", ""),
