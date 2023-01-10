@@ -213,7 +213,7 @@ end
 
 function get_s3_credentials(daac = "nsidc")
     body = sprint() do output
-        return Downloads.request(
+        return _request(
             "https://data.$daac.earthdatacloud.nasa.gov/s3credentials";
             output = output,
         )

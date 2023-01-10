@@ -2,8 +2,9 @@ using HDF5
 import Downloads
 import AWSS3
 
+# Custom downloader for Julia 1.6 which doensn't have NETRC + Cookie support
 # This is a method because it will segfault if precompiled.
-function _download(kwargs...)
+function custom_downloader()
     downloader = Downloads.Downloader()
     easy_hook =
         (easy, _) -> begin
@@ -11,7 +12,17 @@ function _download(kwargs...)
             Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_COOKIEFILE, "")
         end
     downloader.easy_hook = easy_hook
+    return downloader
+end
+
+function _download(kwargs...)
+    downloader = custom_downloader()
     Downloads.download(kwargs...; downloader = downloader)
+end
+
+function _request(args...; kwargs...)
+    downloader = custom_downloader()
+    Downloads.request(args...; kwargs..., downloader = downloader)
 end
 
 function create_aws_config(daac = "nsidc", region = "us-west-2")
