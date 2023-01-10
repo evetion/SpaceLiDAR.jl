@@ -744,6 +744,13 @@ details.
 <p><a id='Search'></a></p>
 <p><a id='Search-1'></a></p>
 <h1 id="search">Search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h1>
+<p><a id='SpaceLiDAR.search' href='#SpaceLiDAR.search'>#</a>
+<strong><code>SpaceLiDAR.search</code></strong> &mdash; <em>Function</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">search</span><span class="p">(</span><span class="n">mission</span><span class="o">::</span><span class="kt">Mission</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">NamedTuple</span><span class="p">{(</span><span class="ss">:min_x</span><span class="p">,</span><span class="w"> </span><span class="ss">:min_y</span><span class="p">,</span><span class="w"> </span><span class="ss">:max_x</span><span class="p">,</span><span class="w"> </span><span class="ss">:max_y</span><span class="p">),</span><span class="kt">NTuple</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="kt">Float64</span><span class="p">}})</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">search</span><span class="p">(</span><span class="ss">:GEDI02_A</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;002&quot;</span><span class="p">)</span><span class="w">  </span><span class="c"># searches *all* GEDI v2 granules</span>
+</code></pre></div>
+<p>Search granules for a given mission and bounding box.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/0e322f6b6d022b0e482135a2d049b6defe559077/src/search.jl#LL17-L22' class='documenter-source'>source</a><br></p>
 
 
 
