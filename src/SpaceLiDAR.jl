@@ -26,13 +26,14 @@ include("geoid.jl")
 include("table.jl")
 include("search.jl")
 
-export find, download!, netrc!, instantiate, info, angle, angle!, shift
+export find, search, download!, netrc!, instantiate, info, angle, angle!, shift
 export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!
 export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
 export granule_from_file, granules_from_folder, write_granule_urls!
 
 precompile(find, (Symbol, String, NamedTuple, String))
 precompile(find, (Symbol, String))
+precompile(search, (Symbol, Symbol))
 precompile(instantiate, (Vector{GEDI_Granule}, String))
 precompile(instantiate, (Vector{ICESat_Granule}, String))
 precompile(instantiate, (Vector{ICESat2_Granule}, String))

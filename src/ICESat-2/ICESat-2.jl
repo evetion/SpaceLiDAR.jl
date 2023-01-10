@@ -24,7 +24,7 @@ Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
 end
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule{product}(copy(g.id), copy(g.url), copy(g.bbox), copy(g.info), copy(g.polygons))
+    ICESat2_Granule{product}(g.id, g.url, copy(g.bbox), copy(g.info), copy(g.polygons))
 end
 
 """

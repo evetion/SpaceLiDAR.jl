@@ -15,7 +15,7 @@ function _download(kwargs...)
 end
 
 function create_aws_config(daac = "nsidc", region = "us-west-2")
-    expiry = get(ENV, "AWS_SESSION_EXPIRES", typemin(DateTime))
+    expiry = DateTime(get(ENV, "AWS_SESSION_EXPIRES", typemin(DateTime)))
     if expiry < Dates.now(UTC)
         # If credentials are expired or unset, get new ones
         creds = get_s3_credentials(daac)
@@ -26,7 +26,7 @@ function create_aws_config(daac = "nsidc", region = "us-west-2")
             get(ENV, "AWS_ACCESS_KEY_ID", ""),
             get(ENV, "AWS_SECRET_ACCESS_KEY", ""),
             get(ENV, "AWS_SESSION_TOKEN", ""),
-            expiry = get(ENV, "AWS_SESSION_EXPIRES", typemax(DateTime)),
+            expiry = DateTime(get(ENV, "AWS_SESSION_EXPIRES", typemax(DateTime))),
         )
     end
 

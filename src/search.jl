@@ -8,6 +8,10 @@ struct Mission{x}
 end
 Mission(x) = Mission{x}()
 
+prefix(::Mission{:ICESat}) = "GLAH"
+prefix(::Mission{:ICESat2}) = "ATL"
+prefix(::Mission{:GEDI}) = "GEDI"
+
 const url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
@@ -17,14 +21,16 @@ const url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 Search granules for a given mission and bounding box.
 """
 function search(
-    ::Mission{:GEDI},
+    m::Mission{:GEDI},
     product::Symbol = :GEDI02_A;
     bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
     version::Int = 2,
     provider::String = "LPDAAC_ECS",
 )::Vector{GEDI_Granule}
+    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong $product for $m."))
     granules =
         earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+    length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     filter!(g -> !isnothing(g.https_url), granules)
     map(
         x -> GEDI_Granule{product}(
@@ -37,15 +43,17 @@ function search(
 end
 
 function search(
-    ::Mission{:ICESat2},
+    m::Mission{:ICESat2},
     product::Symbol = :ATL03;
     bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
     version::Int = 5,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat2_Granule}
+    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong $product for $m."))
     granules =
         earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+    length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
         x -> ICESat2_Granule{product}(
@@ -58,15 +66,17 @@ function search(
 end
 
 function search(
-    ::Mission{:ICESat},
+    m::Mission{:ICESat},
     product::Symbol = :GLAH14;
     bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
     version::Int = 34,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat_Granule}
+    startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong $product for $m."))
     granules =
         earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+    length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
         x -> ICESat_Granule{product}(
