@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks; step=1, bbox::Union{Nothing,NamedTuple{}} = nothing)
+    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks; step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL03 (Global Geolocated Photon Data) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -27,9 +27,16 @@ function points(
     granule::ICESat2_Granule{:ATL03};
     tracks = icesat2_tracks,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
 )
-
+    if bbox isa NamedTuple
+        bbox = convert(Extent, bbox)
+        Base.depwarn(
+            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
+            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
+            :points,
+        )
+    end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = file["ancillary_data/atlas_sdp_gps_epoch"][1]::Float64 + gps_offset
@@ -51,9 +58,16 @@ function lines(
     granule::ICESat2_Granule{:ATL03},
     tracks = icesat2_tracks;
     step = 100,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
-
+    if bbox isa NamedTuple
+        bbox = convert(Extent, bbox)
+        Base.depwarn(
+            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
+            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
+            :points,
+        )
+    end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
@@ -84,7 +98,7 @@ function points(
     track::AbstractString,
     t_offset::Float64,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
 
     if !isnothing(bbox)
@@ -92,7 +106,7 @@ function points(
         y = file["$track/heights/lat_ph"][:]::Vector{Float64}
 
         # find index of points inside of bbox
-        ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
+        ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
         start = findfirst(ind)
         stop = findlast(ind)
 

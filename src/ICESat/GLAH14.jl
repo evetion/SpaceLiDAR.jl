@@ -1,5 +1,5 @@
 """
-    points(g::ICESat_Granule{:GLAH14}, step=1, bbox::Union{Nothing,NamedTuple{}} = nothing)
+    points(g::ICESat_Granule{:GLAH14}, step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
 
 Retrieve the points for a given ICESat GLAH14 (Land Surface) granule as a list of namedtuples
 The names of the tuples are based on the following fields:
@@ -26,9 +26,16 @@ You can get the output in a `DataFrame` with `DataFrame(points(g))`.
 function points(
     granule::ICESat_Granule{:GLAH14};
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
 )
-
+    if bbox isa NamedTuple
+        bbox = convert(Extent, bbox)
+        Base.depwarn(
+            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
+            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
+            :points,
+        )
+    end
     HDF5.h5open(granule.url, "r") do file
         if !isnothing(bbox)
             x = file["Data_40HZ/Geolocation/d_lon"][:]::Vector{Float64}
@@ -36,7 +43,7 @@ function points(
             y = file["Data_40HZ/Geolocation/d_lat"][:]::Vector{Float64}
 
             # find index of points inside of bbox
-            ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
+            ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
             start = findfirst(ind)
             stop = findlast(ind)
 

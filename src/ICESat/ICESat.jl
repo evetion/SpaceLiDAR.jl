@@ -18,7 +18,7 @@ Base.@kwdef mutable struct ICESat_Granule{product} <: Granule
 end
 
 function Base.copy(g::ICESat_Granule{product}) where {product}
-    return ICESat_Granule{product}(g.id, g.url, copy(g.info), copy(g.polygons))
+    return ICESat_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end
 
 function bounds(granule::ICESat_Granule)
@@ -30,7 +30,6 @@ function bounds(granule::ICESat_Granule)
             max_x = parse(Float64, read(nt["geospatial_lon_max"])),
             max_y = parse(Float64, read(nt["geospatial_lat_max"])),
         )
-        return ntb
     end
 end
 

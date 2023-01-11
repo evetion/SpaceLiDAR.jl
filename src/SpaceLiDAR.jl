@@ -3,11 +3,14 @@ module SpaceLiDAR
 using Dates
 using CategoricalArrays
 using FillArrays
+using GeoFormatTypes
+using GeoInterface
 using HDF5
 using Tables
 using TableOperations: joinpartitions
 using DataFrames
 using TimeZones
+using Extents
 
 include("granule.jl")
 include("utils.jl")
@@ -25,8 +28,9 @@ include("ICESat/GLAH14.jl")
 include("geoid.jl")
 include("table.jl")
 include("search.jl")
+include("geointerface.jl")
 
-export find, search, download!, netrc!, instantiate, info, angle, angle!, shift
+export find, search, download!, download, netrc!, instantiate, info, angle, angle!, shift
 export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!
 export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
 export granule_from_file, granules_from_folder, write_granule_urls!

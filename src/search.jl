@@ -1,9 +1,8 @@
 using HTTP
-using Downloads
 using Dates
 using JSON3
 
-const world = (min_x = -180.0, min_y = -90.0, max_x = 180.0, max_y = 90.0)
+const world = convert(Extent, (min_x = -180.0, min_y = -90.0, max_x = 180.0, max_y = 90.0))
 struct Mission{x}
 end
 Mission(x) = Mission{x}()
@@ -16,7 +15,7 @@ mission(::Mission{T}) where {T} = T
 const url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
-    search(mission::Mission, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
+    search(mission::Mission, bbox::Extent)
     search(:GEDI02_A, "002")  # searches *all* GEDI v2 granules
 
 Search granules for a given mission and bounding box.
@@ -24,7 +23,7 @@ Search granules for a given mission and bounding box.
 function search(
     m::Mission{:GEDI},
     product::Symbol = :GEDI02_A;
-    bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
+    bbox::Extent = world,
     version::Int = 2,
     provider::String = "LPDAAC_ECS",
 )::Vector{GEDI_Granule}
@@ -46,7 +45,7 @@ end
 function search(
     m::Mission{:ICESat2},
     product::Symbol = :ATL03;
-    bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
+    bbox::Extent = world,
     version::Int = 5,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
@@ -69,7 +68,7 @@ end
 function search(
     m::Mission{:ICESat},
     product::Symbol = :GLAH14;
-    bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}} = world,
+    bbox::Extent = world,
     version::Int = 34,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
@@ -92,21 +91,16 @@ end
 search(::Mission{X}, product, args...; kwargs...) where {X} =
     throw(ArgumentError("Mission $X not supported. Currently supported are :ICESat, :ICESat2, and :GEDI."))
 
-# search(mission::Symbol, product::AbstractString, bbox::NamedTuple, version::String) =
-# search(Mission(mission), Symbol(product); bbox = bbox, version = parse(Int, version))
-# search(mission::Symbol, product::AbstractString, bbox::NamedTuple) =
-# search(Mission(mission), Symbol(product); bbox = bbox)
-
 @deprecate find(mission::Symbol, product::AbstractString, bbox, version) search(
     mission,
     Symbol(product);
-    bbox = bbox,
+    bbox = convert(Extent, bbox),
     version = parse(Int, version),
 )
 @deprecate find(mission::Symbol, product::AbstractString, bbox) search(
     mission,
     Symbol(product);
-    bbox = bbox,
+    bbox = convert(Extent, bbox),
 )
 @deprecate find(mission::Symbol, product::AbstractString) search(
     mission,
@@ -175,7 +169,7 @@ end
 
 function earthdata_search(;
     short_name::String,
-    bounding_box::Union{Nothing,NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}} = nothing,
+    bounding_box::Union{Nothing,Extent} = nothing,
     version::Union{Nothing,Int} = nothing,
     provider::Union{Nothing,String} = "NSIDC_CPRD",
     all_pages::Bool = true,
@@ -190,7 +184,7 @@ function earthdata_search(;
         "short_name" => short_name,
     )
     !isnothing(bounding_box) ?
-    q["bounding_box"] = "$(bounding_box.min_x),$(bounding_box.min_y),$(bounding_box.max_x),$(bounding_box.max_y)" :
+    q["bounding_box"] = "$(bounding_box.X[1]),$(bounding_box.Y[1]),$(bounding_box.X[2]),$(bounding_box.Y[2])" :
     nothing
     !isnothing(version) ? q["version"] = lpad(version, 3, "0") : nothing
     !isnothing(provider) ? q["provider"] = provider : nothing
