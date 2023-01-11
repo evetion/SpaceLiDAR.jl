@@ -9,6 +9,7 @@ using Tables
 using Proj
 using Documenter
 using Extents
+using GeoInterface
 
 const rng = MersenneTwister(54321)
 const SL = SpaceLiDAR
@@ -276,5 +277,10 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         t = Tables.columntable(g14)
         @test length(t.longitude) == 729117
 
+    end
+
+    @testset "GeoInterface" begin
+        g = SL.granule_from_file(ATL08_fn)
+        GeoInterface.testgeometry(g)
     end
 end
