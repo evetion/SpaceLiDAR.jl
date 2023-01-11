@@ -185,6 +185,9 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points[1].longitude) == 45
         @test points[1].longitude[45] ≈ 175.22807f0
         df = reduce(vcat, DataFrame.(points))  # test that empty tracks can be catted
+
+        ps = SL.points(g; highres = true)
+        @test length(ps[1].longitude) == (933 * 5)
     end
 
     @testset "ATL12" begin

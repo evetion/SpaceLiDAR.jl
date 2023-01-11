@@ -6,7 +6,7 @@
 [![DOI](https://zenodo.org/badge/241095197.svg)](https://zenodo.org/badge/latestdoi/241095197)
 
 # SpaceLiDAR
-A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly search, download and load filtered point data with relevant attributes from the `.h5` granules of each data product.
+A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly search, download, and load filtered point data with relevant attributes from the `.h5` granules of each data product.
 
 Currently supports the following data products:
 
@@ -20,7 +20,7 @@ Currently supports the following data products:
 |ICESat-2| ATL12 v5 | [UG](https://nsidc.org/sites/nsidc.org/files/ATL12-V005-UserGuide.pdf) | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL12_ATBD_r005.pdf) |
 |GEDI| L2A v2 | [UG](https://lpdaac.usgs.gov/documents/998/GEDI02_UserGuide_V21.pdf) | [ATBD](https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf) |
 
-For a overview with code examples, see the FOSS4G Pluto notebook [here](https://www.evetion.nl/SpaceLiDAR.jl/dev/tutorial/foss4g_2021.jl.html)
+For an overview with code examples, see the FOSS4G Pluto notebook [here](https://www.evetion.nl/SpaceLiDAR.jl/dev/tutorial/foss4g_2021.jl.html)
 
 If you use SpaceLiDAR.jl in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197).
 
@@ -33,15 +33,16 @@ If you use SpaceLiDAR.jl in your research, please consider [citing it](https://z
 Search for data
 ```julia
 using SpaceLiDAR
+using Extents
 # Find all ATL08 granules
-granules = find(:ICESat2, "ATL08")
+granules = search(:ICESat2, :ATL08)
 
 # Find only ATL03 granules in a part of Vietnam
-vietnam = (min_x = 102., min_y = 8.0, max_x = 107.0, max_y = 12.0)
-granules = find(:ICESat2, "ATL08", vietnam, "004")
+vietnam = Extent(X = (102., 107.0), Y = (8.0, 12.0))
+granules = search(:ICESat2, :ATL08; bbox=vietnam, version=5)
 
 # Find GEDI granules in the same way
-granules = find(:GEDI, "GEDI02_A")
+granules = search(:GEDI, :GEDI02_A)
 
 # A granule is pretty simple
 granule = granules[1]
@@ -51,19 +52,19 @@ granule.info  # derived information from id
 
 # Downloading granules requires a setup .netrc with an NASA EarthData account
 # we provide a helper function, that creates/updates a ~/.netrc or ~/_netrc
-SpaceLiDAR.netrc!(<username>, <password>)  # replace with your credentials
+SpaceLiDAR.netrc!(username, password)  # replace with your credentials
 
-# Afterward you can download (requires curl to be available on PATH)
+# Afterward you can download the dataset
 fn = SpaceLiDAR.download!(granule)
 
 # You can also load a granule from disk
 granule = granule_from_file(fn)
 
 # Or from a folder
-local_granules = granules_from_folder(<folder>)
+local_granules = granules_from_folder(folder)
 
 # Instantiate search results locally (useful for GEDI location indexing)
-local_granules = instantiate(granules, <folder>)
+local_granules = instantiate(granules, folder)
 ```
 
 Derive points

@@ -3,14 +3,14 @@
 ```julia
 using SpaceLiDAR
 # Find all ATL08 granules
-granules = find(:ICESat2, "ATL08")
+granules = search(:ICESat2, :ATL08)
 
 # Find only ATL03 granules in a part of Vietnam
-vietnam = (min_x = 102., min_y = 8.0, max_x = 107.0, max_y = 12.0)
-granules = find(:ICESat2, "ATL08", vietnam, "004")
+vietnam = Extent(X = (102., 107.0), Y = (8.0, 12.0))
+granules = search(:ICESat2, :ATL08; bbox=vietnam, version=5)
 
 # Find GEDI granules in the same way
-granules = find(:GEDI, "GEDI02_A")
+granules = search(:GEDI, :GEDI02_A)
 
 # A granule is pretty simple
 granule = granules[1]
@@ -20,19 +20,19 @@ granule.info  # derived information from id
 
 # Downloading granules requires a setup .netrc with an NASA EarthData account
 # we provide a helper function, that creates/updates a ~/.netrc or ~/_netrc
-SpaceLiDAR.netrc!(<username>, <password>)  # replace with your credentials
+SpaceLiDAR.netrc!(username, password)  # replace with your credentials
 
-# Afterward you can download (requires curl to be available on PATH)
+# Afterward you can download the dataset
 fn = SpaceLiDAR.download!(granule)
 
 # You can also load a granule from disk
 granule = granule_from_file(fn)
 
 # Or from a folder
-local_granules = granules_from_folder(<folder>)
+local_granules = granules_from_folder(folder)
 
 # Instantiate search results locally (useful for GEDI location indexing)
-local_granules = instantiate(granules, <folder>)
+local_granules = instantiate(granules, folder)
 
 ```
 

@@ -6,6 +6,8 @@ With the `tracks` keyword, you can specify which tracks to include. The default 
 With the `step` keyword, you can choose to limit the number of points, the default is 1 (all points).
 With setting `ground` and or `canopy`, you can control to include ground and/or canopy points.
 Finally, with the `ground_field` and `canopy_field` settings, you can determine the source field. The default is `h_te_mean` for ground and `h_mean_canopy_abs` for canopy.
+With the introduction of v5, a 20m resolution is also available for estimation, which you can enable with `highres`.
+Note that filtering with a bounding box doesn't yet work when `highres` is true.
 
 The names of the tuples are based on the following fields:
 
@@ -40,6 +42,7 @@ function points(
     ground = true,
     ground_field = "h_te_mean",
     bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    highres::Bool = false,
 )
     if bbox isa NamedTuple
         bbox = convert(Extent, bbox)
@@ -55,7 +58,8 @@ function points(
 
         for track in tracks
             if in(track, keys(file)) && in("land_segments", keys(file[track]))
-                for track_nt in points(granule, file, track, t_offset, step, canopy, canopy_field, ground, ground_field, bbox)
+                f = highres ? _extrapoints : points
+                for track_nt in f(granule, file, track, t_offset, step, canopy, canopy_field, ground, ground_field, bbox)
                     track_nt.height[track_nt.height.==fill_value] .= NaN
                     push!(dfs, track_nt)
                 end
@@ -253,4 +257,93 @@ function atl03_mapping(file::HDF5.H5DataStore, track::AbstractString)
     i = read(file, "$track/signal_photons/classed_pc_indx")::Array{Int32,1}
     s = read(file, "$track/signal_photons/ph_segment_id")::Array{Int32,1}
     (segment = s, index = i, classification = c, track = track)
+end
+
+
+function _extrapoints(
+    ::ICESat2_Granule{:ATL08},
+    file::HDF5.H5DataStore,
+    track::AbstractString,
+    t_offset::Float64,
+    step = 1,
+    canopy = false,
+    canopy_field = "h_canopy_20",
+    ground = true,
+    ground_field = "h_te_best_fit_20m",
+    bbox = nothing,
+)
+    if ground
+        zt = vec(file["$track/land_segments/terrain/h_te_best_fit_20m"][1:step:end, :])::Array{Float32}
+        tu = repeat(file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Vector{Float32}, 5)
+        q = vec(file["$track/land_segments/terrain/subset_te_flag"][1:step:end, :]::Array{Int8})
+    end
+    if canopy
+        zc = vec(file["$track/land_segments/canopy/h_canopy_20"][1:step:end, :])::Array{Float32}
+        cu = repeat(file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Vector{Float32}, 5)
+        q = vec(file["$track/land_segments/canopy/subset_can_flag"][1:step:end, :]::Array{Int8})
+    end
+    x = vec(file["$track/land_segments/longitude_20m"][1:step:end, :]::Array{Float32})
+    y = vec(file["$track/land_segments/latitude_20m"][1:step:end, :]::Array{Float32})
+    t = repeat(file["$track/land_segments/delta_time"][1:step:end]::Vector{Float64}, 5)
+    sensitivity = repeat(file["$track/land_segments/snr"][1:step:end]::Vector{Float32}, 5)
+    clouds = repeat(file["$track/land_segments/layer_flag"][1:step:end]::Vector{Int8}, 5)
+    scattered = repeat(file["$track/land_segments/msw_flag"][1:step:end]::Vector{Int8}, 5)
+    saturated = repeat(file["$track/land_segments/sat_flag"][1:step:end]::Vector{Int8}, 5)
+    phr = repeat(file["$track/land_segments/ph_removal_flag"][1:step:end]::Vector{Int8}, 5)
+    dem = repeat(file["$track/land_segments/dem_h"][1:step:end]::Vector{Float32}, 5)
+    times = unix2datetime.(t .+ t_offset)
+    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+
+    # This is something to use, reduce(vcat,Fill.($x, $v));
+
+    if ground
+        gt = (
+            longitude = x,
+            latitude = y,
+            height = zt,
+            height_error = tu,
+            datetime = times,
+            quality = q,
+            phr = Int16.(phr),
+            sensitivity = sensitivity,
+            scattered = Int16.(scattered),
+            saturated = Int16.(saturated),
+            clouds = Bool.(clouds),
+            track = Fill(track, length(times)),
+            strong_beam = Fill(atlas_beam_type == "strong", length(times)),
+            classification = Fill("ground", length(times)),
+            height_reference = dem,
+            detector_id = Fill(parse(Int8, spot_number), length(times)),
+        )
+    end
+    if canopy
+        ct = (
+            longitude = x,
+            latitude = y,
+            height = zc,
+            height_error = cu,
+            datetime = times,
+            quality = q,
+            phr = Int16.(phr),
+            sensitivity = sensitivity,
+            scattered = Int16.(scattered),
+            saturated = Int16.(saturated),
+            clouds = Bool.(clouds),
+            track = Fill(track, length(times)),
+            strong_beam = Fill(atlas_beam_type == "strong", length(times)),
+            classification = Fill("high_canopy", length(times)),
+            height_reference = dem,
+            detector_id = Fill(parse(Int8, spot_number), length(times)),
+        )
+    end
+    if canopy && ground
+        ct, gt
+    elseif canopy
+        (ct,)
+    elseif ground
+        (gt,)
+    else
+        ()
+    end
 end
