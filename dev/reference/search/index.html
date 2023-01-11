@@ -97,9 +97,8 @@
             
             
 <!-- Add announcement here, including arbitrary HTML -->
-The newly released v0.2.0 is a *breaking* release. Please see the <a
-    href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for
-details.
+Please see the <a href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for recent (deprecation) changes and pin this
+package if you use it in production.
 
           </div>
           
@@ -746,11 +745,11 @@ details.
 <h1 id="search">Search<a class="headerlink" href="#search" title="Permanent link">&para;</a></h1>
 <p><a id='SpaceLiDAR.search' href='#SpaceLiDAR.search'>#</a>
 <strong><code>SpaceLiDAR.search</code></strong> &mdash; <em>Function</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">search</span><span class="p">(</span><span class="n">mission</span><span class="o">::</span><span class="kt">Mission</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">NamedTuple</span><span class="p">{(</span><span class="ss">:min_x</span><span class="p">,</span><span class="w"> </span><span class="ss">:min_y</span><span class="p">,</span><span class="w"> </span><span class="ss">:max_x</span><span class="p">,</span><span class="w"> </span><span class="ss">:max_y</span><span class="p">),</span><span class="kt">NTuple</span><span class="p">{</span><span class="mi">4</span><span class="p">,</span><span class="kt">Float64</span><span class="p">}})</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">search</span><span class="p">(</span><span class="n">mission</span><span class="o">::</span><span class="kt">Mission</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Extent</span><span class="p">)</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">search</span><span class="p">(</span><span class="ss">:GEDI02_A</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;002&quot;</span><span class="p">)</span><span class="w">  </span><span class="c"># searches *all* GEDI v2 granules</span>
 </code></pre></div>
 <p>Search granules for a given mission and bounding box.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4446567e4578e0f59c80d36d5fd9ab21182c67dd/src/search.jl#LL18-L23' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/688105ed50c71e9d8d02c52c7a83801da1728611/src/search.jl#LL17-L22' class='documenter-source'>source</a><br></p>
 
 
 

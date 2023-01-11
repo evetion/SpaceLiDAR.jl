@@ -81,7 +81,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#unreleased" class="md-skip">
+        <a href="#v030" class="md-skip">
           Skip to content
         </a>
       
@@ -97,9 +97,8 @@
             
             
 <!-- Add announcement here, including arbitrary HTML -->
-The newly released v0.2.0 is a *breaking* release. Please see the <a
-    href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for
-details.
+Please see the <a href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for recent (deprecation) changes and pin this
+package if you use it in production.
 
           </div>
           
@@ -419,8 +418,8 @@ details.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#unreleased" class="md-nav__link">
-    Unreleased
+  <a href="#v030" class="md-nav__link">
+    v0.3.0
   </a>
   
 </li>
@@ -819,14 +818,24 @@ details.
 
   <h1>Changelog</h1>
 
-<p><a id='Unreleased'></a></p>
-<p><a id='Unreleased-1'></a></p>
-<h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
+<p><a id='v0.3.0'></a></p>
+<p><a id='v0.3.0-1'></a></p>
+<h2 id="v030">v0.3.0<a class="headerlink" href="#v030" title="Permanent link">&para;</a></h2>
+<div class="admonition danger">
+<p class="admonition-title">Danger</p>
+<p>This is a <strong>breaking</strong> release</p>
+</div>
 <ul>
-<li>Extents support</li>
-<li>Search using polygons</li>
-<li>ICESat-2 S3 access</li>
-<li>20m resolution data in ICESat-2 ATL08 v05</li>
+<li>GeoInterface, Extents support</li>
+<li>Bounding box using Extent subsetting on all <code>points</code> functions</li>
+<li><code>find</code> renamed to <code>search</code></li>
+<li><code>search</code> now takes the <code>product</code> as a <code>Symbol</code> and accepts a <code>s3::Bool</code> parameter.</li>
+<li>Stricter checking of arguments in <code>search</code></li>
+<li>MultiPolygon extents of granules are now returned in the <code>polygons</code> field in granules from <code>search</code>.</li>
+<li>Removed <code>bbox</code> field on granules.</li>
+<li><code>download(granule)</code> now works on AWS S3 urls</li>
+<li><code>donwload(granule)</code> now creates temporary files and renames after successful download</li>
+<li>ICESat-2 ATL08 v5 <code>points</code> function now supports 20 m resolution by passing <code>highres::Bool</code> parameter.</li>
 </ul>
 <p><a id='v0.2.2'></a></p>
 <p><a id='v0.2.2-1'></a></p>
@@ -863,7 +872,7 @@ details.
 <p><a id='v0.1.6-1'></a></p>
 <h2 id="v016">v0.1.6<a class="headerlink" href="#v016" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Support for ICESat GLAH06 by <a href="https://github.com/alex-s-gardner">alex-s-gardner</a> <img alt="👍" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f44d.svg" title=":+1:" /><img alt="🎉" class="twemoji" src="https://twemoji.maxcdn.com/v/latest/svg/1f389.svg" title=":tada:" /></li>
+<li>Support for ICESat GLAH06 by <a href="https://github.com/alex-s-gardner">alex-s-gardner</a> <img alt="👍" class="twemoji" src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f44d.svg" title=":+1:" /><img alt="🎉" class="twemoji" src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f389.svg" title=":tada:" /></li>
 </ul>
 <p><a id='v0.1.5'></a></p>
 <p><a id='v0.1.5-1'></a></p>

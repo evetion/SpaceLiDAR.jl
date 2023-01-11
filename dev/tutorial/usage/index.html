@@ -97,9 +97,8 @@
             
             
 <!-- Add announcement here, including arbitrary HTML -->
-The newly released v0.2.0 is a *breaking* release. Please see the <a
-    href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for
-details.
+Please see the <a href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for recent (deprecation) changes and pin this
+package if you use it in production.
 
           </div>
           
@@ -794,14 +793,14 @@ details.
 <h2 id="search-for-data">Search for data<a class="headerlink" href="#search-for-data" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="n">SpaceLiDAR</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="c"># Find all ATL08 granules</span>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">find</span><span class="p">(</span><span class="ss">:ICESat2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ATL08&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="ss">:ICESat2</span><span class="p">,</span><span class="w"> </span><span class="ss">:ATL08</span><span class="p">)</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
 <a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Find only ATL03 granules in a part of Vietnam</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">vietnam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">min_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">102.</span><span class="p">,</span><span class="w"> </span><span class="n">min_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="n">max_x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">107.0</span><span class="p">,</span><span class="w"> </span><span class="n">max_y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">12.0</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">find</span><span class="p">(</span><span class="ss">:ICESat2</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ATL08&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">vietnam</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;004&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">vietnam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Extent</span><span class="p">(</span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mf">102.</span><span class="p">,</span><span class="w"> </span><span class="mf">107.0</span><span class="p">),</span><span class="w"> </span><span class="n">Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mf">12.0</span><span class="p">))</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="ss">:ICESat2</span><span class="p">,</span><span class="w"> </span><span class="ss">:ATL08</span><span class="p">;</span><span class="w"> </span><span class="n">bbox</span><span class="o">=</span><span class="n">vietnam</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="c"># Find GEDI granules in the same way</span>
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">find</span><span class="p">(</span><span class="ss">:GEDI</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;GEDI02_A&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="ss">:GEDI</span><span class="p">,</span><span class="w"> </span><span class="ss">:GEDI02_A</span><span class="p">)</span>
 <a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
 <a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="c"># A granule is pretty simple</span>
 <a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">granule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granules</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -811,19 +810,19 @@ details.
 <a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>
 <a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="c"># Downloading granules requires a setup .netrc with an NASA EarthData account</span>
 <a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="c"># we provide a helper function, that creates/updates a ~/.netrc or ~/_netrc</span>
-<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">netrc!</span><span class="p">(</span><span class="o">&lt;</span><span class="n">username</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">password</span><span class="o">&gt;</span><span class="p">)</span><span class="w">  </span><span class="c"># replace with your credentials</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">netrc!</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span><span class="w">  </span><span class="c"># replace with your credentials</span>
 <a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>
-<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Afterward you can download (requires curl to be available on PATH)</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c"># Afterward you can download the dataset</span>
 <a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">download!</span><span class="p">(</span><span class="n">granule</span><span class="p">)</span>
 <a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>
 <a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c"># You can also load a granule from disk</span>
 <a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="n">granule</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule_from_file</span><span class="p">(</span><span class="n">fn</span><span class="p">)</span>
 <a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
 <a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="c"># Or from a folder</span>
-<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">local_granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granules_from_folder</span><span class="p">(</span><span class="o">&lt;</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span>
+<a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="n">local_granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granules_from_folder</span><span class="p">(</span><span class="n">folder</span><span class="p">)</span>
 <a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>
 <a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="c"># Instantiate search results locally (useful for GEDI location indexing)</span>
-<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="n">local_granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">instantiate</span><span class="p">(</span><span class="n">granules</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">folder</span><span class="o">&gt;</span><span class="p">)</span>
+<a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="n">local_granules</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">instantiate</span><span class="p">(</span><span class="n">granules</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="p">)</span>
 </code></pre></div>
 <p><a id='Derive-points'></a></p>
 <p><a id='Derive-points-1'></a></p>
