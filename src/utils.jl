@@ -91,14 +91,6 @@ function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y)
     g[m]
 end
 
-function bounds(table)
-    NamedTuple{(:min_x, :max_x, :min_y, :max_y, :min_z, :max_z)}((
-        extrema(table.longitude)...,
-        extrema(table.latitude)...,
-        extrema(table.height)...,
-    ))
-end
-
 function write_granule_urls!(fn::String, granules::Vector{<:Granule})
     open(fn, "w") do f
         for granule in granules
@@ -156,4 +148,15 @@ function filter_rgt(granules::Vector{<:Granule}, rgt::Int, cycle::Int)
         end
     end
     results
+end
+
+function Base.convert(::Type{Extent}, nt::NamedTuple{(:min_x, :min_y, :max_x, :max_y)})
+    Extent(X = (nt.min_x, nt.max_x), Y = (nt.min_y, nt.max_y))
+end
+
+function Base.convert(
+    ::Type{NamedTuple},
+    nt::Extent{(:X, :Y)},
+)
+    (; min_x = nt.X[1], min_y = nt.Y[1], max_x = nt.X[2], max_y = nt.Y[2])
 end

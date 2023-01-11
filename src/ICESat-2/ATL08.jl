@@ -1,7 +1,12 @@
 """
-    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true, bbox::Union{Nothing,NamedTuple{}} = nothing)
+    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL08 (Land and Vegetation Height) granule as a list of namedtuples, one for each beam.
+With the `tracks` keyword, you can specify which tracks to include. The default is to include all tracks.
+With the `step` keyword, you can choose to limit the number of points, the default is 1 (all points).
+With setting `ground` and or `canopy`, you can control to include ground and/or canopy points.
+Finally, with the `ground_field` and `canopy_field` settings, you can determine the source field. The default is `h_te_mean` for ground and `h_mean_canopy_abs` for canopy.
+
 The names of the tuples are based on the following fields:
 
 | Column             | Field                                    | Description                                           | Units                        |
@@ -24,23 +29,33 @@ The names of the tuples are based on the following fields:
 | `detector_id`      | `atlas_spot_number attribute`            | -                                                     | -                            |
 
 You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points(g)))` if you
-want to change the default arguments or `DataFrame(g)` with the default options.
+want to change the default arguments or just `DataFrame(g)` with the default options.
 """
 function points(
     granule::ICESat2_Granule{:ATL08};
     tracks = icesat2_tracks,
     step = 1,
     canopy = false,
+    canopy_field = "h_mean_canopy_abs",
     ground = true,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    ground_field = "h_te_mean",
+    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
 )
+    if bbox isa NamedTuple
+        bbox = convert(Extent, bbox)
+        Base.depwarn(
+            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
+            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
+            :points,
+        )
+    end
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track in tracks
             if in(track, keys(file)) && in("land_segments", keys(file[track]))
-                for track_nt in points(granule, file, track, t_offset, step, canopy, ground, bbox)
+                for track_nt in points(granule, file, track, t_offset, step, canopy, canopy_field, ground, ground_field, bbox)
                     track_nt.height[track_nt.height.==fill_value] .= NaN
                     push!(dfs, track_nt)
                 end
@@ -50,6 +65,7 @@ function points(
     dfs
 end
 
+
 function points(
     ::ICESat2_Granule{:ATL08},
     file::HDF5.H5DataStore,
@@ -57,8 +73,10 @@ function points(
     t_offset::Float64,
     step = 1,
     canopy = false,
+    canopy_field = "h_mean_canopy_abs",
     ground = true,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    ground_field = "h_te_mean",
+    bbox::Union{Nothing,Extent} = nothing,
 )
 
     # subset by bbox
@@ -67,7 +85,7 @@ function points(
         y = file["$track/land_segments/latitude"][1:step:end]::Vector{Float32}
 
         # find index of points inside of bbox
-        ind = (x .> bbox.min_x) .& (y .> bbox.min_y) .& (x .< bbox.max_x) .& (y .< bbox.max_y)
+        ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
         start = findfirst(ind)
         stop = findlast(ind)
 

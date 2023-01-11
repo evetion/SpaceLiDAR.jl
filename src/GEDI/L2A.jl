@@ -36,11 +36,19 @@ function points(
     granule::GEDI_Granule{:GEDI02_A};
     tracks = gedi_tracks,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
 )
+    if bbox isa NamedTuple
+        bbox = convert(Extent, bbox)
+        Base.depwarn(
+            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
+            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
+            :points,
+        )
+    end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         for track in tracks
@@ -57,13 +65,12 @@ function points(
     nts
 end
 
-
 function points(
     ::GEDI_Granule{:GEDI02_A},
     file::HDF5.H5DataStore,
     track::AbstractString,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
@@ -74,7 +81,7 @@ function points(
             x_grd = file["$track/lon_lowestmode"][:]::Vector{Float64}
             y_grd = file["$track/lat_lowestmode"][:]::Vector{Float64}
 
-            ind = (x_grd .> bbox.min_x) .& (y_grd .> bbox.min_y) .& (x_grd .< bbox.max_x) .& (y_grd .< bbox.max_y)
+            ind = (x_grd .> bbox.X[1]) .& (y_grd .> bbox.Y[1]) .& (x_grd .< bbox.X[2]) .& (y_grd .< bbox.Y[2])
             start_grd = findfirst(ind)
             stop_grd = findlast(ind)
         end
@@ -83,7 +90,7 @@ function points(
             x_can = file["$track/lon_highestreturn"][:]::Vector{Float64}
             y_can = file["$track/lat_highestreturn"][:]::Vector{Float64}
 
-            ind = (x_can .> bbox.min_x) .& (y_can .> bbox.min_y) .& (x_can .< bbox.max_x) .& (y_can .< bbox.max_y)
+            ind = (x_can .> bbox.X[1]) .& (y_can .> bbox.Y[1]) .& (x_can .< bbox.X[2]) .& (y_can .< bbox.Y[2])
             start_can = findfirst(ind)
             stop_can = findlast(ind)
         end
@@ -313,11 +320,19 @@ function lines(
     granule::GEDI_Granule{:GEDI02_A};
     tracks = gedi_tracks,
     step = 1,
-    bbox::Union{Nothing,NamedTuple{}} = nothing,
+    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
 )
+    if bbox isa NamedTuple
+        bbox = convert(Extent, bbox)
+        Base.depwarn(
+            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
+            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
+            :points,
+        )
+    end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         for track in tracks
@@ -364,6 +379,5 @@ function bounds(granule::GEDI_Granule)
             max_x = max_xs,
             max_y = max_ys,
         )
-        ntb
     end
 end

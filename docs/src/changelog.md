@@ -1,8 +1,18 @@
-## Unreleased
-- Extents support
-- Search using polygons
-- ICESat-2 S3 access
-- 20m resolution data in ICESat-2 ATL08 v05
+## v0.3.0
+
+!!! danger
+    This is a **breaking** release
+
+- GeoInterface, Extents support
+- Bounding box using Extent subsetting on all `points` functions
+- `find` renamed to `search`
+- `search` now takes the `product` as a `Symbol` and accepts a `s3::Bool` parameter.
+- Stricter checking of arguments in `search`
+- MultiPolygon extents of granules are now returned in the `polygons` field in granules from `search`.
+- Removed `bbox` field on granules.
+- `download(granule)` now works on AWS S3 urls
+- `donwload(granule)` now creates temporary files and renames after successful download
+- ICESat-2 ATL08 v5 `points` function now supports 20 m resolution by passing `highres::Bool` parameter.
 
 ## v0.2.2
 - Fixed ICESat-2 download (please remove `n5eil01u.ecs.nsidc.org` from your `.netrc` file)

@@ -8,6 +8,7 @@ using DataFrames
 using Tables
 using Proj
 using Documenter
+using Extents
 
 const rng = MersenneTwister(54321)
 const SL = SpaceLiDAR
@@ -75,15 +76,15 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
                 get(ENV, "EARTHDATA_PW", ""),
             )
         end
-        granules = search(:ICESat, :GLAH06, bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
+        granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
         g = granules[1]
-        download!(g)
+        SL.download!(g)
         @test isfile(g)
         rm(g)
 
-        granules = search(:ICESat, :GLAH06, bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0), s3 = true)
+        granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
         g = granules[1]
-        download!(g)
+        SL.download!(g)
         @test isfile(g)
         rm(g)
     end
@@ -91,6 +92,7 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
     @testset "granules" begin
         gs = SL.granules_from_folder("data")
         @test length(gs) == 7
+        copies = copy.(gs)
 
         fgs = SL.in_bbox(gs, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
         @test length(fgs) == 2

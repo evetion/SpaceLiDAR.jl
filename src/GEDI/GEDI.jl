@@ -18,7 +18,7 @@ Base.@kwdef mutable struct GEDI_Granule{product} <: Granule
 end
 
 function Base.copy(g::GEDI_Granule{product}) where {product}
-    GEDI_Granule{product}(g.id, g.url, copy(g.info), copy(g.polygons))
+    GEDI_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end
 
 

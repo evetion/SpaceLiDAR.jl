@@ -3,11 +3,13 @@ module SpaceLiDAR
 using Dates
 using CategoricalArrays
 using FillArrays
+using GeoInterface
 using HDF5
 using Tables
 using TableOperations: joinpartitions
 using DataFrames
 using TimeZones
+using Extents
 
 include("granule.jl")
 include("utils.jl")
