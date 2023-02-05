@@ -67,6 +67,11 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
         @test_throws ArgumentError find(:ICESat2, "GLAH14")
         @test_throws ArgumentError find(:Foo, "GLAH14")
+
+        @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = DateTime(2019, 12, 12), before = DateTime(2019, 12, 13))) == 161
+        @test length(SpaceLiDAR.search(:ICESat2, :ATL08, before = now() - Year(5))) == 0
+        @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = now())) == 0
+        @test_throws ErrorException SpaceLiDAR.search(:ICESat2, :ATL08, after = now() - Month(47), before = now() - Month(48))
     end
 
     @testset "download" begin
