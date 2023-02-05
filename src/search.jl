@@ -25,11 +25,13 @@ function search(
     product::Symbol = :GEDI02_A;
     bbox::Extent = world,
     version::Int = 2,
+    before::Union{Nothing,DateTime} = nothing,
+    after::Union{Nothing,DateTime} = nothing,
     provider::String = "LPDAAC_ECS",
 )::Vector{GEDI_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     granules =
-        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider, before = before, after = after)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -47,12 +49,14 @@ function search(
     product::Symbol = :ATL03;
     bbox::Extent = world,
     version::Int = 5,
+    before::Union{Nothing,DateTime} = nothing,
+    after::Union{Nothing,DateTime} = nothing,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat2_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     granules =
-        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider, before = before, after = after)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -70,12 +74,14 @@ function search(
     product::Symbol = :GLAH14;
     bbox::Extent = world,
     version::Int = 34,
+    before::Union{Nothing,DateTime} = nothing,
+    after::Union{Nothing,DateTime} = nothing,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     granules =
-        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider)
+        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider, before = before, after = after)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -118,7 +124,7 @@ function parse_polygon(polygons, T = Float64)
             ro = Vector{Vector{T}}()
             c = map(Base.Fix1(parse, T), split(ring, " "))
             for i = 1:2:length(c)
-                push!(ro, [c[i], c[i+1]])
+                push!(ro, [c[i], c[i+1]])  # correct?
             end
             push!(po, ro)
         end
@@ -130,6 +136,14 @@ end
 function parse_cmr_json(r)
     data = JSON3.read(r.body)
     map(granule_info, get(get(data, "feed", Dict()), "entry", []))
+end
+
+function parse_cmr_error(r)
+    try
+        "Something went wrong:\n" * string(get(JSON3.read(r.body), "errors", ""))
+    catch
+        "Something went wrong, but we don't know what."
+    end
 end
 
 function granule_info(item)::NamedTuple
@@ -172,6 +186,8 @@ function earthdata_search(;
     bounding_box::Union{Nothing,Extent} = nothing,
     version::Union{Nothing,Int} = nothing,
     provider::Union{Nothing,String} = "NSIDC_CPRD",
+    before::Union{Nothing,DateTime} = nothing,
+    after::Union{Nothing,DateTime} = nothing,
     all_pages::Bool = true,
     page_size = 2000,
     page_num = 1,
@@ -189,8 +205,13 @@ function earthdata_search(;
     !isnothing(version) ? q["version"] = lpad(version, 3, "0") : nothing
     !isnothing(provider) ? q["provider"] = provider : nothing
 
+    if !isnothing(before) || !isnothing(after)
+        q["temporal"] = "$(isnothing(after) ? "" : after),$(isnothing(before) ? "" : before)"
+    end
+
     qurl = umm ? url : replace(url, "umm_json_v1_6_4" => "json")
-    r = HTTP.get(qurl, query = q, verbose = verbose)
+    r = HTTP.get(qurl, query = q, verbose = verbose, status_exception = false)
+    HTTP.iserror(r) && error(parse_cmr_error(r))
     parsef = umm ? parse_cmr_ummjson : parse_cmr_json
     cgranules = parsef(r)
     granules = Vector{NamedTuple}()
@@ -198,7 +219,8 @@ function earthdata_search(;
     while (length(cgranules) == page_size) && all_pages
         @warn "Found more than $page_size granules, requesting another $page_size..."
         q["page_num"] += 1
-        r = HTTP.get(qurl, query = q, verbose = verbose)
+        r = HTTP.get(qurl, query = q, verbose = verbose, status_exception = false)
+        HTTP.iserror(r) && error(parse_cmr_error(r))
         cgranules = parsef(r)
         append!(granules, cgranules)
     end
