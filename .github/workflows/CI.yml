@@ -42,3 +42,7 @@ jobs:
         env:
           EARTHDATA_USER: ${{ secrets.EARTHDATA_USER }}
           EARTHDATA_PW: ${{ secrets.EARTHDATA_PW }}
+      - uses: julia-actions/julia-processcoverage@v1
+      - uses: codecov/codecov-action@v2
+        with:
+          files: lcov.info
