@@ -27,10 +27,10 @@ function download_artifact(version, source_filename)
     return local_path
 end
 
-ATL03_fn = download_artifact(v"0.2", "ATL03_20201121151145_08920913_005_01.h5")
-ATL06_fn = download_artifact(v"0.2", "ATL06_20220404104324_01881512_005_01.h5")
-ATL08_fn = download_artifact(v"0.2", "ATL08_20201121151145_08920913_005_01.h5")
-ATL12_fn = download_artifact(v"0.2", "ATL12_20220404110409_01891501_005_01.h5")
+ATL03_fn = download_artifact(v"0.3", "ATL03_20201121151145_08920913_006_01.h5")
+ATL06_fn = download_artifact(v"0.3", "ATL06_20220404104324_01881512_006_02.h5")
+ATL08_fn = download_artifact(v"0.3", "ATL08_20201121151145_08920913_006_01.h5")
+ATL12_fn = download_artifact(v"0.3", "ATL12_20220404110409_01891501_006_02.h5")
 GEDI02_fn = download_artifact(v"0.1", "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5")
 GLAH14_fn = download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
@@ -178,7 +178,7 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points) == 6
         points = SL.points(g, step = 1)
         @test length(points) == 6
-        @test length(points[1].longitude) == 933
+        @test length(points[1].longitude) == 998
         @test points[1].longitude[356] ≈ 175.72562f0
 
         lines = SL.lines(g, step = 1000)
@@ -188,13 +188,13 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         bbox = (min_x = 175.0, min_y = -50.0, max_x = 175.5, max_y = -30.0)
         points = SL.points(g, step = 1, bbox = bbox)
         @test length(points) == 6
-        @test length(points[2].longitude) == 0
-        @test length(points[1].longitude) == 45
+        @test length(points[2].longitude) == 1
+        @test length(points[1].longitude) == 55
         @test points[1].longitude[45] ≈ 175.22807f0
         df = reduce(vcat, DataFrame.(points))  # test that empty tracks can be catted
 
         ps = SL.points(g; highres = true)
-        @test length(ps[1].longitude) == (933 * 5)
+        @test length(ps[1].longitude) == (998 * 5)
     end
 
     @testset "ATL12" begin
