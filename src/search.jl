@@ -48,7 +48,7 @@ function search(
     m::Mission{:ICESat2},
     product::Symbol = :ATL03;
     bbox::Extent = world,
-    version::Int = 5,
+    version::Int = 6,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
     s3::Bool = false,

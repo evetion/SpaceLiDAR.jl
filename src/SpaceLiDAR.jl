@@ -29,6 +29,7 @@ include("geoid.jl")
 include("table.jl")
 include("search.jl")
 include("geointerface.jl")
+include("env.jl")
 
 export find, search, download!, download, netrc!, instantiate, info, angle, angle!, shift
 export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!

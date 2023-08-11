@@ -18,6 +18,7 @@ const SL = SpaceLiDAR
 testdir = @__DIR__
 datadir = joinpath(testdir, "data")
 isdir(datadir) || mkdir(datadir)
+SpaceLiDAR.load_dotenv()  # get earthdata credentials for local testing
 
 function download_artifact(version, source_filename)
     local_path = joinpath(datadir, source_filename)
@@ -88,11 +89,12 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test isfile(g)
         rm(g)
 
-        granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
-        g = granules[1]
-        SL.download!(g)
-        @test isfile(g)
-        rm(g)
+        # This only works on us-west-2 region in AWS
+        # granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
+        # g = granules[1]
+        # SL.download!(g)
+        # @test isfile(g)
+        # rm(g)
     end
 
     @testset "granules" begin
