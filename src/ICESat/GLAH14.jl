@@ -51,17 +51,17 @@ function points(
                 @warn "no data found within bbox of track $track in $(file.filename)"
 
                 gt = (
-                    longitude = Vector{Float64}[],
-                    latitude = Vector{Float64}[],
-                    height = Vector{Float64}[],
-                    datetime = Vector{Dates.DateTime}[],
-                    quality = Vector{Bool}[],
-                    clouds = clouds{Bool}[],
-                    height_reference = Vector{Float64}[],
-                    gain = Vector{Int32}[],
-                    reflectivity = Vector{Float64}[],
-                    attitude = Vector{Int8}[],
-                    saturation = Vector{Int8}[],
+                    longitude = Float64[],
+                    latitude = Float64[],
+                    height = Float64[],
+                    datetime = Dates.DateTime[],
+                    quality = Bool[],
+                    clouds = Bool[],
+                    height_reference = Float64[],
+                    gain = Int32[],
+                    reflectivity = Float64[],
+                    attitude = Int8[],
+                    saturation = Int8[],
                 )
                 return gt
             end
