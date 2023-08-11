@@ -21,7 +21,7 @@
         <link rel="next" href="../utilities/">
       
       <link rel="icon" href="../../img/favicon.svg">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.15">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.26e3688c.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.eebd395e.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ecc896b0.min.css">
@@ -804,59 +804,59 @@ package if you use it in production.
 <table>
 <thead>
 <tr>
-<th align="left">Variable</th>
-<th align="left">Original Field</th>
-<th align="left">Description</th>
-<th align="left">Units</th>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Original Field</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Units</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>longitude</code></td>
-<td align="left"><code>Data_40HZ/Geolocation/d_lon</code></td>
-<td align="left">Longitude of segment center, WGS84, East=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>longitude</code></td>
+<td style="text-align: left;"><code>Data_40HZ/Geolocation/d_lon</code></td>
+<td style="text-align: left;">Longitude of segment center, WGS84, East=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>latitude</code></td>
-<td align="left"><code>Data_40HZ/Geolocation/d_lat</code></td>
-<td align="left">Latitude of segment center, WGS84, North=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>latitude</code></td>
+<td style="text-align: left;"><code>Data_40HZ/Geolocation/d_lat</code></td>
+<td style="text-align: left;">Latitude of segment center, WGS84, North=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>height</code></td>
-<td align="left"><code>Data_40HZ/Elevation_Surfaces/d_elev</code></td>
-<td align="left">+ <code>Data_40HZ/Elevation_Corrections/d_satElevCorr</code></td>
-<td align="left">m above WGS84 ellipsoid</td>
+<td style="text-align: left;"><code>height</code></td>
+<td style="text-align: left;"><code>Data_40HZ/Elevation_Surfaces/d_elev</code></td>
+<td style="text-align: left;">+ <code>Data_40HZ/Elevation_Corrections/d_satElevCorr</code></td>
+<td style="text-align: left;">m above WGS84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>datetime</code></td>
-<td align="left"><code>Data_40HZ/DS_UTCTime_40</code></td>
-<td align="left">Precise time of aquisiton</td>
-<td align="left">date-time</td>
+<td style="text-align: left;"><code>datetime</code></td>
+<td style="text-align: left;"><code>Data_40HZ/DS_UTCTime_40</code></td>
+<td style="text-align: left;">Precise time of aquisiton</td>
+<td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td align="left"><code>quality</code> <sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></td>
-<td align="left"><code>Data_40HZ/Quality/elev_use_flg</code></td>
-<td align="left">&amp; <code>Data_40HZ/Quality/sigma_att_flg</code> = 0</td>
-<td align="left"></td>
+<td style="text-align: left;"><code>quality</code> <sup id="fnref2:1"><a class="footnote-ref" href="#fn:1">1</a></sup></td>
+<td style="text-align: left;"><code>Data_40HZ/Quality/elev_use_flg</code></td>
+<td style="text-align: left;">&amp; <code>Data_40HZ/Quality/sigma_att_flg</code> = 0</td>
+<td style="text-align: left;"></td>
 </tr>
 <tr>
-<td align="left"></td>
-<td align="left">&amp; <code>Data_40HZ/Waveform/i_numPk</code> = 1</td>
-<td align="left">&amp; <code>Data_40HZ/Elevation_Corrections/d_satElevCorr</code> &lt; 3</td>
-<td align="left">1 = high quality</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">&amp; <code>Data_40HZ/Waveform/i_numPk</code> = 1</td>
+<td style="text-align: left;">&amp; <code>Data_40HZ/Elevation_Corrections/d_satElevCorr</code> &lt; 3</td>
+<td style="text-align: left;">1 = high quality</td>
 </tr>
 <tr>
-<td align="left"><code>height_reference</code></td>
-<td align="left"><code>land_ice_segments/dem/dem_h</code></td>
-<td align="left">Height of the (best available) DEM</td>
-<td align="left">height above WGS84</td>
+<td style="text-align: left;"><code>height_reference</code></td>
+<td style="text-align: left;"><code>land_ice_segments/dem/dem_h</code></td>
+<td style="text-align: left;">Height of the (best available) DEM</td>
+<td style="text-align: left;">height above WGS84</td>
 </tr>
 </tbody>
 </table>
 <p>You can get the output in a <code>DataFrame</code> with <code>DataFrame(points(g))</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH14}}' href='#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH14}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="ss">:GLAH14</span><span class="p">},</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -865,89 +865,89 @@ package if you use it in production.
 <table>
 <thead>
 <tr>
-<th align="left">Variable</th>
-<th align="left">Original Field (in <code>Data_40HZ</code>)</th>
-<th align="left">Description</th>
-<th align="left">Units</th>
+<th style="text-align: left;">Variable</th>
+<th style="text-align: left;">Original Field (in <code>Data_40HZ</code>)</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Units</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>longitude</code></td>
-<td align="left"><code>/Geolocation/d_lon</code></td>
-<td align="left">Longitude of segment center, WGS84, East=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>longitude</code></td>
+<td style="text-align: left;"><code>/Geolocation/d_lon</code></td>
+<td style="text-align: left;">Longitude of segment center, WGS84, East=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>latitude</code></td>
-<td align="left"><code>Geolocation/d_lat</code></td>
-<td align="left">Latitude of segment center, WGS84, North=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>latitude</code></td>
+<td style="text-align: left;"><code>Geolocation/d_lat</code></td>
+<td style="text-align: left;">Latitude of segment center, WGS84, North=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>height</code></td>
-<td align="left"><code>Elevation_Surfaces/d_elev</code></td>
-<td align="left">+ <code>Elevation_Corrections/d_satElevCorr</code></td>
-<td align="left">m above WGS84 ellipsoid</td>
+<td style="text-align: left;"><code>height</code></td>
+<td style="text-align: left;"><code>Elevation_Surfaces/d_elev</code></td>
+<td style="text-align: left;">+ <code>Elevation_Corrections/d_satElevCorr</code></td>
+<td style="text-align: left;">m above WGS84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>datetime</code></td>
-<td align="left"><code>DS_UTCTime_40</code></td>
-<td align="left">Precise time of aquisiton</td>
-<td align="left">date-time</td>
+<td style="text-align: left;"><code>datetime</code></td>
+<td style="text-align: left;"><code>DS_UTCTime_40</code></td>
+<td style="text-align: left;">Precise time of aquisiton</td>
+<td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td align="left"><code>quality</code> <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></td>
-<td align="left"><code>Quality/elev_use_flg</code></td>
-<td align="left">&amp; <code>Quality/sigma_att_flg</code> = 0</td>
-<td align="left"></td>
+<td style="text-align: left;"><code>quality</code> <sup id="fnref:1"><a class="footnote-ref" href="#fn:1">1</a></sup></td>
+<td style="text-align: left;"><code>Quality/elev_use_flg</code></td>
+<td style="text-align: left;">&amp; <code>Quality/sigma_att_flg</code> = 0</td>
+<td style="text-align: left;"></td>
 </tr>
 <tr>
-<td align="left"></td>
-<td align="left">&amp; <code>Waveform/i_numPk</code> = 1</td>
-<td align="left">&amp; <code>Elevation_Corrections/d_satElevCorr</code> &lt; 3</td>
-<td align="left">1=high quality</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;">&amp; <code>Waveform/i_numPk</code> = 1</td>
+<td style="text-align: left;">&amp; <code>Elevation_Corrections/d_satElevCorr</code> &lt; 3</td>
+<td style="text-align: left;">1=high quality</td>
 </tr>
 <tr>
-<td align="left"><code>clouds</code></td>
-<td align="left"><code>Elevation_Flags/elv_cloud_flg</code></td>
-<td align="left">Cloud contamination</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>clouds</code></td>
+<td style="text-align: left;"><code>Elevation_Flags/elv_cloud_flg</code></td>
+<td style="text-align: left;">Cloud contamination</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>height_reference</code></td>
-<td align="left"><code>Geophysical/d_DEM_elv</code></td>
-<td align="left">Height of the (best available) DEM</td>
-<td align="left">height above WGS84</td>
+<td style="text-align: left;"><code>height_reference</code></td>
+<td style="text-align: left;"><code>Geophysical/d_DEM_elv</code></td>
+<td style="text-align: left;">Height of the (best available) DEM</td>
+<td style="text-align: left;">height above WGS84</td>
 </tr>
 <tr>
-<td align="left"><code>gain</code></td>
-<td align="left"><code>Waveform/i_gval_rcv</code></td>
-<td align="left">Gain value used for received pulse.</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>gain</code></td>
+<td style="text-align: left;"><code>Waveform/i_gval_rcv</code></td>
+<td style="text-align: left;">Gain value used for received pulse.</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>reflectivity</code></td>
-<td align="left"><code>Reflectivity/d_reflctUC</code></td>
-<td align="left">Reflectivity, not corrected</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>reflectivity</code></td>
+<td style="text-align: left;"><code>Reflectivity/d_reflctUC</code></td>
+<td style="text-align: left;">Reflectivity, not corrected</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>attitude</code></td>
-<td align="left"><code>Quality/sigma_att_flg</code></td>
-<td align="left">Attitude quality indicator</td>
-<td align="left">0=good; 50=warning; 100=bad;</td>
+<td style="text-align: left;"><code>attitude</code></td>
+<td style="text-align: left;"><code>Quality/sigma_att_flg</code></td>
+<td style="text-align: left;">Attitude quality indicator</td>
+<td style="text-align: left;">0=good; 50=warning; 100=bad;</td>
 </tr>
 <tr>
-<td align="left"><code>saturation</code></td>
-<td align="left"><code>Quality/sat_corr_flg</code></td>
-<td align="left">Saturation Correction Flag</td>
-<td align="left">0=not_saturated;</td>
+<td style="text-align: left;"><code>saturation</code></td>
+<td style="text-align: left;"><code>Quality/sat_corr_flg</code></td>
+<td style="text-align: left;">Saturation Correction Flag</td>
+<td style="text-align: left;">0=not_saturated;</td>
 </tr>
 </tbody>
 </table>
 <p>You can get the output in a <code>DataFrame</code> with <code>DataFrame(points(g))</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat/GLAH14.jl#LL1-L25' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat/GLAH14.jl#LL1-L25' class='documenter-source'>source</a><br></p>
 <p><a id='ICESat-2'></a></p>
 <p><a id='ICESat-2-1'></a></p>
 <h2 id="icesat-2">ICESat-2<a class="headerlink" href="#icesat-2" title="Permanent link">&para;</a></h2>
@@ -956,7 +956,7 @@ package if you use it in production.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">classify</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL03</span><span class="p">},</span><span class="w"> </span><span class="n">atl08</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL08</span><span class="p">},</span><span class="kt">Nothing</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">,</span><span class="w"> </span><span class="n">tracks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icesat2_tracks</span><span class="p">)</span>
 </code></pre></div>
 <p>Like <a href="./#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}"><code>points(::ICESat2_Granule{:ATL03})</code></a> but with the classification from the ATL08 dataset. If an ATL08 granule is not provided, we try to find it based on the ATL03 name using <a href="../granules/#Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T"><code>convert</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat-2/ATL03.jl#LL196-L201' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat-2/ATL03.jl#LL196-L201' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}' href='#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL03</span><span class="p">},</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">;</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -965,95 +965,95 @@ package if you use it in production.
 <table>
 <thead>
 <tr>
-<th align="left">Column</th>
-<th align="left">Field</th>
-<th align="left">Description</th>
-<th align="left">Units</th>
+<th style="text-align: left;">Column</th>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Units</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>longitude</code></td>
-<td align="left"><code>heights/lon_ph</code></td>
-<td align="left">Longitude of photon, WGS84, East=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>longitude</code></td>
+<td style="text-align: left;"><code>heights/lon_ph</code></td>
+<td style="text-align: left;">Longitude of photon, WGS84, East=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>latitude</code></td>
-<td align="left"><code>heights/lat_ph</code></td>
-<td align="left">Latitude of photon, WGS84, North=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>latitude</code></td>
+<td style="text-align: left;"><code>heights/lat_ph</code></td>
+<td style="text-align: left;">Latitude of photon, WGS84, North=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>height</code></td>
-<td align="left"><code>heights/h_ph</code></td>
-<td align="left">Photon WGS84 Height</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height</code></td>
+<td style="text-align: left;"><code>heights/h_ph</code></td>
+<td style="text-align: left;">Photon WGS84 Height</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>quality</code></td>
-<td align="left"><code>heights/quality_ph</code></td>
-<td align="left">Indicates the quality of the associated photon</td>
-<td align="left">0 = nominal</td>
+<td style="text-align: left;"><code>quality</code></td>
+<td style="text-align: left;"><code>heights/quality_ph</code></td>
+<td style="text-align: left;">Indicates the quality of the associated photon</td>
+<td style="text-align: left;">0 = nominal</td>
 </tr>
 <tr>
-<td align="left"><code>uncertainty</code></td>
-<td align="left"><code>geolocation/sigma_h</code></td>
-<td align="left">Estimated height uncertainty</td>
-<td align="left">m</td>
+<td style="text-align: left;"><code>uncertainty</code></td>
+<td style="text-align: left;"><code>geolocation/sigma_h</code></td>
+<td style="text-align: left;">Estimated height uncertainty</td>
+<td style="text-align: left;">m</td>
 </tr>
 <tr>
-<td align="left"><code>datetime</code></td>
-<td align="left"><code>heights/delta_time</code></td>
-<td align="left">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
-<td align="left">date-time</td>
+<td style="text-align: left;"><code>datetime</code></td>
+<td style="text-align: left;"><code>heights/delta_time</code></td>
+<td style="text-align: left;">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
+<td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td align="left"><code>confidence</code></td>
-<td align="left"><code>heights/signal_conf_ph</code></td>
-<td align="left">Photon Signal Confidence</td>
-<td align="left">2=low; 3=med; 4=high</td>
+<td style="text-align: left;"><code>confidence</code></td>
+<td style="text-align: left;"><code>heights/signal_conf_ph</code></td>
+<td style="text-align: left;">Photon Signal Confidence</td>
+<td style="text-align: left;">2=low; 3=med; 4=high</td>
 </tr>
 <tr>
-<td align="left"><code>segment</code></td>
-<td align="left"><code>geolocation/segment_id</code></td>
-<td align="left">Along-track segment ID number</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>segment</code></td>
+<td style="text-align: left;"><code>geolocation/segment_id</code></td>
+<td style="text-align: left;">Along-track segment ID number</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>track</code></td>
-<td align="left"><code>gt1l</code> - <code>gt3r</code> groups</td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>track</code></td>
+<td style="text-align: left;"><code>gt1l</code> - <code>gt3r</code> groups</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>strong_beam</code></td>
-<td align="left"><code>-</code></td>
-<td align="left">"strong" (true) or "weak" (false) laser power</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>strong_beam</code></td>
+<td style="text-align: left;"><code>-</code></td>
+<td style="text-align: left;">"strong" (true) or "weak" (false) laser power</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>sun_angle</code></td>
-<td align="left"><code>geolocation/solar_elevation</code></td>
-<td align="left">Sun angle</td>
-<td align="left">° above horizon</td>
+<td style="text-align: left;"><code>sun_angle</code></td>
+<td style="text-align: left;"><code>geolocation/solar_elevation</code></td>
+<td style="text-align: left;">Sun angle</td>
+<td style="text-align: left;">° above horizon</td>
 </tr>
 <tr>
-<td align="left"><code>detector_id</code></td>
-<td align="left"><code>atlas_spot_number attribute</code></td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>detector_id</code></td>
+<td style="text-align: left;"><code>atlas_spot_number attribute</code></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>height_reference</code></td>
-<td align="left"><code>heights/dem/dem_h</code></td>
-<td align="left">Height of the (best available) DEM</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height_reference</code></td>
+<td style="text-align: left;"><code>heights/dem/dem_h</code></td>
+<td style="text-align: left;">Height of the (best available) DEM</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat-2/ATL03.jl#LL1-L25' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat-2/ATL03.jl#LL1-L25' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL06}}' href='#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL06}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL06</span><span class="p">},</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -1062,83 +1062,83 @@ package if you use it in production.
 <table>
 <thead>
 <tr>
-<th align="left">Column</th>
-<th align="left">Field</th>
-<th align="left">Description</th>
-<th align="left">Units</th>
+<th style="text-align: left;">Column</th>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Units</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>longitude</code></td>
-<td align="left"><code>land_ice_segments/longitude</code></td>
-<td align="left">Longitude of segment center, WGS84, East=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>longitude</code></td>
+<td style="text-align: left;"><code>land_ice_segments/longitude</code></td>
+<td style="text-align: left;">Longitude of segment center, WGS84, East=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>latitude</code></td>
-<td align="left"><code>land_ice_segments/latitude</code></td>
-<td align="left">Latitude of segment center, WGS84, North=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>latitude</code></td>
+<td style="text-align: left;"><code>land_ice_segments/latitude</code></td>
+<td style="text-align: left;">Latitude of segment center, WGS84, North=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>height</code></td>
-<td align="left"><code>land_ice_segments/h_li</code></td>
-<td align="left">Standard land-ice segment height</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height</code></td>
+<td style="text-align: left;"><code>land_ice_segments/h_li</code></td>
+<td style="text-align: left;">Standard land-ice segment height</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>height_error</code></td>
-<td align="left">√(<code>land_ice_segments/sigma_geo_h</code>² +</td>
-<td align="left">Total vertical geolocation error</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height_error</code></td>
+<td style="text-align: left;">√(<code>land_ice_segments/sigma_geo_h</code>² +</td>
+<td style="text-align: left;">Total vertical geolocation error</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"></td>
-<td align="left"><code>land_ice_segments/h_li_sigma</code>²)</td>
-<td align="left"></td>
-<td align="left"></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><code>land_ice_segments/h_li_sigma</code>²)</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
 </tr>
 <tr>
-<td align="left"><code>datetime</code></td>
-<td align="left"><code>land_ice_segments/delta_time</code></td>
-<td align="left">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
-<td align="left">date-time</td>
+<td style="text-align: left;"><code>datetime</code></td>
+<td style="text-align: left;"><code>land_ice_segments/delta_time</code></td>
+<td style="text-align: left;">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
+<td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td align="left"><code>quality</code></td>
-<td align="left"><code>land_ice_segments/atl06_quality_summary</code></td>
-<td align="left">Boolean flag indicating the best-quality subset</td>
-<td align="left">1 = high quality</td>
+<td style="text-align: left;"><code>quality</code></td>
+<td style="text-align: left;"><code>land_ice_segments/atl06_quality_summary</code></td>
+<td style="text-align: left;">Boolean flag indicating the best-quality subset</td>
+<td style="text-align: left;">1 = high quality</td>
 </tr>
 <tr>
-<td align="left"><code>track</code></td>
-<td align="left"><code>gt1l</code> - <code>gt3r</code> groups</td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>track</code></td>
+<td style="text-align: left;"><code>gt1l</code> - <code>gt3r</code> groups</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>strong_beam</code></td>
-<td align="left"><code>-</code></td>
-<td align="left">"strong" (true) or "weak" (false) laser power</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>strong_beam</code></td>
+<td style="text-align: left;"><code>-</code></td>
+<td style="text-align: left;">"strong" (true) or "weak" (false) laser power</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>detector_id</code></td>
-<td align="left"><code>atlas_spot_number attribute</code></td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>detector_id</code></td>
+<td style="text-align: left;"><code>atlas_spot_number attribute</code></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>height_reference</code></td>
-<td align="left"><code>land_ice_segments/dem/dem_h</code></td>
-<td align="left">Height of the (best available) DEM</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>height_reference</code></td>
+<td style="text-align: left;"><code>land_ice_segments/dem/dem_h</code></td>
+<td style="text-align: left;">Height of the (best available) DEM</td>
+<td style="text-align: left;">-</td>
 </tr>
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat-2/ATL06.jl#LL1-L23' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat-2/ATL06.jl#LL1-L23' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL08}}' href='#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL08}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL08</span><span class="p">};</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">canopy</span><span class="o">=</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="n">ground</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -1148,113 +1148,113 @@ package if you use it in production.
 <table>
 <thead>
 <tr>
-<th align="left">Column</th>
-<th align="left">Field</th>
-<th align="left">Description</th>
-<th align="left">Units</th>
+<th style="text-align: left;">Column</th>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Units</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>longitude</code></td>
-<td align="left"><code>land_segments/longitude</code></td>
-<td align="left">Longitude of segment center, WGS84, East=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>longitude</code></td>
+<td style="text-align: left;"><code>land_segments/longitude</code></td>
+<td style="text-align: left;">Longitude of segment center, WGS84, East=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>latitude</code></td>
-<td align="left"><code>land_segments/latitude</code></td>
-<td align="left">Latitude of segment center, WGS84, North=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>latitude</code></td>
+<td style="text-align: left;"><code>land_segments/latitude</code></td>
+<td style="text-align: left;">Latitude of segment center, WGS84, North=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>height</code></td>
-<td align="left"><code>land_segments/terrain/h_te_mean</code></td>
-<td align="left">Standard land-ice segment height</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height</code></td>
+<td style="text-align: left;"><code>land_segments/terrain/h_te_mean</code></td>
+<td style="text-align: left;">Standard land-ice segment height</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>height_error</code></td>
-<td align="left"><code>land_segments/terrain/h_te_uncertainty</code></td>
-<td align="left">Total vertical geolocation error</td>
-<td align="left">m</td>
+<td style="text-align: left;"><code>height_error</code></td>
+<td style="text-align: left;"><code>land_segments/terrain/h_te_uncertainty</code></td>
+<td style="text-align: left;">Total vertical geolocation error</td>
+<td style="text-align: left;">m</td>
 </tr>
 <tr>
-<td align="left"><code>datetime</code></td>
-<td align="left"><code>land_segments/delta_time</code></td>
-<td align="left">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
-<td align="left">date-time</td>
+<td style="text-align: left;"><code>datetime</code></td>
+<td style="text-align: left;"><code>land_segments/delta_time</code></td>
+<td style="text-align: left;">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
+<td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td align="left"><code>quality</code></td>
-<td align="left"><code>land_segments/terrain_flg</code></td>
-<td align="left">Boolean flag indicating the best-quality subset</td>
-<td align="left">1 = high quality</td>
+<td style="text-align: left;"><code>quality</code></td>
+<td style="text-align: left;"><code>land_segments/terrain_flg</code></td>
+<td style="text-align: left;">Boolean flag indicating the best-quality subset</td>
+<td style="text-align: left;">1 = high quality</td>
 </tr>
 <tr>
-<td align="left"><code>phr</code></td>
-<td align="left"><code>land_segments/ph_removal_flag</code></td>
-<td align="left">More than 50% of photons removed</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>phr</code></td>
+<td style="text-align: left;"><code>land_segments/ph_removal_flag</code></td>
+<td style="text-align: left;">More than 50% of photons removed</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>sensitivity</code></td>
-<td align="left"><code>land_segments/snr</code></td>
-<td align="left">The signal to noise ratio</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>sensitivity</code></td>
+<td style="text-align: left;"><code>land_segments/snr</code></td>
+<td style="text-align: left;">The signal to noise ratio</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>scattered</code></td>
-<td align="left"><code>land_segments/msw_flag</code></td>
-<td align="left">Multiple Scattering warning flag</td>
-<td align="left">-1=unknown; 0=none</td>
+<td style="text-align: left;"><code>scattered</code></td>
+<td style="text-align: left;"><code>land_segments/msw_flag</code></td>
+<td style="text-align: left;">Multiple Scattering warning flag</td>
+<td style="text-align: left;">-1=unknown; 0=none</td>
 </tr>
 <tr>
-<td align="left"><code>saturated</code></td>
-<td align="left"><code>land_segments/sat_flag</code></td>
-<td align="left">Saturation detected</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>saturated</code></td>
+<td style="text-align: left;"><code>land_segments/sat_flag</code></td>
+<td style="text-align: left;">Saturation detected</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>clouds</code></td>
-<td align="left"><code>land_segments/layer_flag</code></td>
-<td align="left">Clouds or blowing snow are likely present</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>clouds</code></td>
+<td style="text-align: left;"><code>land_segments/layer_flag</code></td>
+<td style="text-align: left;">Clouds or blowing snow are likely present</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>track</code></td>
-<td align="left"><code>gt1l</code> - <code>gt3r</code> groups</td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>track</code></td>
+<td style="text-align: left;"><code>gt1l</code> - <code>gt3r</code> groups</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>strong_beam</code></td>
-<td align="left"><code>-</code></td>
-<td align="left">"strong" (true) or "weak" (false) laser power</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>strong_beam</code></td>
+<td style="text-align: left;"><code>-</code></td>
+<td style="text-align: left;">"strong" (true) or "weak" (false) laser power</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>classification</code></td>
-<td align="left"><code>-</code></td>
-<td align="left">"ground", "high_canopy"</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>classification</code></td>
+<td style="text-align: left;"><code>-</code></td>
+<td style="text-align: left;">"ground", "high_canopy"</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>height_reference</code></td>
-<td align="left"><code>land_segments/dem_h</code></td>
-<td align="left">Height of the (best available) DEM</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height_reference</code></td>
+<td style="text-align: left;"><code>land_segments/dem_h</code></td>
+<td style="text-align: left;">Height of the (best available) DEM</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>detector_id</code></td>
-<td align="left"><code>atlas_spot_number attribute</code></td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>detector_id</code></td>
+<td style="text-align: left;"><code>atlas_spot_number attribute</code></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or just <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat-2/ATL08.jl#LL1-L35' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat-2/ATL08.jl#LL1-L35' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points' href='#SpaceLiDAR.points'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL12</span><span class="p">},</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">)</span>
@@ -1263,59 +1263,59 @@ package if you use it in production.
 <table>
 <thead>
 <tr>
-<th align="left">Column</th>
-<th align="left">Field</th>
-<th align="left">Description</th>
-<th align="left">Units</th>
+<th style="text-align: left;">Column</th>
+<th style="text-align: left;">Field</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Units</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left"><code>longitude</code></td>
-<td align="left"><code>ssh_segments/longitude</code></td>
-<td align="left">Longitude of segment center, WGS84, East=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>longitude</code></td>
+<td style="text-align: left;"><code>ssh_segments/longitude</code></td>
+<td style="text-align: left;">Longitude of segment center, WGS84, East=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>latitude</code></td>
-<td align="left"><code>ssh_segments/latitude</code></td>
-<td align="left">Latitude of segment center, WGS84, North=+</td>
-<td align="left">decimal degrees</td>
+<td style="text-align: left;"><code>latitude</code></td>
+<td style="text-align: left;"><code>ssh_segments/latitude</code></td>
+<td style="text-align: left;">Latitude of segment center, WGS84, North=+</td>
+<td style="text-align: left;">decimal degrees</td>
 </tr>
 <tr>
-<td align="left"><code>height</code></td>
-<td align="left"><code>ssh_segments/heights/h</code></td>
-<td align="left">Standard land-ice segment height</td>
-<td align="left">m above the WGS 84 ellipsoid</td>
+<td style="text-align: left;"><code>height</code></td>
+<td style="text-align: left;"><code>ssh_segments/heights/h</code></td>
+<td style="text-align: left;">Standard land-ice segment height</td>
+<td style="text-align: left;">m above the WGS 84 ellipsoid</td>
 </tr>
 <tr>
-<td align="left"><code>datetime</code></td>
-<td align="left"><code>ssh_segments/delta_time</code></td>
-<td align="left">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
-<td align="left">date-time</td>
+<td style="text-align: left;"><code>datetime</code></td>
+<td style="text-align: left;"><code>ssh_segments/delta_time</code></td>
+<td style="text-align: left;">+ <code>ancillary_data/atlas_sdp_gps_epoch</code> + <code>gps_offset</code></td>
+<td style="text-align: left;">date-time</td>
 </tr>
 <tr>
-<td align="left"><code>track</code></td>
-<td align="left"><code>gt1l</code> - <code>gt3r</code> groups</td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>track</code></td>
+<td style="text-align: left;"><code>gt1l</code> - <code>gt3r</code> groups</td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>strong_beam</code></td>
-<td align="left"><code>-</code></td>
-<td align="left">"strong" (true) or "weak" (false) laser power</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>strong_beam</code></td>
+<td style="text-align: left;"><code>-</code></td>
+<td style="text-align: left;">"strong" (true) or "weak" (false) laser power</td>
+<td style="text-align: left;">-</td>
 </tr>
 <tr>
-<td align="left"><code>detector_id</code></td>
-<td align="left"><code>atlas_spot_number attribute</code></td>
-<td align="left">-</td>
-<td align="left">-</td>
+<td style="text-align: left;"><code>detector_id</code></td>
+<td style="text-align: left;"><code>atlas_spot_number attribute</code></td>
+<td style="text-align: left;">-</td>
+<td style="text-align: left;">-</td>
 </tr>
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/ICESat-2/ATL12.jl#LL1-L19' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/ICESat-2/ATL12.jl#LL1-L19' class='documenter-source'>source</a><br></p>
 <p><a id='GEDI'></a></p>
 <p><a id='GEDI-1'></a></p>
 <h2 id="gedi">GEDI<a class="headerlink" href="#gedi" title="Permanent link">&para;</a></h2>
@@ -1328,7 +1328,7 @@ package if you use it in production.
 <p class="admonition-title">Warning</p>
 <p>This opens the .h5 file to read all tracks, so it is very slow.</p>
 </div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/3d6e79c92a8f8962597e6c0dbe659b47de96ef8e/src/GEDI/L2A.jl#LL351-L359' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/4b4ba06b804dcff952f781d5b688c049ba6141e5/src/GEDI/L2A.jl#LL351-L359' class='documenter-source'>source</a><br></p>
 <div class="footnote">
 <hr />
 <ol>
@@ -1411,14 +1411,18 @@ package if you use it in production.
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "toc.integrate", "announce.dismiss", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../../assets/javascripts/bundle.220ee61c.min.js"></script>
       
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+        
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_HTML"></script>
+        
       
-        <script src="../../assets/mathjaxhelper.js"></script>
+        
+          <script src="../../assets/mathjaxhelper.js"></script>
+        
       
     
   </body>
