@@ -38,9 +38,9 @@ function points(
     end
     HDF5.h5open(granule.url, "r") do file
         if !isnothing(bbox)
-            x = file["Data_40HZ/Geolocation/d_lon"][:]::Vector{Float64}
+            x = read_dataset(file, "Data_40HZ/Geolocation/d_lon")::Vector{Float64}
             x[x.>180] .= x[x.>180] .- 360.0  # translate from 0 - 360
-            y = file["Data_40HZ/Geolocation/d_lat"][:]::Vector{Float64}
+            y = read_dataset(file, "Data_40HZ/Geolocation/d_lat")::Vector{Float64}
 
             # find index of points inside of bbox
             ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
@@ -71,15 +71,15 @@ function points(
             y = y[start:step:stop]
         else
             start = 1
-            stop = length(file["Data_40HZ/Geolocation/d_lon"])
-            x = file["Data_40HZ/Geolocation/d_lon"][start:step:stop]::Vector{Float64}
-            y = file["Data_40HZ/Geolocation/d_lat"][start:step:stop]::Vector{Float64}
+            stop = length(open_dataset(file, "Data_40HZ/Geolocation/d_lon"))
+            x = read_dataset(file, "Data_40HZ/Geolocation/d_lon")[start:step:stop]::Vector{Float64}
+            y = read_dataset(file, "Data_40HZ/Geolocation/d_lat")[start:step:stop]::Vector{Float64}
         end
 
         valid = (x .!= icesat_fill) .& (y .!= icesat_fill)
-        height = file["Data_40HZ/Elevation_Surfaces/d_elev"][start:step:stop]::Vector{Float64}
+        height = read_dataset(file, "Data_40HZ/Elevation_Surfaces/d_elev")[start:step:stop]::Vector{Float64}
         valid .&= height .!= icesat_fill
-        height_correction = file["Data_40HZ/Elevation_Corrections/d_satElevCorr"][start:step:stop]::Vector{Float64}
+        height_correction = read_dataset(file, "Data_40HZ/Elevation_Corrections/d_satElevCorr")[start:step:stop]::Vector{Float64}
         valid .&= (height_correction .!= icesat_fill)
         height .+= height_correction
 
@@ -88,15 +88,15 @@ function points(
         height = height[valid]
         height_correction = height_correction[valid]
 
-        datetime = file["Data_40HZ/DS_UTCTime_40"][start:step:stop][valid]::Vector{Float64}
-        quality = file["Data_40HZ/Quality/elev_use_flg"][start:step:stop][valid]::Vector{Int8}
-        clouds = file["Data_40HZ/Elevation_Flags/elv_cloud_flg"][start:step:stop][valid]::Vector{Int8}
-        sat_corr_flag = file["Data_40HZ/Quality/sat_corr_flg"][start:step:stop][valid]::Vector{Int8}
-        sigma_att_flg = file["Data_40HZ/Quality/sigma_att_flg"][start:step:stop][valid]::Vector{Int8}
-        ref_flag = file["Data_40HZ/Reflectivity/d_reflctUC"][start:step:stop][valid]::Vector{Float64}
-        gain_value = file["Data_40HZ/Waveform/i_gval_rcv"][start:step:stop][valid]::Vector{Int32}
-        i_numPk = file["Data_40HZ/Waveform/i_numPk"][start:step:stop][valid]::Vector{Int32}
-        height_ref = file["Data_40HZ/Geophysical/d_DEM_elv"][start:step:stop][valid]::Vector{Float64}
+        datetime = read_dataset(file, "Data_40HZ/DS_UTCTime_40")[start:step:stop][valid]::Vector{Float64}
+        quality = read_dataset(file, "Data_40HZ/Quality/elev_use_flg")[start:step:stop][valid]::Vector{Int8}
+        clouds = read_dataset(file, "Data_40HZ/Elevation_Flags/elv_cloud_flg")[start:step:stop][valid]::Vector{Int8}
+        sat_corr_flag = read_dataset(file, "Data_40HZ/Quality/sat_corr_flg")[start:step:stop][valid]::Vector{Int8}
+        sigma_att_flg = read_dataset(file, "Data_40HZ/Quality/sigma_att_flg")[start:step:stop][valid]::Vector{Int8}
+        ref_flag = read_dataset(file, "Data_40HZ/Reflectivity/d_reflctUC")[start:step:stop][valid]::Vector{Float64}
+        gain_value = read_dataset(file, "Data_40HZ/Waveform/i_gval_rcv")[start:step:stop][valid]::Vector{Int32}
+        i_numPk = read_dataset(file, "Data_40HZ/Waveform/i_numPk")[start:step:stop][valid]::Vector{Int32}
+        height_ref = read_dataset(file, "Data_40HZ/Geophysical/d_DEM_elv")[start:step:stop][valid]::Vector{Float64}
 
         # SHOULD WE FILL WITH NAN OR MISSINGS ?
         height_ref[height_ref.==icesat_fill] .= NaN

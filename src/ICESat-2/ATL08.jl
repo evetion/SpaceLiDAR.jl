@@ -54,13 +54,13 @@ function points(
     end
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track in tracks
-            if in(track, keys(file)) && in("land_segments", keys(file[track]))
+            if haskey(file, track) && haskey(open_group(file, track), "land_segments")
                 f = highres ? _extrapoints : points
                 for track_nt in f(granule, file, track, t_offset, step, canopy, canopy_field, ground, ground_field, bbox)
-                    track_nt.height[track_nt.height.==fill_value] .= NaN
+                    replace!(x -> x === fill_value ? NaN : x, track_nt.height)
                     push!(dfs, track_nt)
                 end
             end
@@ -82,11 +82,11 @@ function points(
     ground_field = "h_te_mean",
     bbox::Union{Nothing,Extent} = nothing,
 )
-
+    group = open_group(file, track)
     # subset by bbox
     if !isnothing(bbox)
-        x = file["$track/land_segments/longitude"][1:step:end]::Vector{Float32}
-        y = file["$track/land_segments/latitude"][1:step:end]::Vector{Float32}
+        x = open_dataset(group, "land_segments/longitude")[1:step:end]::Vector{Float32}
+        y = open_dataset(group, "land_segments/latitude")[1:step:end]::Vector{Float32}
 
         # find index of points inside of bbox
         ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
@@ -96,8 +96,8 @@ function points(
         if isnothing(start)
             @warn "no data found within bbox of track $track in $(file.filename)"
 
-            atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
-            spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+            atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
+            spot_number = read_attribute(group, "atlas_spot_number")::String
 
             nt = (;
                 longitude = Float64[],
@@ -126,32 +126,32 @@ function points(
         y = y[start:step:stop]
     else
         start = 1
-        stop = length(file["$track/land_segments/longitude"])
-        x = file["$track/land_segments/longitude"][start:step:stop]::Vector{Float32}
-        y = file["$track/land_segments/latitude"][start:step:stop]::Vector{Float32}
+        stop = length(open_dataset(group, "land_segments/longitude"))
+        x = open_dataset(group, "land_segments/longitude")[start:step:stop]::Vector{Float32}
+        y = open_dataset(group, "land_segments/latitude")[start:step:stop]::Vector{Float32}
     end
 
     if ground
-        zt = file["$track/land_segments/terrain/h_te_mean"][start:step:stop]::Vector{Float32}
-        tu = file["$track/land_segments/terrain/h_te_uncertainty"][start:step:stop]::Vector{Float32}
+        zt = open_dataset(group, "land_segments/terrain/h_te_mean")[start:step:stop]::Vector{Float32}
+        tu = open_dataset(group, "land_segments/terrain/h_te_uncertainty")[start:step:stop]::Vector{Float32}
     end
     if canopy
-        zc = file["$track/land_segments/canopy/h_mean_canopy_abs"][start:step:stop]::Vector{Float32}
-        cu = file["$track/land_segments/canopy/h_canopy_uncertainty"][start:step:stop]::Vector{Float32}
+        zc = open_dataset(group, "land_segments/canopy/h_mean_canopy_abs")[start:step:stop]::Vector{Float32}
+        cu = open_dataset(group, "land_segments/canopy/h_canopy_uncertainty")[start:step:stop]::Vector{Float32}
     end
-    x = file["$track/land_segments/longitude"][start:step:stop]::Vector{Float32}
-    y = file["$track/land_segments/latitude"][start:step:stop]::Vector{Float32}
-    t = file["$track/land_segments/delta_time"][start:step:stop]::Vector{Float64}
-    sensitivity = file["$track/land_segments/snr"][start:step:stop]::Vector{Float32}
-    clouds = file["$track/land_segments/layer_flag"][start:step:stop]::Vector{Int8}
-    scattered = file["$track/land_segments/msw_flag"][start:step:stop]::Vector{Int8}
-    saturated = file["$track/land_segments/sat_flag"][start:step:stop]::Vector{Int8}
-    q = file["$track/land_segments/terrain_flg"][start:step:stop]::Vector{Int32}
-    phr = file["$track/land_segments/ph_removal_flag"][start:step:stop]::Vector{Int8}
-    dem = file["$track/land_segments/dem_h"][start:step:stop]::Vector{Float32}
+    x = open_dataset(group, "land_segments/longitude")[start:step:stop]::Vector{Float32}
+    y = open_dataset(group, "land_segments/latitude")[start:step:stop]::Vector{Float32}
+    t = open_dataset(group, "land_segments/delta_time")[start:step:stop]::Vector{Float64}
+    sensitivity = open_dataset(group, "land_segments/snr")[start:step:stop]::Vector{Float32}
+    clouds = open_dataset(group, "land_segments/layer_flag")[start:step:stop]::Vector{Int8}
+    scattered = open_dataset(group, "land_segments/msw_flag")[start:step:stop]::Vector{Int8}
+    saturated = open_dataset(group, "land_segments/sat_flag")[start:step:stop]::Vector{Int8}
+    q = open_dataset(group, "land_segments/terrain_flg")[start:step:stop]::Vector{Int32}
+    phr = open_dataset(group, "land_segments/ph_removal_flag")[start:step:stop]::Vector{Int8}
+    dem = open_dataset(group, "land_segments/dem_h")[start:step:stop]::Vector{Float32}
     times = unix2datetime.(t .+ t_offset)
-    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
-    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+    atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
+    spot_number = read_attribute(group, "atlas_spot_number")::String
 
     if ground
         gt = (
@@ -163,8 +163,8 @@ function points(
             quality = .!Bool.(q),
             phr = Bool.(phr),
             sensitivity = sensitivity,
-            scattered = Int16.(scattered),
-            saturated = Int16.(saturated),
+            scattered = scattered,
+            saturated = saturated,
             clouds = Bool.(clouds),
             track = Fill(track, length(times)),
             strong_beam = Fill(atlas_beam_type == "strong", length(times)),
@@ -212,13 +212,14 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
         # t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track ∈ tracks
-            if in(track, keys(file)) && in("land_segments", keys(file[track]))
-                height = file["$track/land_segments/terrain/h_te_mean"][1:step:end]::Array{Float32,1}
-                longitude = file["$track/land_segments/longitude"][1:step:end]::Array{Float32,1}
-                latitude = file["$track/land_segments/latitude"][1:step:end]::Array{Float32,1}
-                # t = file["$track/land_segments/delta_time"][1:step:end]::Array{Float64,1}
+            if haskey(file, track) && haskey(open_group(file, track), "land_segments")
+                group = open_group(file, track)
+                height = open_dataset(group, "land_segments/terrain/h_te_mean")[1:step:end]::Array{Float32,1}
+                longitude = open_dataset(group, "land_segments/longitude")[1:step:end]::Array{Float32,1}
+                latitude = open_dataset(group, "land_segments/latitude")[1:step:end]::Array{Float32,1}
+                # t = open_dataset(group, "land_segments/delta_time")[1:step:end]::Array{Float64,1}
                 # times = unix2datetime.(t .+ t_offset)
-                atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+                atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
 
                 height[height.==fill_value] .= NaN
                 line = Line(longitude, latitude, height)
@@ -272,28 +273,29 @@ function _extrapoints(
     ground_field = "h_te_best_fit_20m",
     bbox = nothing,
 )
+    group = open_group(file, track)
     if ground
-        zt = vec(file["$track/land_segments/terrain/h_te_best_fit_20m"][1:step:end, :])::Array{Float32}
-        tu = repeat(file["$track/land_segments/terrain/h_te_uncertainty"][1:step:end]::Vector{Float32}, 5)
-        q = vec(file["$track/land_segments/terrain/subset_te_flag"][1:step:end, :]::Array{Int8})
+        zt = vec(open_dataset(group, "land_segments/terrain/h_te_best_fit_20m")[1:step:end, :])::Array{Float32}
+        tu = repeat(open_dataset(group, "land_segments/terrain/h_te_uncertainty")[1:step:end]::Vector{Float32}, 5)
+        q = vec(open_dataset(group, "land_segments/terrain/subset_te_flag")[1:step:end, :]::Array{Int8})
     end
     if canopy
-        zc = vec(file["$track/land_segments/canopy/h_canopy_20"][1:step:end, :])::Array{Float32}
-        cu = repeat(file["$track/land_segments/canopy/h_canopy_uncertainty"][1:step:end]::Vector{Float32}, 5)
-        q = vec(file["$track/land_segments/canopy/subset_can_flag"][1:step:end, :]::Array{Int8})
+        zc = vec(open_dataset(group, "land_segments/canopy/h_canopy_20")[1:step:end, :])::Array{Float32}
+        cu = repeat(open_dataset(group, "land_segments/canopy/h_canopy_uncertainty")[1:step:end]::Vector{Float32}, 5)
+        q = vec(open_dataset(group, "land_segments/canopy/subset_can_flag")[1:step:end, :]::Array{Int8})
     end
-    x = vec(file["$track/land_segments/longitude_20m"][1:step:end, :]::Array{Float32})
-    y = vec(file["$track/land_segments/latitude_20m"][1:step:end, :]::Array{Float32})
-    t = repeat(file["$track/land_segments/delta_time"][1:step:end]::Vector{Float64}, 5)
-    sensitivity = repeat(file["$track/land_segments/snr"][1:step:end]::Vector{Float32}, 5)
-    clouds = repeat(file["$track/land_segments/layer_flag"][1:step:end]::Vector{Int8}, 5)
-    scattered = repeat(file["$track/land_segments/msw_flag"][1:step:end]::Vector{Int8}, 5)
-    saturated = repeat(file["$track/land_segments/sat_flag"][1:step:end]::Vector{Int8}, 5)
-    phr = repeat(file["$track/land_segments/ph_removal_flag"][1:step:end]::Vector{Int8}, 5)
-    dem = repeat(file["$track/land_segments/dem_h"][1:step:end]::Vector{Float32}, 5)
+    x = vec(open_dataset(group, "land_segments/longitude_20m")[1:step:end, :]::Array{Float32})
+    y = vec(open_dataset(group, "land_segments/latitude_20m")[1:step:end, :]::Array{Float32})
+    t = repeat(open_dataset(group, "land_segments/delta_time")[1:step:end]::Vector{Float64}, 5)
+    sensitivity = repeat(open_dataset(group, "land_segments/snr")[1:step:end]::Vector{Float32}, 5)
+    clouds = repeat(open_dataset(group, "land_segments/layer_flag")[1:step:end]::Vector{Int8}, 5)
+    scattered = repeat(open_dataset(group, "land_segments/msw_flag")[1:step:end]::Vector{Int8}, 5)
+    saturated = repeat(open_dataset(group, "land_segments/sat_flag")[1:step:end]::Vector{Int8}, 5)
+    phr = repeat(open_dataset(group, "land_segments/ph_removal_flag")[1:step:end]::Vector{Int8}, 5)
+    dem = repeat(open_dataset(group, "land_segments/dem_h")[1:step:end]::Vector{Float32}, 5)
     times = unix2datetime.(t .+ t_offset)
-    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
-    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+    atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
+    spot_number = read_attribute(group, "atlas_spot_number")::String
 
     # This is something to use, reduce(vcat,Fill.($x, $v));
 

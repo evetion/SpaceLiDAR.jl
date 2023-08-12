@@ -10,6 +10,7 @@ using Proj
 using Documenter
 using Extents
 using GeoInterface
+using CategoricalArrays
 
 const rng = MersenneTwister(54321)
 const SL = SpaceLiDAR
@@ -34,6 +35,8 @@ ATL12_fn = download_artifact(v"0.3", "ATL12_20220404110409_01891501_006_02.h5")
 GEDI02_fn = download_artifact(v"0.1", "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5")
 GLAH14_fn = download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
+
+empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
 
 @testset "SpaceLiDAR.jl" begin
 
@@ -117,6 +120,10 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
         points = SL.points(g; step = 4, bbox = bbox)
         @test length(points.longitude) == 74
+
+        df = DataFrame(SL.points(g))
+        dff = DataFrame(g)
+        @test isequal(df, dff)
     end
 
     @testset "GLAH14" begin
@@ -126,16 +133,21 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points) == 11
 
         bbox = (min_x = -20.0, min_y = -85, max_x = -2, max_y = 20)
-        points = SL.points(g; bbox = bbox)
-        @test length(points.latitude) == 375791
-        @test typeof(points.gain[1010]) == Int32
+        fpoints = SL.points(g; bbox = bbox)
+        @test length(fpoints.latitude) == 375791
+        @test typeof(fpoints.gain[1010]) == Int32
 
-        points = SL.points(g; step = 400, bbox = bbox)
-        @test length(points.longitude) == 934
+        fpoints = SL.points(g; step = 400, bbox = bbox)
+        @test length(fpoints.longitude) == 934
+
+        df = DataFrame(points)
+        dff = DataFrame(g)
+        @test isequal(df, dff)
     end
 
     @testset "ATL03" begin
         g = SL.granule_from_file(ATL03_fn)
+        g8 = SL.granule_from_file(ATL08_fn)
 
         points = SL.points(g)
         @test length(points) == 6
@@ -145,41 +157,59 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test points[end].track[1] == "gt3r"
 
         bbox = (min_x = 174.0, min_y = -50.0, max_x = 176.0, max_y = -30.0)
-        points = SL.points(g, step = 1, bbox = bbox)
-        @test length(points) == 6
-        @test length(points[1].longitude) == 1158412
+        fpoints = SL.points(g, step = 1, bbox = bbox)
+        @test length(fpoints) == 6
+        @test length(fpoints[1].longitude) == 1158412
+
+        df = reduce(vcat, DataFrame.(points))
+        dff = DataFrame(g)
+        @test isequal(df, dff)
 
         lines = SL.lines(g, step = 1000)
         @test length(lines) == 6
 
         c = SL.classify(g)
         df = reduce(vcat, DataFrame.(c))
-
+        @test df.classification isa CategoricalVector{String,Int8}
         SL.materialize!(df)
         @test df.classification isa Vector{String}
+
+        C = SL.ClassifyATL03(g, g8)
+        dfc = DataFrame(C)
+        @test isequal(df, dfc)
     end
 
     @testset "ATL06" begin
         g6 = SL.granule_from_file(ATL06_fn)
-
-        points = SL.points(g6, step = 1000)
+        points = SL.points(g6)
+        fpoints = SL.points(g6, step = 1000)
         @test length(points) == 6
-        @test length(points[1].height) == 34
+        @test length(fpoints) == 6
+        @test length(points[1].height) == 33725
+        @test length(fpoints[1].height) == 34
 
         df = reduce(vcat, DataFrame.(points))
         @test minimum(df.datetime) == Dates.DateTime("2022-04-04T10:43:41.629")
         @test all(in.(df.detector_id, Ref(1:6)))
+
+        df = reduce(vcat, DataFrame.(points))
+        dff = DataFrame(g6)
+        @test isequal(df, dff)
     end
 
     @testset "ATL08" begin
         g = SL.granule_from_file(ATL08_fn)
 
-        points = SL.points(g, step = 1000)
-        @test length(points) == 6
+        fpoints = SL.points(g, step = 1000)
+        @test length(fpoints) == 6
         points = SL.points(g, step = 1)
         @test length(points) == 6
         @test length(points[1].longitude) == 998
         @test points[1].longitude[356] ≈ 175.72562f0
+
+        df = reduce(vcat, DataFrame.(points))  # test that empty tracks can be catted
+        dff = DataFrame(g)
+        @test isequal(df, dff)
 
         lines = SL.lines(g, step = 1000)
         @test length(lines) == 6
@@ -191,7 +221,6 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points[2].longitude) == 1
         @test length(points[1].longitude) == 55
         @test points[1].longitude[45] ≈ 175.22807f0
-        df = reduce(vcat, DataFrame.(points))  # test that empty tracks can be catted
 
         ps = SL.points(g; highres = true)
         @test length(ps[1].longitude) == (998 * 5)
@@ -202,6 +231,10 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
         points = SL.points(g12)
         @test length(points) == 6
+
+        df = reduce(vcat, DataFrame.(points))
+        dff = DataFrame(g12)
+        @test isequal(df, dff)
     end
 
     @testset "L2A" begin
@@ -228,7 +261,10 @@ GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
         @test length(points[1].longitude) == 1166
         @test length(points[6].latitude) == 1168
         @test length(points) == 16
-        df = reduce(vcat, DataFrame.(points))
+
+        df = reduce(vcat, DataFrame.(SL.points(gg)))
+        dff = DataFrame(gg)
+        @test isequal(df, dff)
     end
 
     @testset "Geometry" begin

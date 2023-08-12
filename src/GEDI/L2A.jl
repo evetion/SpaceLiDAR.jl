@@ -52,7 +52,7 @@ function points(
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         for track in tracks
-            if in(track, keys(file))
+            if haskey(file, track)
                 for track_nt ∈ points(granule, file, track, step, bbox, ground, canopy, filtered)
                     if !isempty(track_nt.height)
                         track_nt.height[track_nt.height.==fill_value] .= NaN
@@ -75,11 +75,13 @@ function points(
     canopy = false,
     filtered = true,
 )
+    group = open_group(file, track)
+
     if !isnothing(bbox)
         # find data that falls withing bbox
         if ground
-            x_grd = file["$track/lon_lowestmode"][:]::Vector{Float64}
-            y_grd = file["$track/lat_lowestmode"][:]::Vector{Float64}
+            x_grd = read_dataset(group, "lon_lowestmode")::Vector{Float64}
+            y_grd = read_dataset(group, "lat_lowestmode")::Vector{Float64}
 
             ind = (x_grd .> bbox.X[1]) .& (y_grd .> bbox.Y[1]) .& (x_grd .< bbox.X[2]) .& (y_grd .< bbox.Y[2])
             start_grd = findfirst(ind)
@@ -87,8 +89,8 @@ function points(
         end
 
         if canopy
-            x_can = file["$track/lon_highestreturn"][:]::Vector{Float64}
-            y_can = file["$track/lat_highestreturn"][:]::Vector{Float64}
+            x_can = read_dataset(group, "lon_highestreturn")::Vector{Float64}
+            y_can = read_dataset(group, "lat_highestreturn")::Vector{Float64}
 
             ind = (x_can .> bbox.X[1]) .& (y_can .> bbox.Y[1]) .& (x_can .< bbox.X[2]) .& (y_can .< bbox.Y[2])
             start_can = findfirst(ind)
@@ -117,7 +119,7 @@ function points(
             # no data found
             @warn "no data found within bbox of track $track in $(file.filename)"
 
-            power = occursin("Full power", read_attribute(file["$track"], "description")::String)
+            power = occursin("Full power", read_attribute(group, "description")::String)
 
             if canopy
                 nt_canopy = (
@@ -188,47 +190,47 @@ function points(
         end
     else
         start = 1
-        stop = length(file["$track/lon_highestreturn"])
+        stop = length(open_dataset(group, "lon_highestreturn"))
 
         if ground
-            x_grd = file["$track/lon_lowestmode"][start:step:stop]::Vector{Float64}
-            y_grd = file["$track/lat_lowestmode"][start:step:stop]::Vector{Float64}
+            x_grd = open_dataset(group, "lon_lowestmode")[start:step:stop]::Vector{Float64}
+            y_grd = open_dataset(group, "lat_lowestmode")[start:step:stop]::Vector{Float64}
         end
 
         if canopy
-            x_can = file["$track/lon_highestreturn"][start:step:stop]::Vector{Float64}
-            y_can = file["$track/lat_highestreturn"][start:step:stop]::Vector{Float64}
+            x_can = open_dataset(group, "lon_highestreturn")[start:step:stop]::Vector{Float64}
+            y_can = open_dataset(group, "lat_highestreturn")[start:step:stop]::Vector{Float64}
         end
     end
 
     # now that we have the start and stop extents
-    height_error = file["$track/elevation_bin0_error"][start:step:stop]::Vector{Float32}
-    height_reference = file["$track/digital_elevation_model"][start:step:stop]::Vector{Float32}
+    height_error = open_dataset(group, "elevation_bin0_error")[start:step:stop]::Vector{Float32}
+    height_reference = open_dataset(group, "digital_elevation_model")[start:step:stop]::Vector{Float32}
     height_reference[height_reference.==-999999.0] .= NaN
-    intensity = file["$track/energy_total"][start:step:stop]::Vector{Float32}
-    aid = file["$track/selected_algorithm"][start:step:stop]::Vector{UInt8}
+    intensity = open_dataset(group, "energy_total")[start:step:stop]::Vector{Float32}
+    aid = open_dataset(group, "selected_algorithm")[start:step:stop]::Vector{UInt8}
 
     if canopy
-        height_can = file["$track/elev_highestreturn"][start:step:stop]::Vector{Float32}
+        height_can = open_dataset(group, "elev_highestreturn")[start:step:stop]::Vector{Float32}
         height_can[(height_can.<-1000.0).&(height_can.>25000.0)] .= NaN
     end
 
     if ground
-        height_grd = file["$track/elev_lowestmode"][start:step:stop]::Vector{Float32}
+        height_grd = open_dataset(group, "elev_lowestmode")[start:step:stop]::Vector{Float32}
         height_grd[(height_grd.<-1000.0).&(height_grd.>25000.0)] .= NaN
     end
-    datetime = file["$track/delta_time"][start:step:stop]::Vector{Float64}
+    datetime = open_dataset(group, "delta_time")[start:step:stop]::Vector{Float64}
 
     # Quality
-    quality = file["$track/quality_flag"][start:step:stop]::Vector{UInt8}
-    rx_assess_quality_flag = file["$track/rx_assess/quality_flag"][start:step:stop]::Vector{UInt8}
-    degrade_flag = file["$track/degrade_flag"][start:step:stop]::Vector{UInt8}
-    stale_return_flag = file["$track/geolocation/stale_return_flag"][start:step:stop]::Vector{UInt8}
-    surface_flag = file["$track/surface_flag"][start:step:stop]::Vector{UInt8}
-    nmodes = file["$track/num_detectedmodes"][start:step:stop]::Vector{UInt8}
+    quality = open_dataset(group, "quality_flag")[start:step:stop]::Vector{UInt8}
+    rx_assess_quality_flag = open_dataset(group, "rx_assess/quality_flag")[start:step:stop]::Vector{UInt8}
+    degrade_flag = open_dataset(group, "degrade_flag")[start:step:stop]::Vector{UInt8}
+    stale_return_flag = open_dataset(group, "geolocation/stale_return_flag")[start:step:stop]::Vector{UInt8}
+    surface_flag = open_dataset(group, "surface_flag")[start:step:stop]::Vector{UInt8}
+    nmodes = open_dataset(group, "num_detectedmodes")[start:step:stop]::Vector{UInt8}
 
-    rx_maxamp = file["$track/rx_assess/rx_maxamp"][start:step:stop]::Vector{Float32}
-    sd_corrected = file["$track/rx_assess/sd_corrected"][start:step:stop]::Vector{Float32}
+    rx_maxamp = open_dataset(group, "rx_assess/rx_maxamp")[start:step:stop]::Vector{Float32}
+    sd_corrected = open_dataset(group, "rx_assess/sd_corrected")[start:step:stop]::Vector{Float32}
     rx_maxamp_f = rx_maxamp ./ sd_corrected
 
     # Algorithm
@@ -236,15 +238,16 @@ function points(
     toploc = similar(aid, Float32)
     algrun = similar(aid, Bool)
     for algorithm = 1:6
-        zcross[aid.==algorithm] = file["$track/rx_processing_a$algorithm/zcross"][start:step:stop][aid.==algorithm]
-        toploc[aid.==algorithm] = file["$track/rx_processing_a$algorithm/toploc"][start:step:stop][aid.==algorithm]
-        algrun[aid.==algorithm] =
-            file["$track/rx_processing_a$algorithm/rx_algrunflag"][start:step:stop][aid.==algorithm]
+        am = aid .== algorithm
+        zcross[am] = open_dataset(group, "rx_processing_a$algorithm/zcross")[start:step:stop][am]
+        toploc[am] = open_dataset(group, "rx_processing_a$algorithm/toploc")[start:step:stop][am]
+        algrun[am] =
+            open_dataset(group, "rx_processing_a$algorithm/rx_algrunflag")[start:step:stop][am]
     end
 
-    sensitivity = file["$track/sensitivity"][start:step:stop]::Vector{Float32}
-    sun_angle = file["$track/solar_elevation"][start:step:stop]::Vector{Float32}
-    power = occursin("Full power", read_attribute(file["$track"], "description")::String)
+    sensitivity = open_dataset(group, "sensitivity")[start:step:stop]::Vector{Float32}
+    sun_angle = open_dataset(group, "solar_elevation")[start:step:stop]::Vector{Float32}
+    power = occursin("Full power", read_attribute(group, "description")::String)
 
     # Quality flags as defined by [^l3]
     m = trues(length(quality))
@@ -336,7 +339,7 @@ function lines(
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
         for track in tracks
-            if in(track, keys(file))
+            if haskey(file, track)
                 for track_df ∈ points(granule, file, track, step, bbox, ground, canopy, filtered)
                     line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
                     nt = (geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = granule.id)
@@ -354,7 +357,7 @@ end
 Return the bounds of the GEDI granule.
 
 !!! warning
-    
+
     This opens the .h5 file to read all tracks, so it is very slow.
 """
 function bounds(granule::GEDI_Granule)
@@ -364,9 +367,10 @@ function bounds(granule::GEDI_Granule)
     max_ys = -Inf
     HDF5.h5open(granule.url, "r") do file
         for track ∈ gedi_tracks
-            if in(track, keys(file))
-                min_x, max_x = extrema(file["$track/lon_lowestmode"][:])
-                min_y, max_y = extrema(file["$track/lat_lowestmode"][:])
+            if haskey(file, track)
+                group = open_dataset(file, track)
+                min_x, max_x = extrema(open_dataset(group, "lon_lowestmode"))
+                min_y, max_y = extrema(open_dataset(group, "lat_lowestmode"))
                 min_xs = min(min_xs, min_x)
                 min_ys = min(min_ys, min_y)
                 max_xs = max(max_xs, max_x)
