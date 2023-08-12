@@ -103,8 +103,8 @@ function points(
                 start = start_grd
                 stop = stop_grd
             else
-                start = minimum([start_grd, start_can])
-                stop = maximum([stop_grd, stop_can])
+                start = min(start_grd, start_can)
+                stop = max(stop_grd, stop_can)
             end
 
         elseif ground
@@ -368,9 +368,9 @@ function bounds(granule::GEDI_Granule)
     HDF5.h5open(granule.url, "r") do file
         for track ∈ gedi_tracks
             if haskey(file, track)
-                group = open_dataset(file, track)
-                min_x, max_x = extrema(open_dataset(group, "lon_lowestmode"))
-                min_y, max_y = extrema(open_dataset(group, "lat_lowestmode"))
+                group = open_group(file, track)
+                min_x, max_x = extrema(read_dataset(group, "lon_lowestmode"))
+                min_y, max_y = extrema(read_dataset(group, "lat_lowestmode"))
                 min_xs = min(min_xs, min_x)
                 min_ys = min(min_ys, min_y)
                 max_xs = max(max_xs, max_x)
