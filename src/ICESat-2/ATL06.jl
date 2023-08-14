@@ -37,9 +37,10 @@ function points(
     end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = file["ancillary_data/atlas_sdp_gps_epoch"][1]::Float64 + gps_offset
+        t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         for track ∈ tracks
-            if in(track, keys(file)) && in("land_ice_segments", keys(file[track]))
+            if haskey(file, track) && haskey(open_group(file, track), "land_ice_segments")
+
                 track_nt = points(granule, file, track, t_offset, step, bbox)
                 if !isempty(track_nt.height)
                     track_nt.height[track_nt.height.==fill_value] .= NaN
@@ -59,11 +60,12 @@ function points(
     step = 1,
     bbox = bbox::Union{Nothing,Extent} = nothing,
 )
+    group = open_group(file, track)
 
     # subset by bbox ?
     if !isnothing(bbox)
-        x = file["$track/land_ice_segments/longitude"][:]::Vector{Float64}
-        y = file["$track/land_ice_segments/latitude"][:]::Vector{Float64}
+        x = read_dataset(group, "land_ice_segments/longitude")::Vector{Float64}
+        y = read_dataset(group, "land_ice_segments/latitude")::Vector{Float64}
 
         # find index of points inside of bbox
         ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
@@ -73,8 +75,8 @@ function points(
         if isnothing(start)
             @warn "no data found within bbox of track $track in $(file.filename)"
 
-            spot_number = attrs(file["$track"])["atlas_spot_number"]::String
-            atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+            spot_number = read_attribute(group, "atlas_spot_number")::String
+            atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
 
             nt = (;
                 longitude = Float64[],
@@ -96,19 +98,19 @@ function points(
         y = y[start:step:stop]
     else
         start = 1
-        stop = length(file["$track/land_ice_segments/longitude"])
-        x = file["$track/land_ice_segments/longitude"][start:step:stop]::Vector{Float64}
-        y = file["$track/land_ice_segments/latitude"][start:step:stop]::Vector{Float64}
+        stop = length(open_dataset(group, "land_ice_segments/longitude"))
+        x = open_dataset(group, "land_ice_segments/longitude")[start:step:stop]::Vector{Float64}
+        y = open_dataset(group, "land_ice_segments/latitude")[start:step:stop]::Vector{Float64}
     end
 
-    z = file["$track/land_ice_segments/h_li"][start:step:stop]::Vector{Float32}
-    sigma_geo_h = file["$track/land_ice_segments/sigma_geo_h"][start:step:stop]::Vector{Float32}
-    h_li_sigma = file["$track/land_ice_segments/h_li_sigma"][start:step:stop]::Vector{Float32}
-    t = file["$track/land_ice_segments/delta_time"][start:step:stop]::Vector{Float64}
-    q = file["$track/land_ice_segments/atl06_quality_summary"][start:step:stop]::Vector{Int8}
-    dem = file["$track/land_ice_segments/dem/dem_h"][start:step:stop]::Vector{Float32}
-    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
-    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+    z = open_dataset(group, "land_ice_segments/h_li")[start:step:stop]::Vector{Float32}
+    sigma_geo_h = open_dataset(group, "land_ice_segments/sigma_geo_h")[start:step:stop]::Vector{Float32}
+    h_li_sigma = open_dataset(group, "land_ice_segments/h_li_sigma")[start:step:stop]::Vector{Float32}
+    t = open_dataset(group, "land_ice_segments/delta_time")[start:step:stop]::Vector{Float64}
+    q = open_dataset(group, "land_ice_segments/atl06_quality_summary")[start:step:stop]::Vector{Int8}
+    dem = open_dataset(group, "land_ice_segments/dem/dem_h")[start:step:stop]::Vector{Float32}
+    spot_number = read_attribute(group, "atlas_spot_number")::String
+    atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
     times = unix2datetime.(t .+ t_offset)
 
     sigma_geo_h[sigma_geo_h.==fill_value] .= NaN

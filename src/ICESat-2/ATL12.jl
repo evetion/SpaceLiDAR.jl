@@ -20,11 +20,10 @@ want to change the default arguments or `DataFrame(g)` with the default options.
 function points(granule::ICESat2_Granule{:ATL12}, tracks = icesat2_tracks)
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
+        t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
 
         for track ∈ tracks
-            if in(track, keys(file)) && in("ssh_segments", keys(file[track])) &&
-               in("heights", keys(file[track]["ssh_segments"]))
+            if haskey(file, track) && haskey(open_group(file, track), "ssh_segments") && haskey(open_group(file, "$track/ssh_segments"), "heights")
                 track_df = points(granule, file, track, t_offset)
                 push!(dfs, track_df)
             end
@@ -39,13 +38,15 @@ function points(
     track::AbstractString,
     t_offset::Real,
 )
-    height = read(file, "$track/ssh_segments/heights/h")
-    longitude = read(file, "$track/ssh_segments/longitude")
-    latitude = read(file, "$track/ssh_segments/latitude")
-    t = read(file, "$track/ssh_segments/delta_time")
+    group = open_group(file, track)
 
-    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
-    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
+    height = read_dataset(group, "ssh_segments/heights/h")
+    longitude = read_dataset(group, "ssh_segments/longitude")
+    latitude = read_dataset(group, "ssh_segments/latitude")
+    t = read_dataset(group, "ssh_segments/delta_time")
+
+    atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
+    spot_number = read_attribute(group, "atlas_spot_number")::String
 
     datetime = unix2datetime.(t .+ t_offset)
 

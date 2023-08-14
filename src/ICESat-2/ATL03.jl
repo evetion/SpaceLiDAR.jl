@@ -39,10 +39,10 @@ function points(
     end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = file["ancillary_data/atlas_sdp_gps_epoch"][1]::Float64 + gps_offset
+        t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track ∈ tracks
-            if in(track, keys(file)) && in("heights", keys(file[track]))
+            if haskey(file, track) && haskey(open_group(file, track), "heights")
                 track_nt = points(granule, file, track, t_offset, step, bbox)
                 if !isempty(track_nt.height)
                     track_nt.height[track_nt.height.==fill_value] .= NaN
@@ -70,10 +70,11 @@ function lines(
     end
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track ∈ tracks
-            if in(track, keys(file)) && in("heights", keys(file[track]))
+            if haskey(file, track) && haskey(open_group(file, track), "heights")
+
                 track_df = points(granule, file, track, t_offset, step, bbox)
                 line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
                 i = div(length(track_df.datetime), 2) + 1
@@ -101,9 +102,10 @@ function points(
     bbox::Union{Nothing,Extent} = nothing,
 )
 
+    group = open_group(file, track)
     if !isnothing(bbox)
-        x = file["$track/heights/lon_ph"][:]::Vector{Float64}
-        y = file["$track/heights/lat_ph"][:]::Vector{Float64}
+        x = read_dataset(group, "heights/lon_ph")::Vector{Float64}
+        y = read_dataset(group, "heights/lat_ph")::Vector{Float64}
 
         # find index of points inside of bbox
         ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
@@ -112,8 +114,8 @@ function points(
 
         if isnothing(start)
             @warn "no data found within bbox of track $track in $(file.filename)"
-            spot_number = attrs(file["$track"])["atlas_spot_number"]::String
-            atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+            spot_number = read_attribute(group, "atlas_spot_number")::String
+            atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
 
             nt = (
                 longitude = Float64[],
@@ -138,39 +140,39 @@ function points(
         y = y[start:step:stop]
     else
         start = 1
-        stop = length(file["$track/heights/lon_ph"])
-        x = file["$track/heights/lon_ph"][start:step:stop]::Vector{Float64}
-        y = file["$track/heights/lat_ph"][start:step:stop]::Vector{Float64}
+        stop = length(open_dataset(group, "heights/lon_ph"))
+        x = open_dataset(group, "heights/lon_ph")[start:step:stop]::Vector{Float64}
+        y = open_dataset(group, "heights/lat_ph")[start:step:stop]::Vector{Float64}
     end
 
-    height = file["$track/heights/h_ph"][start:step:stop]::Vector{Float32}
-    datetime = file["$track/heights/delta_time"][start:step:stop]::Vector{Float64}
+    height = open_dataset(group, "heights/h_ph")[start:step:stop]::Vector{Float32}
+    datetime = open_dataset(group, "heights/delta_time")[start:step:stop]::Vector{Float64}
 
     # NOT SURE WHY ONLY THE FIRST CONFIDENCE FLAG WAS CHOSEN.. MIGHT NEED TO REVISIT
-    signal_confidence = file["$track/heights/signal_conf_ph"][1, start:step:stop]::Vector{Int8}
-    quality = file["$track/heights/quality_ph"][start:step:stop]::Vector{Int8}
+    signal_confidence = open_dataset(group, "heights/signal_conf_ph")[1, start:step:stop]::Vector{Int8}
+    quality = open_dataset(group, "heights/quality_ph")[start:step:stop]::Vector{Int8}
 
     # Mapping between segment and photon
-    seg_cnt = file["$track/geolocation/segment_ph_cnt"][:]::Vector{Int32}
+    seg_cnt = read(open_dataset(group, "geolocation/segment_ph_cnt"))::Vector{Int32}
     ph_ind = count2index(seg_cnt)
     ph_ind = ph_ind[start:step:stop]
 
     # extract data posted at segment frequency and map to photon frequency
-    segment = file["$track/geolocation/segment_id"][:]::Vector{Int32}
-    segment = segment[ph_ind]
+    segment = read(open_dataset(group, "geolocation/segment_id"))[ph_ind]::Vector{Int32}
+    # segment = segment[ph_ind]
 
-    sun_angle = file["$track/geolocation/solar_elevation"][:]::Vector{Float32}
-    sun_angle = sun_angle[ph_ind]
+    sun_angle = read(open_dataset(group, "geolocation/solar_elevation"))[ph_ind]::Vector{Float32}
+    # sun_angle = sun_angle[ph_ind]
 
-    uncertainty = file["$track/geolocation/sigma_h"][:]::Vector{Float32}
-    uncertainty = uncertainty[ph_ind]
+    uncertainty = read(open_dataset(group, "geolocation/sigma_h"))[ph_ind]::Vector{Float32}
+    # uncertainty = uncertainty[ph_ind]
 
-    height_ref = file["$track/geophys_corr/dem_h"][:]::Vector{Float32}
-    height_ref = height_ref[ph_ind]
+    height_ref = read(open_dataset(group, "geophys_corr/dem_h"))[ph_ind]::Vector{Float32}
+    # height_ref = height_ref[ph_ind]
 
     # extract attributes
-    spot_number = attrs(file["$track"])["atlas_spot_number"]::String
-    atlas_beam_type = attrs(file["$track"])["atlas_beam_type"]::String
+    spot_number = read_attribute(group, "atlas_spot_number")::String
+    atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
 
     # convert from unix time to julia date time
     datetime = unix2datetime.(datetime .+ t_offset)
@@ -193,6 +195,7 @@ function points(
     return nt
 end
 
+
 """
     classify(granule::ICESat2_Granule{:ATL03}, atl08::Union{ICESat2_Granule{:ATL08},Nothing} = nothing, tracks = icesat2_tracks)
 
@@ -210,10 +213,10 @@ function classify(
 
     dfs = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        t_offset = read(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
+        t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
         for track ∈ tracks
-            if in(track, keys(file)) && in("heights", keys(file[track]))
+            if haskey(file, track) && haskey(open_group(file, track), "heights")
                 track_df = points(granule, file, track, t_offset)
 
                 mapping = atl03_mapping(atl08, track)
@@ -235,6 +238,7 @@ function classify(
     end
     dfs
 end
+
 
 function create_mapping(dfsegment, unique_segments)
     index_map = Dict{Int64,Int64}()
