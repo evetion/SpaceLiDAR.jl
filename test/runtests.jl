@@ -173,10 +173,6 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test df.classification isa CategoricalVector{String,Int8}
         SL.materialize!(df)
         @test df.classification isa Vector{String}
-
-        C = SL.ClassifyATL03(g, g8)
-        dfc = DataFrame(C)
-        @test isequal(df, dfc)
     end
 
     @testset "ATL06" begin

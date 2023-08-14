@@ -239,18 +239,6 @@ function classify(
     dfs
 end
 
-struct ClassifyATL03
-    atl03::ICESat2_Granule{:ATL03}
-    atl08::ICESat2_Granule{:ATL08}
-end
-
-"""
-    classify(::ClassifyATL03)
-
-Used internally when called from DataFrame(::ClassifyATL03).
-"""
-classify(gg::ClassifyATL03; kwargs...) = classify(gg.atl03, gg.atl08; kwargs...)
-
 
 function create_mapping(dfsegment, unique_segments)
     index_map = Dict{Int64,Int64}()
