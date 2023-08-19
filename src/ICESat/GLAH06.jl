@@ -111,6 +111,6 @@ function points(
                       (saturation_correction .< 3),
             height_reference = height_ref,
         )
-        return gt
+        return Table(gt)
     end
 end

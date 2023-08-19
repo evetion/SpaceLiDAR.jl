@@ -135,3 +135,44 @@ end
 function Base.filesize(granule::T) where {T<:Granule}
     filesize(granule.url)
 end
+
+struct Table{K,V}
+    table::NamedTuple{K,V}
+    function Table(table::NamedTuple{K,V}) where {K,V}
+        new{K,typeof(values(table))}(table)
+    end
+end
+_table(t::Table) = getfield(t, :table)
+Base.size(table::Table) = size(_table(table))
+Base.getindex(t::Table, i) = _table(t)[i]
+Base.show(io::IO, t::Table) = _show(io, t)
+Base.show(io::IO, ::MIME"text/plain", t::Table) = _show(io, t)
+Base.haskey(table::Table, x) = haskey(_table(table), x)
+Base.keys(table::Table) = keys(_table(table))
+Base.values(table::Table) = values(_table(table))
+Base.length(table::Table) = length(_table(table))
+Base.iterate(table::Table, args...) = iterate(_table(table), args...)
+
+function Base.getproperty(table::Table, key::Symbol)
+    getproperty(_table(table), key)
+end
+
+function _show(io, t::Table)
+    print(io, "SpaceLiDAR Table")
+end
+
+struct PartitionedTable{N,K,V}
+    tables::NTuple{N,NamedTuple{K,V}}
+end
+PartitionedTable(t::NamedTuple) = PartitionedTable((t,))
+Base.size(t::PartitionedTable) = (length(t.tables),)
+Base.length(t::PartitionedTable{N}) where {N} = N
+Base.getindex(t::PartitionedTable, i) = t.tables[i]
+Base.lastindex(t::PartitionedTable{N}) where {N} = N
+Base.show(io::IO, t::PartitionedTable) = _show(io, t)
+Base.show(io::IO, ::MIME"text/plain", t::PartitionedTable) = _show(io, t)
+Base.iterate(table::PartitionedTable, args...) = iterate(table.tables, args...)
+
+function _show(io, t::PartitionedTable)
+    print(io, "SpaceLiDAR Table with $(length(t.tables)) partitions")
+end
