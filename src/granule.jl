@@ -152,6 +152,7 @@ Base.keys(table::Table) = keys(_table(table))
 Base.values(table::Table) = values(_table(table))
 Base.length(table::Table) = length(_table(table))
 Base.iterate(table::Table, args...) = iterate(_table(table), args...)
+Base.merge(table::Table, others...) = Table(merge(_table(table), others...))
 
 function Base.getproperty(table::Table, key::Symbol)
     getproperty(_table(table), key)
@@ -172,6 +173,7 @@ Base.lastindex(t::PartitionedTable{N}) where {N} = N
 Base.show(io::IO, t::PartitionedTable) = _show(io, t)
 Base.show(io::IO, ::MIME"text/plain", t::PartitionedTable) = _show(io, t)
 Base.iterate(table::PartitionedTable, args...) = iterate(table.tables, args...)
+Base.merge(table::PartitionedTable, others...) = PartitionedTable(merge.(table.tables, Ref(others...)))
 
 function _show(io, t::PartitionedTable)
     print(io, "SpaceLiDAR Table with $(length(t.tables)) partitions")

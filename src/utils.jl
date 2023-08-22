@@ -25,6 +25,7 @@ function granule_from_file(filename::AbstractString)
         error("Unknown granule.")
     end
 end
+const granule = granule_from_file
 
 """
     granules_from_folder(foldername::AbstractString)
@@ -37,6 +38,8 @@ function granules_from_folder(foldername::AbstractString)
         file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5"
     ]
 end
+const granules = granules_from_folder
+
 
 """
     instantiate(granules::Vector{::Granule}, folder::AbstractString)

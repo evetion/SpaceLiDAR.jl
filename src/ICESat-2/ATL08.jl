@@ -248,22 +248,22 @@ function _extrapoints(
     group = open_group(file, track)
     if ground
         h = vec(open_dataset(group, "land_segments/terrain/h_te_best_fit_20m")[1:step:end, :])::Array{Float32}
-        he = repeat(open_dataset(group, "land_segments/terrain/h_te_uncertainty")[1:step:end]::Vector{Float32}, outer = 5)
+        he = repeat(open_dataset(group, "land_segments/terrain/h_te_uncertainty")[1:step:end]::Vector{Float32}, inner = 5)
         q = vec(open_dataset(group, "land_segments/terrain/subset_te_flag")[1:step:end, :]::Array{Int8})
     else
-        h = vec(open_dataset(group, "land_segments/canopy/h_canopy_20m")[1:step:end, :])::Array{Float32}
-        he = repeat(open_dataset(group, "land_segments/canopy/h_canopy_uncertainty")[1:step:end]::Vector{Float32}, outer = 5)
-        q = vec(open_dataset(group, "land_segments/canopy/subset_can_flag")[1:step:end, :]::Array{Int8})
+        h = vec(open_dataset(group, "land_segments/canopy/h_canopy_20m")[:, 1:step:end])::Array{Float32}
+        he = repeat(open_dataset(group, "land_segments/canopy/h_canopy_uncertainty")[1:step:end]::Vector{Float32}, inner = 5)
+        q = vec(open_dataset(group, "land_segments/canopy/subset_can_flag")[:, 1:step:end]::Array{Int8})
     end
-    x = vec(open_dataset(group, "land_segments/longitude_20m")[1:step:end, :]::Array{Float32})
-    y = vec(open_dataset(group, "land_segments/latitude_20m")[1:step:end, :]::Array{Float32})
-    t = repeat(open_dataset(group, "land_segments/delta_time")[1:step:end]::Vector{Float64}, outer = 5)
-    sensitivity = repeat(open_dataset(group, "land_segments/snr")[1:step:end]::Vector{Float32}, outer = 5)
-    clouds = repeat(open_dataset(group, "land_segments/layer_flag")[1:step:end]::Vector{Int8}, outer = 5)
-    scattered = repeat(open_dataset(group, "land_segments/msw_flag")[1:step:end]::Vector{Int8}, outer = 5)
-    saturated = repeat(open_dataset(group, "land_segments/sat_flag")[1:step:end]::Vector{Int8}, outer = 5)
-    phr = repeat(open_dataset(group, "land_segments/ph_removal_flag")[1:step:end]::Vector{Int8}, outer = 5)
-    dem = repeat(open_dataset(group, "land_segments/dem_h")[1:step:end]::Vector{Float32}, outer = 5)
+    x = vec(open_dataset(group, "land_segments/longitude_20m")[:, 1:step:end]::Array{Float32})
+    y = vec(open_dataset(group, "land_segments/latitude_20m")[:, 1:step:end]::Array{Float32})
+    t = repeat(open_dataset(group, "land_segments/delta_time")[1:step:end]::Vector{Float64}, inner = 5)
+    sensitivity = repeat(open_dataset(group, "land_segments/snr")[1:step:end]::Vector{Float32}, inner = 5)
+    clouds = repeat(open_dataset(group, "land_segments/layer_flag")[1:step:end]::Vector{Int8}, inner = 5)
+    scattered = repeat(open_dataset(group, "land_segments/msw_flag")[1:step:end]::Vector{Int8}, inner = 5)
+    saturated = repeat(open_dataset(group, "land_segments/sat_flag")[1:step:end]::Vector{Int8}, inner = 5)
+    phr = repeat(open_dataset(group, "land_segments/ph_removal_flag")[1:step:end]::Vector{Int8}, inner = 5)
+    dem = repeat(open_dataset(group, "land_segments/dem_h")[1:step:end]::Vector{Float32}, inner = 5)
     times = unix2datetime.(t .+ t_offset)
     atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
     spot_number = read_attribute(group, "atlas_spot_number")::String
