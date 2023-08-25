@@ -2,12 +2,12 @@ using Printf
 using DataFrames
 
 """
-    granule_from_file(filename::AbstractString)
+    granule(filename::AbstractString)
 
 Create a mission specific granule from a local .h5 filepath. For folder usage see
-[`granules_from_folder`](@ref).
+[`granules`](@ref).
 """
-function granule_from_file(filename::AbstractString)
+function granule(filename::AbstractString)
     _, ext = splitext(filename)
     lowercase(ext) != ".h5" && error("Granule must be a .h5 file")
 
@@ -25,21 +25,20 @@ function granule_from_file(filename::AbstractString)
         error("Unknown granule.")
     end
 end
-const granule = granule_from_file
+@deprecate granule_from_file(filename::AbstractString) granule(filename::AbstractString)
 
 """
-    granules_from_folder(foldername::AbstractString)
+    granules(foldername::AbstractString)
 
-Create mission specific granules from a folder with .h5 files, using [`granule_from_file`](@ref).
+Create mission specific granules from a folder with .h5 files, using [`granule`](@ref).
 """
-function granules_from_folder(foldername::AbstractString)
+function granules(foldername::AbstractString)
     return [
-        granule_from_file(joinpath(foldername, file)) for
+        granule(joinpath(foldername, file)) for
         file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5"
     ]
 end
-const granules = granules_from_folder
-
+@deprecate granules_from_folder(foldername::AbstractString) granules(foldername::AbstractString)
 
 """
     instantiate(granules::Vector{::Granule}, folder::AbstractString)
@@ -94,14 +93,24 @@ function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y)
     g[m]
 end
 
-function write_granule_urls!(fn::String, granules::Vector{<:Granule})
+url(g::Granule) = g.url
+urls(g::Vector{<:Granule}) = getfield.(g, :url)
+
+"""
+    write_urls(fn::String, granules::Vector{<:Granule})
+
+Write all granule urls to a file.
+"""
+function write_urls(fn::String, granules::Vector{<:Granule})
     open(fn, "w") do f
         for granule in granules
-            println(f, granule.url)
+            println(f, url(granule))
         end
     end
     abspath(fn)
 end
+@deprecate write_granule_urls! write_urls
+
 
 """
     isvalid(g::Granule)
@@ -111,7 +120,7 @@ Checks if a granule is has a valid, local and non-corrupt .h5 file. Can be combi
 """
 function isvalid(granule::Granule)
     try
-        HDF5.h5open(granule.url, "r") do file
+        HDF5.h5open(url(granule), "r") do file
             keys(file)
         end
         return true

@@ -88,8 +88,17 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         end
         granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
         g = granules[1]
-        SL.download!(g)
-        @test isfile(g)
+
+        try
+            SL.download!(g)
+            @test isfile(g)
+        catch e
+            if e isa Downloads.RequestError
+                @error "Could not download granule due to network error(s)"
+            else
+                rethrow(e)
+            end
+        end
         rm(g)
 
         # This only works on us-west-2 region in AWS

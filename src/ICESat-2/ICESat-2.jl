@@ -33,7 +33,7 @@ end
 Retrieves the bounding box of the granule.
 
 !!! warning
-    
+
     This opens the .h5 file, so it is slow.
 
 # Example
@@ -159,7 +159,7 @@ const ascending_segments = [true, true, true, true, false, false, false, false, 
 const descending_segments = [false, false, false, true, true, true, true, true, true, true, true, false, false, false]
 
 function icesat2_info(filename)
-    id, _ = splitext(filename)
+    id, _ = splitext(basename(filename))
     type, datetime, track, version, revision = split(id, "_")
     segment = parse(Int, track[7:end])
     (

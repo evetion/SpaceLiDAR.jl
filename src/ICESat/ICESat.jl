@@ -46,7 +46,7 @@ function info(g::ICESat_Granule)
 end
 
 function icesat_info(filename)
-    id, _ = splitext(filename)
+    id, _ = splitext(basename(filename))
     type, revision, orbit, cycle, track, segment, version, filetype =
         split(id, "_")
     return (
