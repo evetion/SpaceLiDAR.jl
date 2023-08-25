@@ -12,7 +12,7 @@ prefix(::Mission{:ICESat2}) = "ATL"
 prefix(::Mission{:GEDI}) = "GEDI"
 mission(::Mission{T}) where {T} = T
 
-const url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
+const earthdata_url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
     search(mission::Mission, bbox::Extent)
@@ -209,7 +209,7 @@ function earthdata_search(;
         q["temporal"] = "$(isnothing(after) ? "" : after),$(isnothing(before) ? "" : before)"
     end
 
-    qurl = umm ? url : replace(url, "umm_json_v1_6_4" => "json")
+    qurl = umm ? earthdata_url : replace(earthdata_url, "umm_json_v1_6_4" => "json")
     r = HTTP.get(qurl, query = q, verbose = verbose, status_exception = false)
     HTTP.iserror(r) && error(parse_cmr_error(r))
     parsef = umm ? parse_cmr_ummjson : parse_cmr_json
