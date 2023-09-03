@@ -210,9 +210,9 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         g = SL.granule_from_file(ATL08_fn)
 
         fpoints = SL.points(g, step = 1000)
-        @test points isa SL.AbstractTable
         @test length(fpoints) == 6
         points = SL.points(g, step = 1)
+        @test points isa SL.AbstractTable
         @test length(points) == 6
         @test length(points[1].longitude) == 998
         @test points[1].longitude[356] ≈ 175.72562f0
