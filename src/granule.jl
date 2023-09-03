@@ -137,13 +137,15 @@ function Base.filesize(granule::T) where {T<:Granule}
 end
 
 abstract type AbstractTable end
-struct Table{K,V} <: AbstractTable
+struct Table{K,V,G} <: AbstractTable
     table::NamedTuple{K,V}
-    function Table(table::NamedTuple{K,V}) where {K,V}
-        new{K,typeof(values(table))}(table)
+    granule::G
+    function Table(table::NamedTuple{K,V}, g::G) where {K,V,G}
+        new{K,typeof(values(table)),G}(table, g)
     end
 end
 _table(t::Table) = getfield(t, :table)
+_granule(t::AbstractTable) = getfield(t, :granule)
 Base.size(table::Table) = size(_table(table))
 Base.getindex(t::Table, i) = _table(t)[i]
 Base.show(io::IO, t::Table) = _show(io, t)
@@ -164,8 +166,9 @@ function _show(io, t::Table)
     print(io, "SpaceLiDAR Table")
 end
 
-struct PartitionedTable{N,K,V} <: AbstractTable
+struct PartitionedTable{N,K,V,G} <: AbstractTable
     tables::NTuple{N,NamedTuple{K,V}}
+    granule::G
 end
 PartitionedTable(t::NamedTuple) = PartitionedTable((t,))
 Base.size(t::PartitionedTable) = (length(t.tables),)
@@ -180,4 +183,50 @@ Base.parent(table::PartitionedTable) = collect(table.tables)
 
 function _show(io, t::PartitionedTable)
     print(io, "SpaceLiDAR Table with $(length(t.tables)) partitions")
+end
+
+function add_info(table::PartitionedTable)
+    it = info(table.granule)
+    nts = map(table.tables) do t
+        nt = NamedTuple(zip(keys(it), Fill.(values(it), length(first(t)))))
+        merge(t, nt)
+    end
+    return PartitionedTable(nts, table.granule)
+end
+
+function add_id(table::PartitionedTable)
+    nts = map(table.tables) do t
+        nt = (; id = Fill(table.granule.id, length(first(t))))
+        merge(t, nt)
+    end
+    return PartitionedTable(nts, table.granule)
+end
+
+function add_id(table::Table)
+    g = _granule(table)
+    t = _table(table)
+    nt = (; id = Fill(g.id, length(first(t))))
+    nts = merge(t, nt)
+    return Table(nts, g)
+end
+
+function add_info(table::Table)
+    g = _granule(table)
+    it = info(g)
+    t = _table(table)
+    nt = NamedTuple(zip(keys(it), Fill.(values(it), length(first(t)))))
+    nts = merge(t, nt)
+    return Table(nts, g)
+end
+
+_info(g::Granule) = merge((; id = g.id), info(g))
+
+DataAPI.metadatasupport(::Type{<:AbstractTable}) = (read = true, write = false)
+DataAPI.metadatakeys(t::AbstractTable) = map(String, keys(pairs(_info(_granule(t)))))
+function DataAPI.metadata(t::AbstractTable, k; style::Bool = false)
+    if style
+        getfield(_info(_granule(t)), Symbol(k)), :default
+    else
+        getfield(_info(_granule(t)), Symbol(k))
+    end
 end

@@ -46,7 +46,7 @@ function points(
             track_nt
         end
     end
-    return PartitionedTable(nts)
+    return PartitionedTable(nts, granule)
 end
 
 function points(

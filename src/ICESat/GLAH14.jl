@@ -63,7 +63,7 @@ function points(
                     attitude = Int8[],
                     saturation = Int8[],
                 )
-                return Table(gt)
+                return Table(gt, granule)
             end
 
             # only include x and y data within bbox
@@ -128,6 +128,6 @@ function points(
             attitude = sigma_att_flg,
             saturation = sat_corr_flag,
         )
-        return Table(gt)
+        return Table(gt, granule)
     end
 end

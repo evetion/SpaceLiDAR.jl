@@ -317,7 +317,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test pts[1][3] ≈ -0.700000000
     end
 
-    @testset "Tables" begin
+    @testset "Tables on granule" begin
         g3 = SL.granule_from_file(ATL03_fn)
         @test Tables.istable(g3)
         @test Tables.columnaccess(g3)
@@ -334,7 +334,40 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test Tables.istable(g14)
         t = Tables.columntable(g14)
         @test length(t.longitude) == 729117
+    end
 
+    @testset "Table from points" begin
+        # PartionedTable
+        g = SL.granule_from_file(ATL08_fn)
+        points = SL.points(g, step = 1)
+        @test points isa SL.AbstractTable
+        @test points isa SL.PartitionedTable
+
+        t = SL.add_info(points)
+        tt = SL.add_id(t)
+
+        df = DataFrame(tt)
+        first(df.id) == g.id
+        first(df.version) == 6
+        @test metadata(df) == metadata(points)
+        metadata(df)["id"] == g.id
+        metadata(df)["version"] == 6
+
+        # Single table
+        g = SL.granule_from_file(GLAH14_fn)
+        points = SL.points(g, step = 1)
+        @test points isa SL.AbstractTable
+        @test points isa SL.Table
+
+        t = SL.add_info(points)
+        tt = SL.add_id(t)
+
+        df = DataFrame(tt)
+        first(df.id) == g.id
+        first(df.version) == 32
+        @test metadata(df) == metadata(points)
+        metadata(df)["id"] == g.id
+        metadata(df)["version"] == 32
     end
 
     @testset "GeoInterface" begin

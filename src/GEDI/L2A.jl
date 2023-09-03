@@ -69,7 +69,7 @@ function points(
             track_nt
         end
     end
-    PartitionedTable(nts)
+    PartitionedTable(nts, granule)
 end
 
 function points(
@@ -253,7 +253,7 @@ function lines(
             (; geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = granule.id)
         end
     end
-    PartitionedTable(nts)
+    PartitionedTable(nts, granule)
 end
 
 """

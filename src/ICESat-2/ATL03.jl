@@ -48,7 +48,7 @@ function points(
             track_nt
         end
     end
-    return PartitionedTable(nts)
+    return PartitionedTable(nts, granule)
 end
 
 function lines(
@@ -83,7 +83,7 @@ function lines(
             )
         end
     end
-    PartitionedTable(nts)
+    PartitionedTable(nts, granule)
 end
 
 function points(
@@ -227,7 +227,7 @@ function classify(
             merge(track_df, (classification = class,))
         end
     end
-    PartitionedTable(nts)
+    PartitionedTable(nts, granule)
 end
 
 

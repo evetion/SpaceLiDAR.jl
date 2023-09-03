@@ -73,7 +73,7 @@ function points(
             track_nt
         end
     end
-    return PartitionedTable(nts)
+    return PartitionedTable(nts, granule)
 end
 
 
@@ -159,6 +159,9 @@ function points(
     atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
     spot_number = read_attribute(group, "atlas_spot_number")::String
 
+    asr = open_dataset(group, "land_segments/asr")[start:step:stop]::Vector{Float32}
+    nph = open_dataset(group, "land_segments/n_seg_ph")[start:step:stop]::Vector{Int32}
+
     nt = (;
         longitude = x,
         latitude = y,
@@ -176,6 +179,8 @@ function points(
         classification = Fill(canopy ? "high_canopy" : "ground", length(times)),
         height_reference = dem,
         detector_id = Fill(parse(Int8, spot_number), length(times)),
+        reflectance = asr,
+        nphotons = nph,
     )
     nt
 end
@@ -201,7 +206,7 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
             (geom = line, track = track, strong_beam = atlas_beam_type == "strong", granule = granule.id)
         end
     end
-    PartitionedTable(nts)
+    return PartitionedTable(nts, granule)
 end
 
 function atl03_mapping(granule::ICESat2_Granule{:ATL08})
@@ -268,6 +273,9 @@ function _extrapoints(
     atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
     spot_number = read_attribute(group, "atlas_spot_number")::String
 
+    asr = repeat(open_dataset(group, "land_segments/asr")[1:step:end]::Vector{Float32}, inner = 5)
+    nph = repeat(open_dataset(group, "land_segments/n_seg_ph")[1:step:end]::Vector{Int32}, inner = 5)
+
     nt = (
         longitude = x,
         latitude = y,
@@ -285,6 +293,8 @@ function _extrapoints(
         classification = Fill(canopy ? "high_canopy" : "ground", length(times)),
         height_reference = dem,
         detector_id = Fill(parse(Int8, spot_number), length(times)),
+        reflectance = asr,
+        nphotons = nph,
     )
     nt
 end

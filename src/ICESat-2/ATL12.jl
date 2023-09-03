@@ -30,7 +30,7 @@ function points(granule::ICESat2_Granule{:ATL12}, tracks = icesat2_tracks)
             points(granule, file, track, t_offset)
         end
     end
-    PartitionedTable(nts)
+    PartitionedTable(nts, granule)
 end
 
 function points(
