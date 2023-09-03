@@ -73,7 +73,7 @@ function points(
             track_nt
         end
     end
-    PartitionedTable(nts)
+    return PartitionedTable(nts)
 end
 
 

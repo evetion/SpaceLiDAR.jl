@@ -124,6 +124,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
 
         bbox = (min_x = 131.0, min_y = -40, max_x = 132, max_y = -30)
         points = SL.points(g; bbox = bbox)
+        @test points isa SL.AbstractTable
         @test length(points.latitude) == 287
         @test points.quality[1] == true
 
@@ -139,6 +140,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         g = SL.granule_from_file(GLAH14_fn)
 
         points = SL.points(g)
+        @test points isa SL.AbstractTable
         @test length(points) == 11
 
         bbox = (min_x = -20.0, min_y = -85, max_x = -2, max_y = 20)
@@ -159,6 +161,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         g8 = SL.granule_from_file(ATL08_fn)
 
         points = SL.points(g)
+        @test points isa SL.AbstractTable
         @test length(points) == 6
         @test points[1].strong_beam[1] == true
         @test points[1].track[1] == "gt1l"
@@ -187,6 +190,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     @testset "ATL06" begin
         g6 = SL.granule_from_file(ATL06_fn)
         points = SL.points(g6)
+        @test points isa SL.AbstractTable
         fpoints = SL.points(g6, step = 1000)
         @test length(points) == 6
         @test length(fpoints) == 6
@@ -206,6 +210,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         g = SL.granule_from_file(ATL08_fn)
 
         fpoints = SL.points(g, step = 1000)
+        @test points isa SL.AbstractTable
         @test length(fpoints) == 6
         points = SL.points(g, step = 1)
         @test length(points) == 6
@@ -235,6 +240,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         g12 = SL.granule_from_file(ATL12_fn)
 
         points = SL.points(g12)
+        @test points isa SL.AbstractTable
         @test length(points) == 6
 
         df = reduce(vcat, DataFrame.(points))
@@ -246,6 +252,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         gg = SL.granule_from_file(GEDI02_fn)
 
         points = SL.points(gg, step = 1000)
+        @test points isa SL.AbstractTable
         @test length(points) == 8
         @test points[2].strong_beam[1] == false
         @test points[4].strong_beam[1] == false

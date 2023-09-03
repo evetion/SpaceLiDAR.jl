@@ -136,7 +136,8 @@ function Base.filesize(granule::T) where {T<:Granule}
     filesize(granule.url)
 end
 
-struct Table{K,V}
+abstract type AbstractTable end
+struct Table{K,V} <: AbstractTable
     table::NamedTuple{K,V}
     function Table(table::NamedTuple{K,V}) where {K,V}
         new{K,typeof(values(table))}(table)
@@ -163,7 +164,7 @@ function _show(io, t::Table)
     print(io, "SpaceLiDAR Table")
 end
 
-struct PartitionedTable{N,K,V}
+struct PartitionedTable{N,K,V} <: AbstractTable
     tables::NTuple{N,NamedTuple{K,V}}
 end
 PartitionedTable(t::NamedTuple) = PartitionedTable((t,))

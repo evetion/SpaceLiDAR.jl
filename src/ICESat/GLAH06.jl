@@ -55,7 +55,7 @@ function points(
                     quality = Bool[],
                     height_reference = Float64[],
                 )
-                return gt
+                return Table(gt)
             end
 
             # only include x and y data within bbox
