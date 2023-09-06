@@ -14,10 +14,10 @@ Currently supports the following data products:
 |--- |--- |--- |--- |
 |ICESat| GLAH06 v34 | [UG](https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf) | [ATBD](https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf) |
 |ICESat| GLAH14 v34 | [UG](https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf) | [ATBD](https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf) |
-|ICESat-2| ATL03 v5 | [UG](https://nsidc.org/sites/nsidc.org/files/ATL03-V005-UserGuide.pdf)  | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL03_ATBD_r005.pdf) |
-|ICESat-2| ATL06 v5 | [UG](https://nsidc.org/sites/nsidc.org/files/ATL03-V005-UserGuide.pdf)  | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL06_ATBD_r005.pdf) |
-|ICESat-2| ATL08 v5 | [UG](https://nsidc.org/sites/nsidc.org/files/ATL08-V005-UserGuide.pdf) | [ATBD](https://nsidc.org/sites/default/files/icesat2_atl08_atbd_r005_1.pdf) |
-|ICESat-2| ATL12 v5 | [UG](https://nsidc.org/sites/nsidc.org/files/ATL12-V005-UserGuide.pdf) | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL12_ATBD_r005.pdf) |
+|ICESat-2| ATL03 v6 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl03-v006-userguide.pdf)  | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL03_ATBD_r006.pdf) |
+|ICESat-2| ATL06 v5 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl06-v006-userguide.pdf)  | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL06_ATBD_r006.pdf) |
+|ICESat-2| ATL08 v6 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl08-v006-userguide.pdf) | [ATBD](https://nsidc.org/sites/default/files/documents/technical-reference/icesat2_atl08_atbd_v006_0.pdf) |
+|ICESat-2| ATL12 v5 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl12-v006-userguide.pdf) | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL12_ATBD_r006.pdf) |
 |GEDI| L2A v2 | [UG](https://lpdaac.usgs.gov/documents/998/GEDI02_UserGuide_V21.pdf) | [ATBD](https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf) |
 
 For an overview with code examples, see the FOSS4G Pluto notebook [here](https://www.evetion.nl/SpaceLiDAR.jl/dev/tutorial/foss4g_2021.jl.html)
@@ -26,7 +26,7 @@ If you use SpaceLiDAR.jl in your research, please consider [citing it](https://z
 
 # Install
 ```julia
-] add SpaceLiDAR
+]add SpaceLiDAR
 ```
 
 # Usage
@@ -34,12 +34,12 @@ Search for data
 ```julia
 using SpaceLiDAR
 using Extents
-# Find all ATL08 granules
+# Find all ATL08 granules ever
 granules = search(:ICESat2, :ATL08)
 
 # Find only ATL03 granules in a part of Vietnam
 vietnam = Extent(X = (102., 107.0), Y = (8.0, 12.0))
-granules = search(:ICESat2, :ATL08; bbox=vietnam, version=5)
+granules = search(:ICESat2, :ATL08; extent=vietnam, version=6)
 
 # Find GEDI granules in the same way
 granules = search(:GEDI, :GEDI02_A)
@@ -58,10 +58,10 @@ SpaceLiDAR.netrc!(username, password)  # replace with your credentials
 fn = SpaceLiDAR.download!(granule)
 
 # You can also load a granule from disk
-granule = granule_from_file(fn)
+granule = granule(fn)
 
 # Or from a folder
-local_granules = granules_from_folder(folder)
+local_granules = granules(folder)
 
 # Instantiate search results locally (useful for GEDI location indexing)
 local_granules = instantiate(granules, folder)
@@ -71,7 +71,7 @@ Derive points
 ```julia
 using DataFrames
 fn = "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5"
-g = SpaceLiDAR.granule_from_file(fn)
+g = SpaceLiDAR.granule(fn)
 df = DataFrame(g)
 149680×15 DataFrame
     Row │ longitude  latitude  height    height_error  datetime                 intensity  sensitivity  surface  quality  nmo ⋯
@@ -92,7 +92,7 @@ Derive linestrings
 ```julia
 using DataFrames
 fn = "ATL03_20181110072251_06520101_003_01.h5"
-g = SpaceLiDAR.granule_from_file(fn)
+g = SpaceLiDAR.granule(fn)
 tlines = DataFrame(SpaceLiDAR.lines(g, step=10000))
 Table with 4 columns and 6 rows:
      geom                       sun_angle  track        datetime

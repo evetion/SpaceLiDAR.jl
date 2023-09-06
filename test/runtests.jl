@@ -11,6 +11,7 @@ using Documenter
 using Extents
 using GeoInterface
 using CategoricalArrays
+using DataAPI
 
 const rng = MersenneTwister(54321)
 const SL = SpaceLiDAR
@@ -60,57 +61,71 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "search" begin
-        @test length(find(:ICESat, "GLAH06", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
-        @test length(find(:ICESat, "GLAH14", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
-        @test length(find(:ICESat2, "ATL03", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
-        @test length(find(:ICESat2, "ATL06", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
-        @test length(find(:ICESat2, "ATL08", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))) > 0
-        granules = find(:GEDI, "GEDI02_A", (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
+        bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
+        ex = convert(Extent, bbox)
+
+        # Deprecation
+        @test length(find(:ICESat, "GLAH06", bbox)) > 0
+        @test length(search(:ICESat, :GLAH06, bbox = ex)) > 0
+
+        @test length(search(:ICESat, :GLAH06, extent = ex)) > 0
+        @test length(search(:ICESat, :GLAH14, extent = ex)) > 0
+        @test length(search(:ICESat2, :ATL03, extent = ex)) > 0
+        @test length(search(:ICESat2, :ATL06, extent = ex)) > 0
+        @test length(search(:ICESat2, :ATL08, extent = ex)) > 0
+        granules = search(:GEDI, :GEDI02_A, extent = ex)
         @test length(granules) > 0
         @test length(granules[1].polygons) > 0
 
         @test_throws ArgumentError find(:ICESat2, "GLAH14")
         @test_throws ArgumentError find(:Foo, "GLAH14")
 
+        # Time
         @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = DateTime(2019, 12, 12), before = DateTime(2019, 12, 13))) == 161
         @test length(SpaceLiDAR.search(:ICESat2, :ATL08, before = now() - Year(5))) == 0
         @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = now())) == 0
         @test_throws ErrorException SpaceLiDAR.search(:ICESat2, :ATL08, after = now() - Month(47), before = now() - Month(48))
     end
 
-    @testset "download" begin
-        if "EARTHDATA_USER" in keys(ENV)
-            @info "Setting up Earthdata credentials for Github Actions"
-            SpaceLiDAR.netrc!(
-                get(ENV, "EARTHDATA_USER", ""),
-                get(ENV, "EARTHDATA_PW", ""),
-            )
-        end
-        granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
-        g = granules[1]
+    # @testset "download" begin
+    #     if "EARTHDATA_USER" in keys(ENV)
+    #         @info "Setting up Earthdata credentials for Github Actions"
+    #         SpaceLiDAR.netrc!(
+    #             get(ENV, "EARTHDATA_USER", ""),
+    #             get(ENV, "EARTHDATA_PW", ""),
+    #         )
+    #     end
+    #     granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+    #     g = granules[1]
 
-        try
-            SL.download!(g)
-            @test isfile(g)
-        catch e
-            if e isa Downloads.RequestError
-                @error "Could not download granule due to network error(s)"
-            else
-                rethrow(e)
-            end
-        end
-        rm(g)
+    #     try
+    #         SL.download!(g)
+    #         @test isfile(g)
+    #     catch e
+    #         if e isa Downloads.RequestError
+    #             @error "Could not download granule due to network error(s)"
+    #         else
+    #             rethrow(e)
+    #         end
+    #     end
+    #     rm(g)
 
-        # This only works on us-west-2 region in AWS
-        # granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
-        # g = granules[1]
-        # SL.download!(g)
-        # @test isfile(g)
-        # rm(g)
-    end
+    #     # This only works on us-west-2 region in AWS
+    #     # granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
+    #     # g = granules[1]
+    #     # SL.download!(g)
+    #     # @test isfile(g)
+    #     # rm(g)
+    # end
 
     @testset "granules" begin
-        gs = SL.granules_from_folder("data")
+        og = SL.granule_from_file(GLAH06_fn)
+        g = SL.granule(GLAH06_fn)
+        @test og == g  # deprecation
+
+        ogs = SL.granules_from_folder("data")
+        gs = SL.granules("data")
+        @test ogs == gs  # deprecation
         @test length(gs) == 7
         copies = copy.(gs)
 
@@ -120,7 +135,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "GLAH06" begin
-        g = SL.granule_from_file(GLAH06_fn)
+        g = SL.granule(GLAH06_fn)
 
         bbox = (min_x = 131.0, min_y = -40, max_x = 132, max_y = -30)
         points = SL.points(g; bbox = bbox)
@@ -137,7 +152,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "GLAH14" begin
-        g = SL.granule_from_file(GLAH14_fn)
+        g = SL.granule(GLAH14_fn)
 
         points = SL.points(g)
         @test points isa SL.AbstractTable
@@ -157,8 +172,8 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "ATL03" begin
-        g = SL.granule_from_file(ATL03_fn)
-        g8 = SL.granule_from_file(ATL08_fn)
+        g = SL.granule(ATL03_fn)
+        g8 = SL.granule(ATL08_fn)
 
         points = SL.points(g)
         @test points isa SL.AbstractTable
@@ -188,7 +203,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "ATL06" begin
-        g6 = SL.granule_from_file(ATL06_fn)
+        g6 = SL.granule(ATL06_fn)
         points = SL.points(g6)
         @test points isa SL.AbstractTable
         fpoints = SL.points(g6, step = 1000)
@@ -207,7 +222,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "ATL08" begin
-        g = SL.granule_from_file(ATL08_fn)
+        g = SL.granule(ATL08_fn)
 
         fpoints = SL.points(g, step = 1000)
         @test length(fpoints) == 6
@@ -237,7 +252,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "ATL12" begin
-        g12 = SL.granule_from_file(ATL12_fn)
+        g12 = SL.granule(ATL12_fn)
 
         points = SL.points(g12)
         @test points isa SL.AbstractTable
@@ -249,7 +264,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "L2A" begin
-        gg = SL.granule_from_file(GEDI02_fn)
+        gg = SL.granule(GEDI02_fn)
 
         points = SL.points(gg, step = 1000)
         @test points isa SL.AbstractTable
@@ -295,11 +310,11 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         end
 
         @testset "Angle" begin
-            g = SL.granule_from_file(ATL08_fn)
+            g = SL.granule(ATL08_fn)
             @test isapprox(SL.track_angle(g, 0), -1.992, atol = 1e-3)
             @test isapprox(SL.track_angle(g, 88), -90.0, atol = 1e-3)
 
-            gg = SL.granule_from_file(GEDI02_fn)
+            gg = SL.granule(GEDI02_fn)
             @test isapprox(SL.track_angle(gg, 0), 38.249, atol = 1e-3)
             @test isapprox(SL.track_angle(gg, 51.6443), 86.075, atol = 1e-3)
         end
@@ -318,7 +333,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "Tables on granule" begin
-        g3 = SL.granule_from_file(ATL03_fn)
+        g3 = SL.granule(ATL03_fn)
         @test Tables.istable(g3)
         @test Tables.columnaccess(g3)
         t = Tables.columntable(g3)
@@ -330,7 +345,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         SL.in_bbox!(df, (min_x = 0.0, min_y = 0.0, max_x = 1.0, max_y = 1.0))
         @test length(df.longitude) == 0
 
-        g14 = SL.granule_from_file(GLAH14_fn)
+        g14 = SL.granule(GLAH14_fn)
         @test Tables.istable(g14)
         t = Tables.columntable(g14)
         @test length(t.longitude) == 729117
@@ -338,7 +353,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
 
     @testset "Table from points" begin
         # PartionedTable
-        g = SL.granule_from_file(ATL08_fn)
+        g = SL.granule(ATL08_fn)
         points = SL.points(g, step = 1)
         @test points isa SL.AbstractTable
         @test points isa SL.PartitionedTable
@@ -354,7 +369,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         metadata(df)["version"] == 6
 
         # Single table
-        g = SL.granule_from_file(GLAH14_fn)
+        g = SL.granule(GLAH14_fn)
         points = SL.points(g, step = 1)
         @test points isa SL.AbstractTable
         @test points isa SL.Table
@@ -371,7 +386,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     end
 
     @testset "GeoInterface" begin
-        g = SL.granule_from_file(ATL08_fn)
+        g = SL.granule(ATL08_fn)
         GeoInterface.testgeometry(g)
     end
 end

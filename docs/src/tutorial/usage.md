@@ -7,7 +7,7 @@ granules = search(:ICESat2, :ATL08)
 
 # Find only ATL03 granules in a part of Vietnam
 vietnam = Extent(X = (102., 107.0), Y = (8.0, 12.0))
-granules = search(:ICESat2, :ATL08; bbox=vietnam, version=5)
+granules = search(:ICESat2, :ATL08; extent=vietnam, version=6)
 
 # Find GEDI granules in the same way
 granules = search(:GEDI, :GEDI02_A)
@@ -26,10 +26,10 @@ SpaceLiDAR.netrc!(username, password)  # replace with your credentials
 fn = SpaceLiDAR.download!(granule)
 
 # You can also load a granule from disk
-granule = granule_from_file(fn)
+granule = granule(fn)
 
 # Or from a folder
-local_granules = granules_from_folder(folder)
+local_granules = granules(folder)
 
 # Instantiate search results locally (useful for GEDI location indexing)
 local_granules = instantiate(granules, folder)
@@ -40,7 +40,7 @@ local_granules = instantiate(granules, folder)
 ```julia
 using DataFrames
 fn = "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5"
-g = SpaceLiDAR.granule_from_file(fn)
+g = SpaceLiDAR.granule(fn)
 df = DataFrame(g)
 149680×15 DataFrame
     Row │ longitude  latitude  height    height_error  datetime                 intensity  sensitivity  surface  quality  nmo ⋯
@@ -61,7 +61,7 @@ df = DataFrame(g)
 ```julia
 using DataFrames
 fn = "ATL03_20181110072251_06520101_003_01.h5"
-g = SpaceLiDAR.granule_from_file(fn)
+g = SpaceLiDAR.granule(fn)
 tlines = DataFrame(SpaceLiDAR.lines(g, step=10000))
 Table with 4 columns and 6 rows:
      geom                       sun_angle  track        datetime
