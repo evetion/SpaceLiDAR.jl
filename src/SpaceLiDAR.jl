@@ -11,6 +11,7 @@ using TableOperations: joinpartitions
 using DataFrames
 using TimeZones
 using Extents
+import DataAPI
 
 include("granule.jl")
 include("utils.jl")

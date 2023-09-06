@@ -63,7 +63,7 @@ function points(
                     attitude = Int8[],
                     saturation = Int8[],
                 )
-                return gt
+                return Table(gt, granule)
             end
 
             # only include x and y data within bbox
@@ -110,7 +110,7 @@ function points(
         pts = Proj.proj_trans.(pipe, Proj.PJ_FWD, zip(x, y, height))
         height = [x[3] for x in pts]::Vector{Float64}
 
-        gt = (
+        gt = (;
             longitude = x,
             latitude = y,
             height = height,
@@ -128,6 +128,6 @@ function points(
             attitude = sigma_att_flg,
             saturation = sat_corr_flag,
         )
-        return gt
+        return Table(gt, granule)
     end
 end

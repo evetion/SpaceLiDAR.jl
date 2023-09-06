@@ -12,7 +12,7 @@ prefix(::Mission{:ICESat2}) = "ATL"
 prefix(::Mission{:GEDI}) = "GEDI"
 mission(::Mission{T}) where {T} = T
 
-const url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
+const earthdata_url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
     search(mission::Mission, bbox::Extent)
@@ -24,14 +24,20 @@ function search(
     m::Mission{:GEDI},
     product::Symbol = :GEDI02_A;
     bbox::Extent = world,
+    extent::Extent = world,
     version::Int = 2,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
     provider::String = "LPDAAC_ECS",
 )::Vector{GEDI_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
+    if bbox != world
+        Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
+        extent = bbox
+    end
+
     granules =
-        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider, before = before, after = after)
+        earthdata_search(short_name = string(product), bounding_box = extent, version = version, provider = provider, before = before, after = after)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -48,6 +54,7 @@ function search(
     m::Mission{:ICESat2},
     product::Symbol = :ATL03;
     bbox::Extent = world,
+    extent::Extent = world,
     version::Int = 6,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
@@ -55,8 +62,13 @@ function search(
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat2_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
+    if bbox != world
+        Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
+        extent = bbox
+    end
+
     granules =
-        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider, before = before, after = after)
+        earthdata_search(short_name = string(product), bounding_box = extent, version = version, provider = provider, before = before, after = after)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -73,6 +85,7 @@ function search(
     m::Mission{:ICESat},
     product::Symbol = :GLAH14;
     bbox::Extent = world,
+    extent::Extent = world,
     version::Int = 34,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
@@ -80,8 +93,13 @@ function search(
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
+    if bbox != world
+        Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
+        extent = bbox
+    end
+
     granules =
-        earthdata_search(short_name = string(product), bounding_box = bbox, version = version, provider = provider, before = before, after = after)
+        earthdata_search(short_name = string(product), bounding_box = extent, version = version, provider = provider, before = before, after = after)
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -209,7 +227,7 @@ function earthdata_search(;
         q["temporal"] = "$(isnothing(after) ? "" : after),$(isnothing(before) ? "" : before)"
     end
 
-    qurl = umm ? url : replace(url, "umm_json_v1_6_4" => "json")
+    qurl = umm ? earthdata_url : replace(earthdata_url, "umm_json_v1_6_4" => "json")
     r = HTTP.get(qurl, query = q, verbose = verbose, status_exception = false)
     HTTP.iserror(r) && error(parse_cmr_error(r))
     parsef = umm ? parse_cmr_ummjson : parse_cmr_json

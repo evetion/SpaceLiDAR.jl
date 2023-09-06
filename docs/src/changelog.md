@@ -1,7 +1,30 @@
-## v0.3.0
+## Unreleased
 
-!!! danger
-    This is a **breaking** release
+- Working on generic retrieval of parameters as a Table from a granule, instead of the hardcoded choices made now for each product. Would result in methods like `points(granule, [vara, varb])`.
+
+### New features
+- New types `Table` and `PartitionedTable`, which support the Tables.jl interface. This prevents allocating code like `reduce(vcat, DataFrame.(points(granule)))` to get a DataFrame. You can now just call `DataFrame(table)`.
+- Reduced allocations in retrieving point data.
+- Introduced `before` and `after` keywords in `search`, to search by date(ranges).
+
+### Fixed
+- Empty (filtered) granules could result in `Vector{BitVector}` columns, which have been changed to `Vector{Bool}`.
+
+### Breaking
+- `points` now return either a `Table` or a `PartitionedTable` instead of `NamedTuple` or `Vector{NamedTuple}`. The old behaviour can be regained by calling `parent` on these tables.
+- Removed `number_of_returns` and `return_number` from ICESat-2 ATL08 canopy output.
+
+### Deprecated
+- Renamed `granule_from_file` to `granule`
+- Renamed `granules_from_file` to `granules`
+- Renamed `write_granule_urls!` to `write_urls`
+
+### Changed
+- Most of the search functionality has been moved out to the more generic [EarthData.jl](https://github.com/evetion/EarthData.jl)
+- Updated ICESat-2 from version 5 to version 6
+
+
+## v0.3.0
 
 - GeoInterface, Extents support
 - Bounding box using Extent subsetting on all `points` functions
@@ -25,7 +48,7 @@
 
 ## v0.2.0
 
-!!! danger
+!!! warning
     This is a **breaking** release
 
 - Many of the column names have changed to be more descriptive.

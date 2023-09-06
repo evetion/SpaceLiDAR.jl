@@ -7,7 +7,7 @@ In such cases it's useful to export a list of granules to a text file and use an
 
 ```julia
 granules = find(:ICESat2, "ATL08")
-SpaceLiDAR.write_granule_urls!("atl08_world.txt", granules)
+SpaceLiDAR.write_urls("atl08_world.txt", granules)
 ```
 
 In my case, I use [aria2c](https://aria2.github.io/manual/en/html/aria2c.html).

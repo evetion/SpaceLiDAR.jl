@@ -55,7 +55,7 @@ function points(
                     quality = Bool[],
                     height_reference = Float64[],
                 )
-                return gt
+                return Table(gt, granule)
             end
 
             # only include x and y data within bbox
@@ -111,6 +111,6 @@ function points(
                       (saturation_correction .< 3),
             height_reference = height_ref,
         )
-        return gt
+        return Table(gt, granule)
     end
 end

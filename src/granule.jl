@@ -50,6 +50,14 @@ function _s3_download(url, fn, config = create_aws_config())
 end
 
 abstract type Granule end
+Base.:(==)(a::Granule, b::Granule) = a.id == b.id
+
+Base.show(io::IO, g::Granule) = _show(io, g)
+Base.show(io::IO, ::MIME"text/plain", g::Granule) = _show(io, g)
+function _show(io, g::T) where {T<:Granule}
+    print(io, "$T with id $(g.id)")
+end
+
 
 MultiPolygonType = Vector{Vector{Vector{Vector{Float64}}}}
 

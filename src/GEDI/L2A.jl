@@ -49,20 +49,27 @@ function points(
             :points,
         )
     end
-    nts = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
-        for track in tracks
-            if haskey(file, track)
-                for track_nt ∈ points(granule, file, track, step, bbox, ground, canopy, filtered)
-                    if !isempty(track_nt.height)
-                        track_nt.height[track_nt.height.==fill_value] .= NaN
-                    end
-                    push!(nts, track_nt)
-                end
+    nts = HDF5.h5open(granule.url, "r") do file
+
+        # Determine number of loops over tracks and ground and/or canopy
+        ftracks = filter(track -> haskey(file, track), tracks)
+        if ground && canopy
+            grounds = (Bool(i % 2) for i = 1:length(ftracks)*2)
+            ftracks = repeat(collect(ftracks), inner = 2)
+        elseif ground || canopy
+            grounds = Base.Iterators.repeated(ground, length(ftracks))
+        else
+            throw(ArgumentError("Choose at least one of `ground` or `canopy`"))
+        end
+        map(Tuple(zip(ftracks, grounds))) do (track, ground)
+            track_nt = points(granule, file, track, step, bbox, ground, canopy, filtered)
+            if !isempty(track_nt.height)
+                track_nt.height[track_nt.height.==fill_value] .= NaN
             end
+            track_nt
         end
     end
-    nts
+    PartitionedTable(nts, granule)
 end
 
 function points(
@@ -80,40 +87,15 @@ function points(
     if !isnothing(bbox)
         # find data that falls withing bbox
         if ground
-            x_grd = read_dataset(group, "lon_lowestmode")::Vector{Float64}
-            y_grd = read_dataset(group, "lat_lowestmode")::Vector{Float64}
-
-            ind = (x_grd .> bbox.X[1]) .& (y_grd .> bbox.Y[1]) .& (x_grd .< bbox.X[2]) .& (y_grd .< bbox.Y[2])
-            start_grd = findfirst(ind)
-            stop_grd = findlast(ind)
+            x = read_dataset(group, "lon_lowestmode")::Vector{Float64}
+            y = read_dataset(group, "lat_lowestmode")::Vector{Float64}
+        else
+            x = read_dataset(group, "lon_highestreturn")::Vector{Float64}
+            y = read_dataset(group, "lat_highestreturn")::Vector{Float64}
         end
-
-        if canopy
-            x_can = read_dataset(group, "lon_highestreturn")::Vector{Float64}
-            y_can = read_dataset(group, "lat_highestreturn")::Vector{Float64}
-
-            ind = (x_can .> bbox.X[1]) .& (y_can .> bbox.Y[1]) .& (x_can .< bbox.X[2]) .& (y_can .< bbox.Y[2])
-            start_can = findfirst(ind)
-            stop_can = findlast(ind)
-        end
-
-        if ground && canopy
-            # take maximum extent between ground and canopy
-            if isnothing(start_grd) && isnothing(start_can)
-                start = start_grd
-                stop = stop_grd
-            else
-                start = min(start_grd, start_can)
-                stop = max(stop_grd, stop_can)
-            end
-
-        elseif ground
-            start = start_grd
-            stop = stop_grd
-        elseif canopy
-            start = start_can
-            stop = stop_can
-        end
+        ind = (x .> bbox.X[1]) .& (y .> bbox.Y[1]) .& (x .< bbox.X[2]) .& (y .< bbox.Y[2])
+        start = findfirst(ind)
+        stop = findlast(ind)
 
         if isnothing(start)
             # no data found
@@ -121,85 +103,38 @@ function points(
 
             power = occursin("Full power", read_attribute(group, "description")::String)
 
-            if canopy
-                nt_canopy = (
-                    longitude = Float32[],
-                    latitude = Float32[],
-                    height = Float32[],
-                    height_error = Float32[],
-                    datetime = Float64[],
-                    intensity = Float32[],
-                    sensitivity = Float32[],
-                    surface = Bool[],
-                    quality = Bool[],
-                    nmodes = UInt8[],
-                    track = Fill(track, 0),
-                    strong_beam = Fill(power, 0),
-                    classification = Fill("high_canopy", 0),
-                    sun_angle = Float32[],
-                    height_reference = Float32[],
-                )
-            end
-
-            if ground
-                nt_ground = (
-                    longitude = Float32[],
-                    latitude = Float32[],
-                    height = Float32[],
-                    height_error = Float32[],
-                    datetime = Float64[],
-                    intensity = Float32[],
-                    sensitivity = Float32[],
-                    surface = Bool[],
-                    quality = Bool[],
-                    nmodes = UInt8[],
-                    track = Fill(track, 0),
-                    strong_beam = Fill(power, 0),
-                    classification = Fill("ground", 0),
-                    sun_angle = Float32[],
-                    height_reference = Float32[],
-                )
-            end
-
-            if canopy && ground
-                return nt_canopy, nt_ground
-            elseif canopy
-                return (nt_canopy,)
-            elseif ground
-                return (nt_ground,)
-            else
-                return ()
-            end
+            nt = (
+                longitude = Float32[],
+                latitude = Float32[],
+                height = Float32[],
+                height_error = Float32[],
+                datetime = Float64[],
+                intensity = Float32[],
+                sensitivity = Float32[],
+                surface = BitVector(),
+                quality = BitVector(),
+                nmodes = UInt8[],
+                track = Fill(track, 0),
+                strong_beam = Fill(power, 0),
+                classification = Fill(canopy ? "high_canopy" : "ground", 0),
+                sun_angle = Float32[],
+                height_reference = Float32[],
+            )
+            return nt
         end
 
-        # subset x/y_grd and x/y_can
-        if ground && canopy
-            x_grd = x_grd[start:step:stop]
-            y_grd = y_grd[start:step:stop]
-
-            x_can = x_can[start:step:stop]
-            y_can = y_can[start:step:stop]
-
-        elseif ground
-            x_grd = x_grd[start:step:stop]
-            y_grd = y_grd[start:step:stop]
-
-        elseif canopy
-            x_can = x_can[start:step:stop]
-            y_can = y_can[start:step:stop]
-        end
+        x = x[start:step:stop]
+        y = y[start:step:stop]
     else
         start = 1
         stop = length(open_dataset(group, "lon_highestreturn"))
 
         if ground
-            x_grd = open_dataset(group, "lon_lowestmode")[start:step:stop]::Vector{Float64}
-            y_grd = open_dataset(group, "lat_lowestmode")[start:step:stop]::Vector{Float64}
-        end
-
-        if canopy
-            x_can = open_dataset(group, "lon_highestreturn")[start:step:stop]::Vector{Float64}
-            y_can = open_dataset(group, "lat_highestreturn")[start:step:stop]::Vector{Float64}
+            x = open_dataset(group, "lon_lowestmode")[start:step:stop]::Vector{Float64}
+            y = open_dataset(group, "lat_lowestmode")[start:step:stop]::Vector{Float64}
+        else
+            x = open_dataset(group, "lon_highestreturn")[start:step:stop]::Vector{Float64}
+            y = open_dataset(group, "lat_highestreturn")[start:step:stop]::Vector{Float64}
         end
     end
 
@@ -211,14 +146,11 @@ function points(
     aid = open_dataset(group, "selected_algorithm")[start:step:stop]::Vector{UInt8}
 
     if canopy
-        height_can = open_dataset(group, "elev_highestreturn")[start:step:stop]::Vector{Float32}
-        height_can[(height_can.<-1000.0).&(height_can.>25000.0)] .= NaN
+        height = open_dataset(group, "elev_highestreturn")[start:step:stop]::Vector{Float32}
+    else
+        height = open_dataset(group, "elev_lowestmode")[start:step:stop]::Vector{Float32}
     end
-
-    if ground
-        height_grd = open_dataset(group, "elev_lowestmode")[start:step:stop]::Vector{Float32}
-        height_grd[(height_grd.<-1000.0).&(height_grd.>25000.0)] .= NaN
-    end
+    height[(height.<-1000.0).&(height.>25000.0)] .= NaN
     datetime = open_dataset(group, "delta_time")[start:step:stop]::Vector{Float64}
 
     # Quality
@@ -265,57 +197,25 @@ function points(
     end
     datetime = unix2datetime.(datetime .+ t_offset)
 
-    if canopy
-        nt_canopy = (
-            longitude = x_can[m],
-            latitude = y_can[m],
-            height = height_can[m],
-            height_error = height_error[m],
-            datetime = datetime[m],
-            intensity = intensity[m],
-            sensitivity = sensitivity[m],
-            surface = Bool.(surface_flag[m]),
-            quality = Bool.(quality[m]),
-            nmodes = nmodes[m],
-            track = Fill(track, sum(m)),
-            strong_beam = Fill(power, sum(m)),
-            classification = Fill("high_canopy", sum(m)),
-            sun_angle = sun_angle[m],
-            height_reference = height_reference[m],
-            # range = zarange[m]
-        )
-    end
-
-    if ground
-        nt_ground = (
-            longitude = x_grd[m],
-            latitude = y_grd[m],
-            height = height_grd[m],
-            height_error = height_error[m],
-            datetime = datetime[m],
-            intensity = intensity[m],
-            sensitivity = sensitivity[m],
-            surface = Bool.(surface_flag[m]),
-            quality = Bool.(quality[m]),
-            nmodes = nmodes[m],
-            track = Fill(track, sum(m)),
-            strong_beam = Fill(power, sum(m)),
-            classification = Fill("ground", sum(m)),
-            sun_angle = sun_angle[m],
-            height_reference = height_reference[m],
-            # range = zarange[m]
-        )
-    end
-
-    if canopy && ground
-        nt_canopy, nt_ground
-    elseif canopy
-        (nt_canopy,)
-    elseif ground
-        (nt_ground,)
-    else
-        ()
-    end
+    nt = (
+        longitude = x[m],
+        latitude = y[m],
+        height = height[m],
+        height_error = height_error[m],
+        datetime = datetime[m],
+        intensity = intensity[m],
+        sensitivity = sensitivity[m],
+        surface = Bool.(surface_flag[m]),
+        quality = Bool.(quality[m]),
+        nmodes = nmodes[m],
+        track = Fill(track, sum(m)),
+        strong_beam = Fill(power, sum(m)),
+        classification = Fill(canopy ? "high_canopy" : "ground", sum(m)),
+        sun_angle = sun_angle[m],
+        height_reference = height_reference[m],
+        # range = zarange[m]
+    )
+    nt
 end
 
 
@@ -336,19 +236,24 @@ function lines(
             :points,
         )
     end
-    nts = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
-        for track in tracks
-            if haskey(file, track)
-                for track_df ∈ points(granule, file, track, step, bbox, ground, canopy, filtered)
-                    line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
-                    nt = (geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = granule.id)
-                    push!(nts, nt)
-                end
-            end
+    nts = HDF5.h5open(granule.url, "r") do file
+
+        ftracks = filter(track -> haskey(file, track), tracks)
+        if ground && canopy
+            grounds = (Bool(i % 2) for i = 1:length(ftracks)*2)
+            ftracks = repeat(collect(ftracks), inner = 2)
+        elseif ground || canopy
+            grounds = Base.Iterators.repeated(ground, length(ftracks))
+        else
+            throw(ArgumentError("Choose at least one of `ground` or `canopy`"))
+        end
+        map(Tuple(zip(ftracks, grounds))) do (track, ground)
+            track_df = points(granule, file, track, step, bbox, ground, canopy, filtered)
+            line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
+            (; geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = granule.id)
         end
     end
-    nts
+    PartitionedTable(nts, granule)
 end
 
 """

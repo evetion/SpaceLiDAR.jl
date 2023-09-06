@@ -35,21 +35,18 @@ function points(
             :points,
         )
     end
-    nts = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
+    nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
-        for track ∈ tracks
-            if haskey(file, track) && haskey(open_group(file, track), "land_ice_segments")
-
-                track_nt = points(granule, file, track, t_offset, step, bbox)
-                if !isempty(track_nt.height)
-                    track_nt.height[track_nt.height.==fill_value] .= NaN
-                end
-                push!(nts, track_nt)
+        ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "land_ice_segments"), tracks)
+        map(ftracks) do track
+            track_nt = points(granule, file, track, t_offset, step, bbox)
+            if !isempty(track_nt.height)
+                track_nt.height[track_nt.height.==fill_value] .= NaN
             end
+            track_nt
         end
     end
-    return nts
+    return PartitionedTable(nts, granule)
 end
 
 function points(
@@ -82,9 +79,9 @@ function points(
                 longitude = Float64[],
                 latitude = Float64[],
                 height = Float32[],
-                height_error = Float64[],
+                height_error = Float32[],
                 datetime = Dates.DateTime[],
-                quality = Bool[],
+                quality = BitVector(),
                 track = Fill(track, 0),
                 strong_beam = Fill(atlas_beam_type == "strong", 0),
                 detector_id = Fill(parse(Int8, spot_number), 0),

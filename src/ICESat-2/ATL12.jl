@@ -18,18 +18,19 @@ You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points
 want to change the default arguments or `DataFrame(g)` with the default options.
 """
 function points(granule::ICESat2_Granule{:ATL12}, tracks = icesat2_tracks)
-    dfs = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
+    nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1] + gps_offset
 
-        for track ∈ tracks
-            if haskey(file, track) && haskey(open_group(file, track), "ssh_segments") && haskey(open_group(file, "$track/ssh_segments"), "heights")
-                track_df = points(granule, file, track, t_offset)
-                push!(dfs, track_df)
-            end
+        ftracks = filter(
+            track ->
+                haskey(file, track) && haskey(open_group(file, track), "ssh_segments") && haskey(open_group(file, "$track/ssh_segments"), "heights"),
+            tracks,
+        )
+        map(ftracks) do track
+            points(granule, file, track, t_offset)
         end
     end
-    dfs
+    PartitionedTable(nts, granule)
 end
 
 function points(

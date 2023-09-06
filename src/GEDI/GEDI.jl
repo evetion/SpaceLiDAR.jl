@@ -35,7 +35,7 @@ function info(g::GEDI_Granule)
 end
 
 function gedi_info(filename)
-    id, _ = splitext(filename)
+    id, _ = splitext(basename(filename))
     if endswith(id, "V002")
         type, name, datetime, orbit, sub_orbit, track, ppds, pge_version, revision, version = Base.split(id, "_")
         version = version[2:end]

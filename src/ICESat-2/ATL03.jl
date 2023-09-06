@@ -37,21 +37,18 @@ function points(
             :points,
         )
     end
-    nts = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
+    nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
-
-        for track ∈ tracks
-            if haskey(file, track) && haskey(open_group(file, track), "heights")
-                track_nt = points(granule, file, track, t_offset, step, bbox)
-                if !isempty(track_nt.height)
-                    track_nt.height[track_nt.height.==fill_value] .= NaN
-                end
-                push!(nts, track_nt)
+        ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "heights"), tracks)
+        map(ftracks) do track
+            track_nt = points(granule, file, track, t_offset, step, bbox)
+            if !isempty(track_nt.height)
+                track_nt.height[track_nt.height.==fill_value] .= NaN
             end
+            track_nt
         end
     end
-    return nts
+    return PartitionedTable(nts, granule)
 end
 
 function lines(
@@ -68,29 +65,25 @@ function lines(
             :points,
         )
     end
-    nts = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
+    nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
-        for track ∈ tracks
-            if haskey(file, track) && haskey(open_group(file, track), "heights")
-
-                track_df = points(granule, file, track, t_offset, step, bbox)
-                line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
-                i = div(length(track_df.datetime), 2) + 1
-                nt = (
-                    geom = line,
-                    sun_angle = Float64(track_df.sun_angle[i]),
-                    track = track,
-                    strong_beam = track_df.strong_beam[i],
-                    t = track_df.datetime[i],
-                    granule = granule.id,
-                )
-                push!(nts, nt)
-            end
+        ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "heights"), tracks)
+        map(ftracks) do track
+            track_df = points(granule, file, track, t_offset, step, bbox)
+            line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
+            i = div(length(track_df.datetime), 2) + 1
+            (;
+                geom = line,
+                sun_angle = Float64(track_df.sun_angle[i]),
+                track = track,
+                strong_beam = track_df.strong_beam[i],
+                t = track_df.datetime[i],
+                granule = granule.id,
+            )
         end
     end
-    nts
+    PartitionedTable(nts, granule)
 end
 
 function points(
@@ -211,32 +204,30 @@ function classify(
         atl08 = convert(:ATL08, granule)
     end
 
-    dfs = Vector{NamedTuple}()
-    HDF5.h5open(granule.url, "r") do file
+    nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
-        for track ∈ tracks
-            if haskey(file, track) && haskey(open_group(file, track), "heights")
-                track_df = points(granule, file, track, t_offset)
+        ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "heights"), tracks)
 
-                mapping = atl03_mapping(atl08, track)
+        map(ftracks) do track
+            track_df = points(granule, file, track, t_offset)
 
-                unique_segments = unique(mapping.segment)
-                index_map = create_mapping(track_df.segment, unique_segments)
+            mapping = atl03_mapping(atl08, track)
 
-                class = CategoricalArray{String,1,Int8}(fill("unclassified", length(track_df.longitude)))
-                for i = 1:length(mapping.segment)
-                    index = get(index_map, mapping.segment[i], nothing)
-                    isnothing(index) && continue
-                    offset = mapping.index[i] - 1
-                    class[index+offset] = classification[mapping.classification[i]+1]
-                end
-                track_dfc = merge(track_df, (classification = class,))
-                push!(dfs, track_dfc)
+            unique_segments = unique(mapping.segment)
+            index_map = create_mapping(track_df.segment, unique_segments)
+
+            class = CategoricalArray{String,1,Int8}(fill("unclassified", length(track_df.longitude)))
+            for i = 1:length(mapping.segment)
+                index = get(index_map, mapping.segment[i], nothing)
+                isnothing(index) && continue
+                offset = mapping.index[i] - 1
+                class[index+offset] = classification[mapping.classification[i]+1]
             end
+            merge(track_df, (classification = class,))
         end
     end
-    dfs
+    PartitionedTable(nts, granule)
 end
 
 
