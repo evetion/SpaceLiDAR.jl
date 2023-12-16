@@ -82,7 +82,7 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
 
         # Time
         @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = DateTime(2019, 12, 12), before = DateTime(2019, 12, 13))) == 161
-        @test length(SpaceLiDAR.search(:ICESat2, :ATL08, before = now() - Year(5))) == 0
+        @test length(SpaceLiDAR.search(:ICESat2, :ATL08, before = DateTime(2017, 12, 12))) == 0
         @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = now())) == 0
         @test_throws ErrorException SpaceLiDAR.search(:ICESat2, :ATL08, after = now() - Month(47), before = now() - Month(48))
     end
