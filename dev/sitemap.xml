@@ -2,72 +2,72 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/changelog/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/guides/downloads/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/guides/tracks/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/reference/api/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/reference/data/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/reference/granules/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/reference/search/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/reference/utilities/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/topics/GEDI/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/topics/ICESat-2/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/topics/ICESat/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/tutorial/installation/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://www.evetion.nl/SpaceLiDAR.jl/tutorial/usage/</loc>
-         <lastmod>2023-11-05</lastmod>
+         <lastmod>2023-12-20</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
