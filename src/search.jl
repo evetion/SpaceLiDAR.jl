@@ -208,12 +208,11 @@ function earthdata_search(;
     after::Union{Nothing,DateTime} = nothing,
     all_pages::Bool = true,
     page_size = 2000,
-    page_num = 1,
+    page_num = 1,  # unused
     umm = false,
     verbose = 0,
 )
     q = Dict(
-        "page_num" => page_num,
         "page_size" => page_size,
         "short_name" => short_name,
     )
@@ -234,10 +233,10 @@ function earthdata_search(;
     cgranules = parsef(r)
     granules = Vector{NamedTuple}()
     append!(granules, cgranules)
-    while (length(cgranules) == page_size) && all_pages
+    while !(length(cgranules) < page_size) && haskey(Dict(r.headers), "CMR-Search-After") && all_pages
         @warn "Found more than $page_size granules, requesting another $page_size..."
-        q["page_num"] += 1
-        r = HTTP.get(qurl, query = q, verbose = verbose, status_exception = false)
+        v = get(Dict(r.headers), SubString("CMR-Search-After"), "")
+        r = HTTP.get(qurl, query = q, ["CMR-Search-After" => v], verbose = verbose, status_exception = false)
         HTTP.iserror(r) && error(parse_cmr_error(r))
         cgranules = parsef(r)
         append!(granules, cgranules)
