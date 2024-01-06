@@ -134,6 +134,10 @@ function search(mission::Symbol, product::Symbol, args...; kwargs...)
     search(Mission(mission), product, args...; kwargs...)
 end
 
+function search(g::Granule, args...; kwargs...)
+    search(mission(g), sproduct(g), args...; kwargs..., version = info(g).version)
+end
+
 function parse_polygon(polygons, T = Float64)
     o = Vector{Vector{Vector{Vector{T}}}}()
     for polygon in polygons

@@ -17,6 +17,9 @@ Base.@kwdef mutable struct ICESat_Granule{product} <: Granule
     polygons::MultiPolygonType = MultiPolygonType()
 end
 
+sproduct(::ICESat_Granule{product}) where {product} = product
+mission(::ICESat_Granule) = :ICESat
+
 function Base.copy(g::ICESat_Granule{product}) where {product}
     return ICESat_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end
@@ -47,17 +50,20 @@ end
 
 function icesat_info(filename)
     id, _ = splitext(basename(filename))
-    type, revision, orbit, cycle, track, segment, version, filetype =
+    type, release, orbit, cycle, track, segment, revision, filetype =
         split(id, "_")
     return (
         type = Symbol(type),
         phase = parse(Int, orbit[1]),
-        rgt = parse(Int, track[2]),
-        instance = parse(Int, track[3:4]),
+        rgt = parse(Int, orbit[2]),
+        instance = parse(Int, orbit[3:4]),
         cycle = parse(Int, cycle),
+        track = parse(Int, track),
         segment = parse(Int, segment),
-        version = parse(Int, version),
         revision = parse(Int, revision),
+        calibration = parse(Int, release[1]),
+        filetype = parse(Int, filetype),
+        version = parse(Int, release[2:3]),
     )
 end
 

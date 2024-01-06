@@ -129,6 +129,12 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test length(gs) == 7
         copies = copy.(gs)
 
+        # Set different path, but same id
+        og.url = "data"
+        @test !(og === g)
+        @test isequal(og, g)
+        @test hash(og) == hash(g)
+
         fgs = SL.in_bbox(gs, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
         @test length(fgs) == 2
         SL.bounds.(fgs)

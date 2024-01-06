@@ -35,7 +35,7 @@ Create mission specific granules from a folder with .h5 files, using [`granule`]
 function granules(foldername::AbstractString)
     return [
         granule(joinpath(foldername, file)) for
-        file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5"
+        file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5" && !isfile("$(file).aria2")
     ]
 end
 @deprecate granules_from_folder(foldername::AbstractString) granules(foldername::AbstractString)
@@ -101,16 +101,26 @@ urls(g::Vector{<:Granule}) = getfield.(g, :url)
 
 Write all granule urls to a file.
 """
-function write_urls(fn::String, granules::Vector{<:Granule})
+function write_urls(fn::String, granules::AbstractVector{<:Granule})
     open(fn, "w") do f
-        for granule in granules
-            println(f, url(granule))
-        end
+        write_urls(f, granules)
     end
     abspath(fn)
 end
 @deprecate write_granule_urls! write_urls
 
+function write_urls(granules::AbstractVector{<:Granule})
+    fn, io = mktemp()
+    write_urls(io, granules)
+    close(io)
+    fn
+end
+
+function write_urls(f::IOStream, granules::AbstractVector{<:Granule})
+    for granule in granules
+        println(f, url(granule))
+    end
+end
 
 """
     isvalid(g::Granule)
