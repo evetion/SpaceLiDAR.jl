@@ -176,41 +176,51 @@ Base.isequal(a::Granule, b::Granule) = a.id == b.id
 Base.hash(g::Granule, h::UInt) = hash(g.id, h)
 
 """
-    sync(folder::AbstractString, all::Bool=false)
-    sync(folders::AbstractVector{<:AbstractString}, all::Bool=false)
-    sync(product::Symbol, folder::AbstractString, all::Bool=false)
-    sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool=false)
+    sync(folder::AbstractString, all::Bool=false; kwargs...)
+    sync(folders::AbstractVector{<:AbstractString}, all::Bool=false; kwargs...)
+    sync(product::Symbol, folder::AbstractString, all::Bool=false; kwargs...)
+    sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool=false; kwargs...)
 
-Syncronize the contents of `folder(s)` with the latest granules available.
-Specifically, this will download any granules not yet present in folder(s),
-to the *first* folder in the list.
+Syncronize an existing archive of local granules in `folder(s)` with the latest granules available.
+Specifically, this will run [`search`](@ref) and [`download`](@ref) for any granules not yet
+present in folder(s), to the *first* folder in the list.
+
+!!! warning
+
+    Using sync could result in downloading significant (TB+) amounts of data.
 
 Assumes all folders contain granules of the same product. If not, pass the
-product as Symbol: [`sync(::Symbol), folders, all`](@ref) instead.
+product as Symbol: [`sync(::Symbol, folders, all)`](@ref) instead.
 
-`all`, false by default, will search only for granules past the date of
-the latest granule found in `folders`. If true, will search for all granules.
+When `all` is false (the default), sync will search only for granules past the date of
+the latest granule found in `folders`. If true, it will search for all granules.
+Note that ICESat granules are not timestamped, so sync will try to download
+*all* ICESat granules not yet present, regardless of this setting.
+
+Any `kwargs...` are passed to the [`search`](@ref) function. This enables
+sync to only download granules within a certain extent, for example.
 """
-function sync(folders::AbstractVector{<:AbstractString}, all::Bool = false)
+function sync(folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
     grans = reduce(vcat, granules.(folders))
-    sync!(grans, first(folders), all)
+    _sync!(grans, first(folders), all; kwargs...)
 end
-sync(folder::AbstractString, all::Bool = false) = sync([folder], all)
+sync(folder::AbstractString, all::Bool = false; kwargs...) = sync([folder], all; kwargs...)
 
-function sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool = false)
+function sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
     grans = reduce(vcat, granules.(folders))
     filter!(g -> sproduct(g) == product, grans)
-    sync!(grans, first(folders), all)
+    _sync!(grans, first(folders), all; kwargs...)
 end
-sync(product::Symbol, folder::AbstractString, all::Bool = false) = sync(product, [folder], all)
+sync(product::Symbol, folder::AbstractString, all::Bool = false; kwargs...) = sync(product, [folder], all; kwargs...)
 
-function sync!(granules, folder, all)
+function _sync!(granules, folder, all; kwargs...)
+    isempty(granules) && error("No granules found in provided folder(s).")
     g = first(granules)
     ngranules = if length(granules) == 0 || !haskey(info(granules[end]), :date) || all
-        Set(search(g))
+        Set(search(g; kwargs...))
     else
         sort!(granules, by = x -> x.id)
-        Set(search(g, after = info(granules[end]).date))
+        Set(search(g, after = info(granules[end]).date, kwargs...))
     end
     setdiff!(ngranules, Set(granules))
     download!(collect(ngranules), folder)
