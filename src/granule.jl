@@ -220,7 +220,7 @@ function _sync!(granules, folder, all; kwargs...)
         Set(search(g; kwargs...))
     else
         sort!(granules, by = x -> x.id)
-        Set(search(g, after = info(granules[end]).date, kwargs...))
+        Set(search(g; after = info(granules[end]).date, kwargs...))
     end
     setdiff!(ngranules, Set(granules))
     download!(collect(ngranules), folder)
