@@ -1,6 +1,7 @@
 using HDF5
 import Downloads
 import AWSS3
+using Aria2_jll
 
 # Custom downloader for Julia 1.6 which doensn't have NETRC + Cookie support
 # This is a method because it will segfault if precompiled.
@@ -57,7 +58,6 @@ Base.show(io::IO, ::MIME"text/plain", g::Granule) = _show(io, g)
 function _show(io, g::T) where {T<:Granule}
     print(io, "$T with id $(g.id)")
 end
-
 
 MultiPolygonType = Vector{Vector{Vector{Vector{Float64}}}}
 
@@ -124,11 +124,33 @@ end
     download!(granules::Vector{<:Granule}, folder=".")
 
 Like [`download!`](@ref), but for a vector of `granules`.
+Will make use of aria2c (parallel).
 """
-function download!(granules::Vector{Granule}, folder::AbstractString = ".")
-    for granule in granules
-        download!(granule, folder)
+function download!(granules::Vector{<:Granule}, folder::AbstractString = ".")
+
+    # Download serially if s3 links are present
+    if any(g -> startswith(g.url, "s3"), granules)
+        return map(g -> download!(g, folder), granules)
     end
+
+    f = write_urls(granules)
+    cmd = `$(Aria2_jll.aria2c()) -i $f -c -d $folder`
+    local io
+    try
+        io = run(pipeline(cmd, stdout = stdout, stderr = stderr), wait = false)
+        while process_running(io)
+            sleep(1)
+        end
+    catch e
+        kill(io)
+        println()
+        throw(e)
+    end
+
+    for granule in granules
+        granule.url = joinpath(folder, granule.id)
+    end
+    granules
 end
 
 """
@@ -136,10 +158,70 @@ end
 
 Like [`download`](@ref), but for a vector of `granules`.
 """
-function download(granules::Vector{Granule}, folder::AbstractString = ".")
-    map(granule -> download(granule, folder), granules)
+function download(granules::Vector{<:Granule}, folder::AbstractString = ".")
+
+    # Download serially if s3 links are present
+    if any(g -> startswith(g.url, "s3"), granules)
+        return map(g -> download(g, folder), granules)
+    else
+        download!(copy.(granules), folder)
+    end
 end
 
 function Base.filesize(granule::T) where {T<:Granule}
     filesize(granule.url)
+end
+
+Base.isequal(a::Granule, b::Granule) = a.id == b.id
+Base.hash(g::Granule, h::UInt) = hash(g.id, h)
+
+"""
+    sync(folder::AbstractString, all::Bool=false; kwargs...)
+    sync(folders::AbstractVector{<:AbstractString}, all::Bool=false; kwargs...)
+    sync(product::Symbol, folder::AbstractString, all::Bool=false; kwargs...)
+    sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool=false; kwargs...)
+
+Syncronize an existing archive of local granules in `folder(s)` with the latest granules available.
+Specifically, this will run [`search`](@ref) and [`download`](@ref) for any granules not yet
+present in folder(s), to the *first* folder in the list.
+
+!!! warning
+
+    Using sync could result in downloading significant (TB+) amounts of data.
+
+Assumes all folders contain granules of the same product. If not, pass the
+product as Symbol: [`sync(::Symbol, folders, all)`](@ref) instead.
+
+When `all` is false (the default), sync will search only for granules past the date of
+the latest granule found in `folders`. If true, it will search for all granules.
+Note that ICESat granules are not timestamped, so sync will try to download
+*all* ICESat granules not yet present, regardless of this setting.
+
+Any `kwargs...` are passed to the [`search`](@ref) function. This enables
+sync to only download granules within a certain extent, for example.
+"""
+function sync(folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
+    grans = reduce(vcat, granules.(folders))
+    _sync!(grans, first(folders), all; kwargs...)
+end
+sync(folder::AbstractString, all::Bool = false; kwargs...) = sync([folder], all; kwargs...)
+
+function sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
+    grans = reduce(vcat, granules.(folders))
+    filter!(g -> sproduct(g) == product, grans)
+    _sync!(grans, first(folders), all; kwargs...)
+end
+sync(product::Symbol, folder::AbstractString, all::Bool = false; kwargs...) = sync(product, [folder], all; kwargs...)
+
+function _sync!(granules, folder, all; kwargs...)
+    isempty(granules) && error("No granules found in provided folder(s).")
+    g = first(granules)
+    ngranules = if length(granules) == 0 || !haskey(info(granules[end]), :date) || all
+        Set(search(g; kwargs...))
+    else
+        sort!(granules, by = x -> x.id)
+        Set(search(g; after = info(granules[end]).date, kwargs...))
+    end
+    setdiff!(ngranules, Set(granules))
+    download!(collect(ngranules), folder)
 end

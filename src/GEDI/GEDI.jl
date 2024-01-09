@@ -17,6 +17,9 @@ Base.@kwdef mutable struct GEDI_Granule{product} <: Granule
     polygons::MultiPolygonType = MultiPolygonType()
 end
 
+sproduct(::GEDI_Granule{product}) where {product} = product
+mission(::GEDI_Granule) = :GEDI
+
 function Base.copy(g::GEDI_Granule{product}) where {product}
     GEDI_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end

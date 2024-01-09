@@ -113,7 +113,10 @@ function search(
 end
 
 search(::Mission{X}, product, args...; kwargs...) where {X} =
-    throw(ArgumentError("Mission $X not supported. Currently supported are :ICESat, :ICESat2, and :GEDI."))
+    throw(ArgumentError("Search doesn't support arguments $args. Did you mean to use keywords?"))
+
+search(::Mission{X}, product; kwargs...) where {X} =
+    throw(ArgumentError("Combination of Mission $X and Product $product not supported. Please make an issue."))
 
 @deprecate find(mission::Symbol, product::AbstractString, bbox, version) search(
     mission,
@@ -132,6 +135,11 @@ search(::Mission{X}, product, args...; kwargs...) where {X} =
 )
 function search(mission::Symbol, product::Symbol, args...; kwargs...)
     search(Mission(mission), product, args...; kwargs...)
+end
+
+function search(g::Granule; kwargs...)
+    initial = (; version = info(g).version)
+    search(mission(g), sproduct(g); merge(initial, kwargs)...)
 end
 
 function parse_polygon(polygons, T = Float64)

@@ -32,7 +32,7 @@ include("search.jl")
 include("geointerface.jl")
 include("env.jl")
 
-export find, search, download!, download, netrc!, instantiate, info, angle, angle!, shift
+export find, search, sync, download!, download, netrc!, instantiate, info, angle, angle!, shift
 export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!
 export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
 export granule_from_file, granules_from_folder, write_granule_urls!

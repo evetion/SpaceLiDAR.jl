@@ -23,6 +23,9 @@ Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
     polygons::MultiPolygonType = MultiPolygonType()
 end
 
+sproduct(::ICESat2_Granule{product}) where {product} = product
+mission(::ICESat2_Granule) = :ICESat2
+
 function Base.copy(g::ICESat2_Granule{product}) where {product}
     ICESat2_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end

@@ -87,36 +87,40 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test_throws ErrorException SpaceLiDAR.search(:ICESat2, :ATL08, after = now() - Month(47), before = now() - Month(48))
     end
 
-    # @testset "download" begin
-    #     if "EARTHDATA_USER" in keys(ENV)
-    #         @info "Setting up Earthdata credentials for Github Actions"
-    #         SpaceLiDAR.netrc!(
-    #             get(ENV, "EARTHDATA_USER", ""),
-    #             get(ENV, "EARTHDATA_PW", ""),
-    #         )
-    #     end
-    #     granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
-    #     g = granules[1]
+    @testset "download" begin
+        if "EARTHDATA_USER" in keys(ENV)
+            @info "Setting up Earthdata credentials for Github Actions"
+            SpaceLiDAR.netrc!(
+                get(ENV, "EARTHDATA_USER", ""),
+                get(ENV, "EARTHDATA_PW", ""),
+            )
+        end
+        granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+        g = granules[1]
 
-    #     try
-    #         SL.download!(g)
-    #         @test isfile(g)
-    #     catch e
-    #         if e isa Downloads.RequestError
-    #             @error "Could not download granule due to network error(s)"
-    #         else
-    #             rethrow(e)
-    #         end
-    #     end
-    #     rm(g)
+        try
+            SL.download!(g)
+            @test isfile(g)
+        catch e
+            if e isa Downloads.RequestError
+                @error "Could not download granule due to network error(s)"
+            else
+                rethrow(e)
+            end
+        end
+        rm(g)
 
-    #     # This only works on us-west-2 region in AWS
-    #     # granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
-    #     # g = granules[1]
-    #     # SL.download!(g)
-    #     # @test isfile(g)
-    #     # rm(g)
-    # end
+        # Test syncing of granules
+        sync(["data/"], after = now(), bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+        sync(:GLAH14, "data/", after = now(), bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+
+        # This only works on us-west-2 region in AWS
+        # granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
+        # g = granules[1]
+        # SL.download!(g)
+        # @test isfile(g)
+        # rm(g)
+    end
 
     @testset "granules" begin
         og = SL.granule_from_file(GLAH06_fn)
@@ -128,6 +132,12 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test ogs == gs  # deprecation
         @test length(gs) == 7
         copies = copy.(gs)
+
+        # Set different path, but same id
+        og.url = "data"
+        @test !(og === g)
+        @test isequal(og, g)
+        @test hash(og) == hash(g)
 
         fgs = SL.in_bbox(gs, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0))
         @test length(fgs) == 2
