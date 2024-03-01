@@ -104,15 +104,15 @@ function points(
             power = occursin("Full power", read_attribute(group, "description")::String)
 
             nt = (
-                longitude = Float32[],
-                latitude = Float32[],
+                longitude = Float64[],
+                latitude = Float64[],
                 height = Float32[],
                 height_error = Float32[],
-                datetime = Float64[],
+                datetime = Dates.DateTime[],
                 intensity = Float32[],
                 sensitivity = Float32[],
-                surface = BitVector(),
-                quality = BitVector(),
+                surface = Bool[],
+                quality = Bool[],
                 nmodes = UInt8[],
                 track = Fill(track, 0),
                 strong_beam = Fill(power, 0),
