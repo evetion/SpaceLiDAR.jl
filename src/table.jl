@@ -115,7 +115,7 @@ Tables.columns(g::SpaceLiDAR.Table) = getfield(g, :table)
 
 function materialize!(df::DataFrame)
     for (name, col) in zip(names(df), eachcol(df))
-        if col isa CategoricalArray
+        if col isa CategoricalArray || eltype(col) <: CategoricalValue
             df[!, name] = String.(col)
         elseif col isa Fill
             df[!, name] = Vector(col)

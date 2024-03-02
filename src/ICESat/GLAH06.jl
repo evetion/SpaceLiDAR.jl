@@ -52,7 +52,7 @@ function points(
                     height = Float64[],
                     datetime = Dates.DateTime[],
                     # quality defined according [^1]
-                    quality = Bool[],
+                    quality = BitVector(),
                     height_reference = Float64[],
                 )
                 return Table(gt, granule)

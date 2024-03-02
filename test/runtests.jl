@@ -38,6 +38,7 @@ GLAH14_fn = download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
 empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
+empty_extent = Extent(X = (0, 0), Y = (0, 0))
 
 @testset "SpaceLiDAR.jl" begin
 
@@ -159,6 +160,10 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         df = DataFrame(SL.points(g))
         dff = DataFrame(g)
         @test isequal(df, dff)
+
+        points = SL.points(g)
+        epoints = SL.points(g, ; bbox = empty_extent)
+        @test typeof(points) == typeof(epoints)
     end
 
     @testset "GLAH14" begin
@@ -179,6 +184,11 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         df = DataFrame(points)
         dff = DataFrame(g)
         @test isequal(df, dff)
+
+
+        points = SL.points(g)
+        epoints = SL.points(g, ; bbox = empty_extent)
+        @test typeof(points) == typeof(epoints)
     end
 
     @testset "ATL03" begin
@@ -210,6 +220,10 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         @test df.classification isa CategoricalVector{String,Int8}
         SL.materialize!(df)
         @test df.classification isa Vector{String}
+
+        points = SL.points(g)
+        epoints = SL.points(g, ; bbox = empty_extent)
+        @test typeof(points) == typeof(epoints)
     end
 
     @testset "ATL06" begin
@@ -229,6 +243,10 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         df = reduce(vcat, DataFrame.(points))
         dff = DataFrame(g6)
         @test isequal(df, dff)
+
+        points = SL.points(g6)
+        epoints = SL.points(g6, ; bbox = empty_extent)
+        @test typeof(points) == typeof(epoints)
     end
 
     @testset "ATL08" begin
@@ -259,6 +277,10 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
 
         ps = SL.points(g; highres = true)
         @test length(ps[1].longitude) == (998 * 5)
+
+        points = SL.points(g)
+        epoints = SL.points(g, ; bbox = empty_extent)
+        @test typeof(points) == typeof(epoints)
     end
 
     @testset "ATL12" begin
@@ -302,6 +324,10 @@ empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
         df = reduce(vcat, DataFrame.(SL.points(gg)))
         dff = DataFrame(gg)
         @test isequal(df, dff)
+
+        points = SL.points(gg)
+        epoints = SL.points(gg, ; bbox = empty_extent)
+        @test typeof(points) == typeof(epoints)
     end
 
     @testset "Geometry" begin
