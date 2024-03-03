@@ -107,22 +107,24 @@ function points(
             spot_number = read_attribute(group, "atlas_spot_number")::String
 
             nt = (;
-                longitude = Float64[],
-                latitude = Float64[],
+                longitude = Float32[],
+                latitude = Float32[],
                 height = Float32[],
-                height_error = Float64[],
+                height_error = Float32[],
                 datetime = Dates.DateTime[],
-                quality = Bool[],
-                phr = Bool[],
+                quality = BitVector(),
+                phr = BitVector(),
                 sensitivity = Float32[],
                 scattered = Int8[],
                 saturated = Int8[],
-                clouds = Bool[],
+                clouds = BitVector(),
                 track = Fill(track, 0),
                 strong_beam = Fill(atlas_beam_type == "strong", 0),
                 classification = Fill("ground", 0),
                 height_reference = Float32[],
                 detector_id = Fill(parse(Int8, spot_number), 0),
+                reflectance = Float32[],
+                nphotons = Int32[],
             )
             return nt
         end

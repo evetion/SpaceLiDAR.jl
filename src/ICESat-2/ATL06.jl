@@ -81,7 +81,7 @@ function points(
                 height = Float32[],
                 height_error = Float32[],
                 datetime = Dates.DateTime[],
-                quality = Bool[],
+                quality = BitVector(),
                 track = Fill(track, 0),
                 strong_beam = Fill(atlas_beam_type == "strong", 0),
                 detector_id = Fill(parse(Int8, spot_number), 0),

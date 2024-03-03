@@ -48,15 +48,15 @@ function points(
             stop = findlast(ind)
 
             if isnothing(start)
-                @warn "no data found within bbox of track $track in $(file.filename)"
+                @warn "no data found within bbox in $(file.filename)"
 
                 gt = (
                     longitude = Float64[],
                     latitude = Float64[],
                     height = Float64[],
                     datetime = Dates.DateTime[],
-                    quality = Bool[],
-                    clouds = Bool[],
+                    quality = BitVector(),
+                    clouds = BitVector(),
                     height_reference = Float64[],
                     gain = Int32[],
                     reflectivity = Float64[],
