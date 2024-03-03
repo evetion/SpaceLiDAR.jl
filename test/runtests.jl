@@ -37,8 +37,8 @@ GEDI02_fn = download_artifact(v"0.1", "GEDI02_A_2019242104318_O04046_01_T02343_0
 GLAH14_fn = download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
-empty_bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
-empty_extent = Extent(X = (0, 0), Y = (0, 0))
+empty_bbox = (min_x = 0.0, min_y = 0.0, max_x = 0.0, max_y = 0.0)
+empty_extent = convert(Extent, empty_bbox)
 
 @testset "SpaceLiDAR.jl" begin
 
