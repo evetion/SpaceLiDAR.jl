@@ -78,6 +78,9 @@ empty_extent = convert(Extent, empty_bbox)
         @test length(granules) > 0
         @test length(granules[1].polygons) > 0
 
+        id = "GEDI02_A_2023003040347_O22988_03_T06105_02_003_02_V002.h5";
+        @test = length(search(:GEDI, :GEDI02_A; version = 2, id = id)) == 1
+
         @test_throws ArgumentError find(:ICESat2, "GLAH14")
         @test_throws ArgumentError find(:Foo, "GLAH14")
 
