@@ -38,11 +38,11 @@ using Extents
 granules = search(:ICESat2, :ATL08)
 
 # Find only ATL03 granules in a part of Vietnam
-vietnam = Extent(X = (102., 107.0), Y = (8.0, 12.0))
+vietnam = Extent(X=(102.0, 107.0), Y=(8.0, 12.0))
 granules = search(:ICESat2, :ATL08; extent=vietnam, version=6)
 
 # Find GEDI granules in the same way
-granules = search(:GEDI, :GEDI02_A)
+granules = search(:GEDI, :GEDI02_A; extent=vietnam)
 
 # A granule is pretty simple
 granule = granules[1]
@@ -54,54 +54,45 @@ granule.info  # derived information from id
 # we provide a helper function, that creates/updates a ~/.netrc or ~/_netrc
 SpaceLiDAR.netrc!(username, password)  # replace with your credentials
 
-# Afterward you can download the dataset
-fn = SpaceLiDAR.download!(granule)
+# Afterward you can download the dataset.
+# Note: download! updated granule url to local path
+granule = SpaceLiDAR.download!(granule)
 
 # You can also load a granule from disk
-granule = granule(fn)
+path2file = granule.url
+granule = SpaceLiDAR.granule(path2file)
 
 # Or from a folder
-local_granules = granules(folder)
-
-# Instantiate search results locally (useful for GEDI location indexing)
-local_granules = instantiate(granules, folder)
+(folder, fn) = splitdir(path2file)
+local_granules = SpaceLiDAR.granules(folder)
 ```
 
 Derive points
 ```julia
 using DataFrames
 fn = "GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5"
-g = SpaceLiDAR.granule(fn)
-df = DataFrame(g)
-149680×15 DataFrame
-    Row │ longitude  latitude  height    height_error  datetime                 intensity  sensitivity  surface  quality  nmo ⋯
-        │ Float64    Float64   Float32   Float32       DateTime                 Float32    Float32      Bool     Bool     UIn ⋯
-────────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-      1 │   153.855  -47.2772  -13.3536      0.307976  2019-08-30T10:48:21.047   393.969   -0.0671094      true    false      ⋯
-      2 │   153.855  -47.2769  -11.2522      0.307978  2019-08-30T10:48:21.055   797.26     0.533529       true     true
-      3 │   153.856  -47.2767  -13.775       0.307981  2019-08-30T10:48:21.063  1010.39     0.695938       true     true
-      4 │   153.857  -47.2765  -11.729       0.307983  2019-08-30T10:48:21.071   852.614    0.544849       true     true
-      5 │   153.857  -47.2763  -13.2443      0.307985  2019-08-30T10:48:21.080   980.66     0.620767       true     true      ⋯
-      6 │   153.858  -47.2761  -12.1813      0.307987  2019-08-30T10:48:21.088   937.441    0.620531       true     true
-      7 │   153.859  -47.2758  -11.9011      0.30799   2019-08-30T10:48:21.096  1235.02     0.73815        true     true
-      8 │   153.859  -47.2756  -12.3796      0.307992  2019-08-30T10:48:21.104   854.127    0.545655       true     true
+granule = SpaceLiDAR.granule(fn)
+
+df = DataFrame(granule)
+760156×15 DataFrame
+    Row │ longitude  latitude   height   height_error  datetime                 intensity   sensitivity  surface  quality  nmodes  track     strong_beam  classification  sun_angle  height_reference 
+        │ Float64    Float64    Float32  Float32       DateTime                 Float32     Float32      Bool     Bool     UInt8   String    Bool         String          Float32    Float32          
+────────┼─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+      1 │   26.6923  51.823     169.045      0.313182  2019-04-18T10:22:23.996   -857.388      1.38006      true    false       1  BEAM0000        false  ground           49.0315            169.752
+      2 │   26.7006  51.823     165.783      0.31319   2019-04-18T10:22:24.078    853.56       0.694586     true    false       1  BEAM0000        false  ground           49.0312            167.354
+      3 │   26.7023  51.823     162.871      0.313192  2019-04-18T10:22:24.095    110.071     -0.480232     true    false       1  BEAM0000        false  ground           49.0311            164.785
+   ⋮    │     ⋮          ⋮         ⋮          ⋮                   ⋮                 ⋮            ⋮          ⋮        ⋮       ⋮        ⋮           ⋮             ⋮             ⋮             ⋮
+ 760155 │  110.661   -0.194184  171.157      0.258848  2019-04-18T10:45:33.900   7702.96       0.945006     true     true       2  BEAM1011         true  ground           -1.94442           176.333
+ 760156 │  110.662   -0.195451  167.176      0.258852  2019-04-18T10:45:33.925   9595.64       0.981322     true     true       2  BEAM1011         true  ground           -1.94564           173.691
 ```
 
 
 Derive linestrings
 ```julia
 using DataFrames
-fn = "ATL03_20181110072251_06520101_003_01.h5"
-g = SpaceLiDAR.granule(fn)
-tlines = DataFrame(SpaceLiDAR.lines(g, step=10000))
-Table with 4 columns and 6 rows:
-     geom                       sun_angle  track        datetime
-   ┌───────────────────────────────────────────────────────────────────────────
- 1 │ wkbLineString25D geometry  38.3864    gt1l_weak    2018-11-10T07:28:01.688
- 2 │ wkbLineString25D geometry  38.375     gt1r_strong  2018-11-10T07:28:02.266
- 3 │ wkbLineString25D geometry  38.2487    gt2l_weak    2018-11-10T07:28:04.474
- 4 │ wkbLineString25D geometry  38.1424    gt2r_strong  2018-11-10T07:28:07.374
- 5 │ wkbLineString25D geometry  38.2016    gt3l_weak    2018-11-10T07:28:05.051
- 6 │ wkbLineString25D geometry  38.1611    gt3r_strong  2018-11-10T07:28:06.344
+fn = "GEDI02_A_2019108093620_O01965_03_T05338_02_003_01_V002.h5"
+granule = SpaceLiDAR.granule(fn)
+tlines = DataFrame.(SpaceLiDAR.lines(granule; step=10000))
+
 SpaceLiDAR.GDF.write("lines.gpkg", tlines)
 ```
