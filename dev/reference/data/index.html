@@ -1042,7 +1042,7 @@ package if you use it in production.
 </tbody>
 </table>
 <p>You can get the output in a <code>DataFrame</code> with <code>DataFrame(points(g))</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat/GLAH06.jl#LL1-L20' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH14}}' href='#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH14}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="ss">:GLAH14</span><span class="p">},</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -1133,7 +1133,7 @@ package if you use it in production.
 </tbody>
 </table>
 <p>You can get the output in a <code>DataFrame</code> with <code>DataFrame(points(g))</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat/GLAH14.jl#LL1-L25' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat/GLAH14.jl#LL1-L25' class='documenter-source'>source</a><br></p>
 <p><a id='ICESat-2'></a></p>
 <p><a id='ICESat-2-1'></a></p>
 <h2 id="icesat-2">ICESat-2<a class="headerlink" href="#icesat-2" title="Permanent link">&para;</a></h2>
@@ -1142,7 +1142,7 @@ package if you use it in production.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">classify</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL03</span><span class="p">},</span><span class="w"> </span><span class="n">atl08</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL08</span><span class="p">},</span><span class="kt">Nothing</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">,</span><span class="w"> </span><span class="n">tracks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">icesat2_tracks</span><span class="p">)</span>
 </code></pre></div>
 <p>Like <a href="./#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}"><code>points(::ICESat2_Granule{:ATL03})</code></a> but with the classification from the ATL08 dataset. If an ATL08 granule is not provided, we try to find it based on the ATL03 name using <a href="../granules/#Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T"><code>convert</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat-2/ATL03.jl#LL192-L197' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat-2/ATL03.jl#LL192-L197' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}' href='#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL03}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL03</span><span class="p">},</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">;</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -1239,7 +1239,7 @@ package if you use it in production.
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat-2/ATL03.jl#LL1-L25' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat-2/ATL03.jl#LL1-L25' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL06}}' href='#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL06}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL06</span><span class="p">},</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -1324,7 +1324,7 @@ package if you use it in production.
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat-2/ATL06.jl#LL1-L23' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat-2/ATL06.jl#LL1-L23' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL08}}' href='#SpaceLiDAR.points-Tuple{ICESat2_Granule{:ATL08}}'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL08</span><span class="p">};</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">,</span><span class="w"> </span><span class="n">step</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">canopy</span><span class="o">=</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="n">ground</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">Union</span><span class="p">{</span><span class="kt">Nothing</span><span class="p">,</span><span class="kt">Extent</span><span class="p">,</span><span class="kt">NamedTuple</span><span class="p">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nothing</span><span class="p">)</span>
@@ -1440,7 +1440,7 @@ package if you use it in production.
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or just <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat-2/ATL08.jl#LL1-L35' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat-2/ATL08.jl#LL1-L35' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.points' href='#SpaceLiDAR.points'>#</a>
 <strong><code>SpaceLiDAR.points</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">points</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL12</span><span class="p">},</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="n">icesat2_tracks</span><span class="p">)</span>
@@ -1501,7 +1501,7 @@ package if you use it in production.
 </tbody>
 </table>
 <p>You can combine the output in a <code>DataFrame</code> with <code>reduce(vcat, DataFrame.(points(g)))</code> if you want to change the default arguments or <code>DataFrame(g)</code> with the default options.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/ICESat-2/ATL12.jl#LL1-L19' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/ICESat-2/ATL12.jl#LL1-L19' class='documenter-source'>source</a><br></p>
 <p><a id='GEDI'></a></p>
 <p><a id='GEDI-1'></a></p>
 <h2 id="gedi">GEDI<a class="headerlink" href="#gedi" title="Permanent link">&para;</a></h2>
@@ -1514,7 +1514,7 @@ package if you use it in production.
 <p class="admonition-title">Warning</p>
 <p>This opens the .h5 file to read all tracks, so it is very slow.</p>
 </div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/570f68582d7cd53eacf4d21c74f5c5b361c9bfb6/src/GEDI/L2A.jl#LL259-L267' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/759e6d8356ec9f8f4c2564cddf045784e1ff9642/src/GEDI/L2A.jl#LL259-L267' class='documenter-source'>source</a><br></p>
 <div class="footnote">
 <hr />
 <ol>
