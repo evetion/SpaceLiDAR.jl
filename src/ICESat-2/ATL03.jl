@@ -124,6 +124,8 @@ function points(
                 sun_angle = Float32[],
                 detector_id = Fill(parse(Int8, spot_number), 0),
                 height_reference = Float32[],
+                near_sat_fract = Float32[],
+                full_sat_fract = Float32[],
             )
             return nt
         end
@@ -152,6 +154,9 @@ function points(
 
     # extract data posted at segment frequency and map to photon frequency
     segment = read(open_dataset(group, "geolocation/segment_id"))[ph_ind]::Vector{Int32}
+    fsat = read(open_dataset(group, "geolocation/full_sat_fract"))[ph_ind]::Vector{Float32}
+    nsat = read(open_dataset(group, "geolocation/near_sat_fract"))[ph_ind]::Vector{Float32}
+    # knn = read(open_dataset(group, "geolocation/knn"))[ph_ind]::Vector{Int32}
     # segment = segment[ph_ind]
 
     sun_angle = read(open_dataset(group, "geolocation/solar_elevation"))[ph_ind]::Vector{Float32}
@@ -170,7 +175,8 @@ function points(
     # convert from unix time to julia date time
     datetime = unix2datetime.(datetime .+ t_offset)
 
-    nt = (
+    nt = (;
+        # geom = collect(zip(x, y)),
         longitude = x,
         latitude = y,
         height = height,
@@ -184,6 +190,9 @@ function points(
         sun_angle = sun_angle,
         detector_id = Fill(parse(Int8, spot_number), length(datetime)),
         height_reference = height_ref,
+        # knn,
+        near_sat_fract = nsat,
+        full_sat_fract = fsat,
     )
     return nt
 end
@@ -212,17 +221,21 @@ function classify(
         map(ftracks) do track
             track_df = points(granule, file, track, t_offset)
 
-            mapping = atl03_mapping(atl08, track)
-
-            unique_segments = unique(mapping.segment)
-            index_map = create_mapping(track_df.segment, unique_segments)
-
             class = CategoricalArray{String,1,Int8}(fill("unclassified", length(track_df.longitude)))
-            for i = 1:length(mapping.segment)
-                index = get(index_map, mapping.segment[i], nothing)
-                isnothing(index) && continue
-                offset = mapping.index[i] - 1
-                class[index+offset] = classification[mapping.classification[i]+1]
+
+            mapping = atl03_mapping(atl08, track)
+            if !isnothing(mapping)  # ATL08 does not neccessarily all ATL03 tracks
+                unique_segments = unique(mapping.segment)
+                index_map = create_mapping(track_df.segment, unique_segments)
+
+                # class = zeros(UInt8, length(track_df.longitude))
+                for i = 1:length(mapping.segment)
+                    index = get(index_map, mapping.segment[i], nothing)
+                    isnothing(index) && continue
+                    offset = mapping.index[i] - 1
+                    class[index+offset] = classification[mapping.classification[i]+1]
+                    # class[index+offset] = mapping.classification[i]
+                end
             end
             merge(track_df, (classification = class,))
         end

@@ -134,7 +134,7 @@ function download!(granules::Vector{<:Granule}, folder::AbstractString = ".")
     end
 
     f = write_urls(granules)
-    cmd = `$(Aria2_jll.aria2c()) -i $f -c -d $folder`
+    cmd = `$(Aria2_jll.aria2c()) -i $f -c --auto-file-renaming=false -d $folder`
     local io
     try
         io = run(pipeline(cmd, stdout = stdout, stderr = stderr), wait = false)
