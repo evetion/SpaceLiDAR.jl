@@ -129,8 +129,8 @@ Converts the granule `g` to the product `product`, by guessing the correct name.
 """
 function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g = ICESat2_Granule{product}(
-        replace(replace(g.id, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
-        replace(replace(g.url, String(T) => String(product)), lowercase(String(T)) => lowercase(String(product))),
+        _convert(g.id, T, product),
+        _convert(g.url, T, product),
         g.info,
         g.polygons,
     )
@@ -146,6 +146,9 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g
 end
 
+function _convert(s::AbstractString, old::Symbol, new::Symbol)
+    replace(replace(s, String(old) => String(new)), lowercase(String(old)) => lowercase(String(new)))
+end
 
 """
     info(g::ICESat2_Granule)
