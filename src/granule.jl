@@ -217,10 +217,10 @@ function _sync!(granules, folder, all; kwargs...)
     isempty(granules) && error("No granules found in provided folder(s).")
     g = first(granules)
     ngranules = if length(granules) == 0 || !haskey(info(granules[end]), :date) || all
-        Set(search(g; kwargs...))
+        Set(search(mission(g), sproduct(g); kwargs...))
     else
         sort!(granules, by = x -> x.id)
-        Set(search(g; after = info(granules[end]).date, kwargs...))
+        Set(search(mission(g), sproduct(g); after = info(granules[end]).date, kwargs...))
     end
     setdiff!(ngranules, Set(granules))
     download!(collect(ngranules), folder)

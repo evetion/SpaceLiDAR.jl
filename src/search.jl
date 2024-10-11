@@ -28,7 +28,7 @@ function search(
     version::Int = 2,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
-    id::Union{Nothing,String}=nothing,
+    id::Union{Nothing,String,Vector{String}} = nothing,
     provider::String = "LPDAAC_ECS",
 )::Vector{GEDI_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
@@ -38,7 +38,15 @@ function search(
     end
 
     granules =
-        earthdata_search(short_name = string(product), bounding_box = extent, version = version, provider = provider, before = before, after = after, id = id)
+        earthdata_search(
+            short_name = string(product),
+            bounding_box = extent,
+            version = version,
+            provider = provider,
+            before = before,
+            after = after,
+            id = id,
+        )
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -59,7 +67,7 @@ function search(
     version::Int = 6,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
-    id::Union{Nothing,String}=nothing,
+    id::Union{Nothing,String,Vector{String}} = nothing,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat2_Granule}
@@ -70,7 +78,15 @@ function search(
     end
 
     granules =
-        earthdata_search(short_name = string(product), bounding_box = extent, version = version, provider = provider, before = before, after = after, id = id)
+        earthdata_search(
+            short_name = string(product),
+            bounding_box = extent,
+            version = version,
+            provider = provider,
+            before = before,
+            after = after,
+            id = id,
+        )
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -91,7 +107,7 @@ function search(
     version::Int = 34,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
-    id::Union{Nothing,String}=nothing,
+    id::Union{Nothing,String,Vector{String}} = nothing,
     s3::Bool = false,
     provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
 )::Vector{ICESat_Granule}
@@ -102,7 +118,15 @@ function search(
     end
 
     granules =
-        earthdata_search(short_name = string(product), bounding_box = extent, version = version, provider = provider, before = before, after = after, id = id)
+        earthdata_search(
+            short_name = string(product),
+            bounding_box = extent,
+            version = version,
+            provider = provider,
+            before = before,
+            after = after,
+            id = id,
+        )
     length(granules) == 0 && @warn "No granules found, did you specify the correct parameters, such as version?"
     s3 ? filter!(g -> !isnothing(g.s3_url), granules) : filter!(g -> !isnothing(g.https_url), granules)
     map(
@@ -141,8 +165,24 @@ function search(mission::Symbol, product::Symbol, args...; kwargs...)
 end
 
 function search(g::Granule; kwargs...)
-    initial = (; version = info(g).version)
+    initial = (; version = info(g).version, id = g.id)
+    only(search(mission(g), sproduct(g); merge(initial, kwargs)...))
+end
+
+function search(gg::Vector{<:Granule}; kwargs...)
+    g = first(gg)
+    initial = (; version = info(g).version, id = map(x -> x.id, gg))
     search(mission(g), sproduct(g); merge(initial, kwargs)...)
+end
+
+function search(g::Granule, product::Symbol; kwargs...)
+    g = SpaceLiDAR.convert(product, g)
+    search(g, kwargs...)
+end
+
+function search(gg::Vector{<:Granule}, product::Symbol; kwargs...)
+    gg = SpaceLiDAR.convert.(product, gg)
+    search(gg, kwargs...)
 end
 
 function parse_polygon(polygons, T = Float64)
@@ -217,7 +257,7 @@ function earthdata_search(;
     provider::Union{Nothing,String} = "NSIDC_CPRD",
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
-    id::Union{Nothing,String} = nothing,
+    id::Union{Nothing,String,Vector{String}} = nothing,
     all_pages::Bool = true,
     page_size = 2000,
     page_num = 1,  # unused
