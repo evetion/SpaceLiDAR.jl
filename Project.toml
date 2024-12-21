@@ -1,7 +1,7 @@
 name = "SpaceLiDAR"
 uuid = "29bf0bfc-420f-4fa5-b441-811fd9e6e11d"
 authors = ["Maarten Pronk", "Deltares"]
-version = "0.4.1"
+version = "0.4.0"
 
 [deps]
 AWSS3 = "1c724243-ef5b-51ab-93f4-b0a88ac62a95"
