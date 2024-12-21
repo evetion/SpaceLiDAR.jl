@@ -19,7 +19,7 @@ jobs:
           ref: gh-pages
       - uses: julia-actions/setup-julia@latest
         with:
-          version: "1.7"
+          version: "lts"
       - name: Install dependencies
         run: julia -e 'using Pkg; Pkg.add("JSON")'
       - name: Update versions

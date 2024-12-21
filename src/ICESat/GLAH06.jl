@@ -44,7 +44,7 @@ function points(
             stop = findlast(ind)
 
             if isnothing(start)
-                @warn "no data found within bbox of track $track in $(file.filename)"
+                @warn "no data found within bbox of $(file.filename)"
 
                 gt = (
                     longitude = Float64[],

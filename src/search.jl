@@ -12,6 +12,10 @@ prefix(::Mission{:ICESat2}) = "ATL"
 prefix(::Mission{:GEDI}) = "GEDI"
 mission(::Mission{T}) where {T} = T
 
+_fix_gedi_id(id::Nothing) = nothing
+_fix_gedi_id(id::String) = first(splitext(id))
+_fix_gedi_id(id::Vector{String}) = _fix_gedi_id.(id)
+
 const earthdata_url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
@@ -29,13 +33,15 @@ function search(
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
     id::Union{Nothing,String,Vector{String}} = nothing,
-    provider::String = "LPDAAC_ECS",
+    provider::String = "LPCLOUD",
 )::Vector{GEDI_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     if bbox != world
         Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
         extent = bbox
     end
+
+    id = _fix_gedi_id(id)
 
     granules =
         earthdata_search(
@@ -165,13 +171,13 @@ function search(mission::Symbol, product::Symbol, args...; kwargs...)
 end
 
 function search(g::Granule; kwargs...)
-    initial = (; version = info(g).version, id = g.id)
+    initial = (; version = info(g).version, id = id(g))
     only(search(mission(g), sproduct(g); merge(initial, kwargs)...))
 end
 
 function search(gg::Vector{<:Granule}; kwargs...)
     g = first(gg)
-    initial = (; version = info(g).version, id = map(x -> x.id, gg))
+    initial = (; version = info(g).version, id = map(x -> id(x), gg))
     search(mission(g), sproduct(g); merge(initial, kwargs)...)
 end
 
@@ -217,7 +223,9 @@ end
 
 function granule_info(item)::NamedTuple
     filename = item.producer_granule_id
-    urls = filter(x -> get(x, "type", "") in ("application/x-hdf5", "application/x-hdfeos"), item.links)
+    endswith(lowercase(filename), ".h5") || (filename *= ".h5")
+
+    urls = filter(x -> endswith(lowercase(get(x, "href", "")), ".h5"), item.links)
 
     https = filter(u -> startswith(u.href, "http"), urls)
     https_url = length(https) > 0 ? https[1].href : nothing
@@ -238,7 +246,7 @@ end
 function granule_info_umm(item)::NamedTuple
     # Schema is here: https://git.earthdata.nasa.gov/projects/EMFD/repos/unified-metadata-model/browse/granule/v1.6.4/umm-g-json-schema.json
     rurls = item.umm.RelatedUrls
-    urls = filter(x -> get(x, "MimeType", "") in ("application/x-hdf5", "application/x-hdfeos"), rurls)
+    urls = filter(x -> endswith(lowercase(get(x, "URL", "")), ".h5"), rurls)
 
     https = filter(u -> startswith(u.URL, "http"), urls)
     https_url = length(https) > 0 ? https[1].URL : nothing
@@ -246,8 +254,9 @@ function granule_info_umm(item)::NamedTuple
     s3_url = length(s3) > 0 ? s3[1].URL : nothing
 
     filename = item.meta["native-id"]
+    endswith(lowercase(filename), ".h5") || (filename *= ".h5")
 
-    (; filename, https_url = https_url, s3_url = s3_url)
+    (; filename, https_url, s3_url, polygons = [])
 end
 
 function earthdata_search(;
@@ -279,7 +288,7 @@ function earthdata_search(;
     end
 
     if !isnothing(id)
-    q["producer_granule_id"] = id
+        q["producer_granule_id"] = id
     end
 
     qurl = umm ? earthdata_url : replace(earthdata_url, "umm_json_v1_6_4" => "json")

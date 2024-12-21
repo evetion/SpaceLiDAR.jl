@@ -205,7 +205,7 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
             height[height.==fill_value] .= NaN
             line = Line(longitude, latitude, height)
             # i = div(length(t), 2) + 1
-            (geom = line, track = track, strong_beam = atlas_beam_type == "strong", granule = granule.id)
+            (geom = line, track = track, strong_beam = atlas_beam_type == "strong", granule = id(granule))
         end
     end
     return PartitionedTable(nts, granule)

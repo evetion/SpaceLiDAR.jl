@@ -250,7 +250,7 @@ function lines(
         map(Tuple(zip(ftracks, grounds))) do (track, ground)
             track_df = points(granule, file, track, step, bbox, ground, canopy, filtered)
             line = Line(track_df.longitude, track_df.latitude, Float64.(track_df.height))
-            (; geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = granule.id)
+            (; geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = id(granule))
         end
     end
     PartitionedTable(nts, granule)
