@@ -79,7 +79,7 @@ function track_angle(g::ICESat2_Granule, latitude::Real = 0.0, nparts = 100)
     v, i = findmin(f -> abs(f - min(abs(latitude), icesat2_inclination)), latitudes)
     a = angles[i]
 
-    info = icesat2_info(g.id)
+    info = icesat2_info(id(g))
     if info.ascending
         return a
     else
@@ -97,7 +97,7 @@ function track_angle(g::ICESat2_Granule, latitude::Vector{Real}, nparts = 100)
         a[I] = angles[i]
     end
 
-    info = icesat2_info(g.id)
+    info = icesat2_info(id(g))
     if info.ascending
         return a
     else
@@ -129,7 +129,7 @@ Converts the granule `g` to the product `product`, by guessing the correct name.
 """
 function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
     g = ICESat2_Granule{product}(
-        _convert(g.id, T, product),
+        _convert(id(g), T, product),
         _convert(g.url, T, product),
         g.info,
         g.polygons,
@@ -157,7 +157,7 @@ Derive info based on the filename. The name is built up as follows:
 `ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5`. See section 1.2.5 in the user guide.
 """
 function info(g::ICESat2_Granule)
-    icesat2_info(g.id)
+    icesat2_info(id(g))
 end
 
 # Granule regions 1-14. Region 4 (North Pole) and region 11 (South Pole) are both ascending descending
@@ -182,5 +182,5 @@ function icesat2_info(filename)
 end
 
 function is_blacklisted(g::Granule)
-    g.id in blacklist
+    id(g) in blacklist
 end

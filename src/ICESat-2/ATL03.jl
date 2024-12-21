@@ -79,7 +79,7 @@ function lines(
                 track = track,
                 strong_beam = track_df.strong_beam[i],
                 t = track_df.datetime[i],
-                granule = granule.id,
+                granule = id(granule),
             )
         end
     end

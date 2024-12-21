@@ -51,12 +51,13 @@ function _s3_download(url, fn, config = create_aws_config())
 end
 
 abstract type Granule end
-Base.:(==)(a::Granule, b::Granule) = a.id == b.id
+Base.:(==)(a::Granule, b::Granule) = id(a) == id(b)
+id(g::Granule) = g.id
 
 Base.show(io::IO, g::Granule) = _show(io, g)
 Base.show(io::IO, ::MIME"text/plain", g::Granule) = _show(io, g)
 function _show(io, g::T) where {T<:Granule}
-    print(io, "$T with id $(g.id)")
+    print(io, "$T with id $(id(g))")
 end
 
 MultiPolygonType = Vector{Vector{Vector{Vector{Float64}}}}
@@ -74,7 +75,7 @@ if it doesn't already exists locally.
 Will require credentials (netrc) which can be set with [`netrc!`](@ref).
 """
 function download!(granule::Granule, folder = ".")
-    fn = joinpath(abspath(folder), granule.id)
+    fn = joinpath(abspath(folder), id(granule))
     if isfile(fn)
         granule.url = fn
         return granule
@@ -148,7 +149,7 @@ function download!(granules::Vector{<:Granule}, folder::AbstractString = ".")
     end
 
     for granule in granules
-        granule.url = joinpath(folder, granule.id)
+        granule.url = joinpath(folder, id(granule))
     end
     granules
 end
@@ -172,8 +173,8 @@ function Base.filesize(granule::T) where {T<:Granule}
     filesize(granule.url)
 end
 
-Base.isequal(a::Granule, b::Granule) = a.id == b.id
-Base.hash(g::Granule, h::UInt) = hash(g.id, h)
+Base.isequal(a::Granule, b::Granule) = id(a) == id(b)
+Base.hash(g::Granule, h::UInt) = hash(id(g), h)
 
 """
     sync(folder::AbstractString, all::Bool=false; kwargs...)
@@ -219,7 +220,7 @@ function _sync!(granules, folder, all; kwargs...)
     ngranules = if length(granules) == 0 || !haskey(info(granules[end]), :date) || all
         Set(search(mission(g), sproduct(g); kwargs...))
     else
-        sort!(granules, by = x -> x.id)
+        sort!(granules, by = x -> id(x))
         Set(search(mission(g), sproduct(g); after = info(granules[end]).date, kwargs...))
     end
     setdiff!(ngranules, Set(granules))

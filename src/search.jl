@@ -12,6 +12,10 @@ prefix(::Mission{:ICESat2}) = "ATL"
 prefix(::Mission{:GEDI}) = "GEDI"
 mission(::Mission{T}) where {T} = T
 
+_fix_gedi_id(id::Nothing) = nothing
+_fix_gedi_id(id::String) = first(splitext(id))
+_fix_gedi_id(id::Vector{String}) = _fix_gedi_id.(id)
+
 const earthdata_url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
@@ -36,6 +40,8 @@ function search(
         Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
         extent = bbox
     end
+
+    id = _fix_gedi_id(id)
 
     granules =
         earthdata_search(
@@ -165,13 +171,13 @@ function search(mission::Symbol, product::Symbol, args...; kwargs...)
 end
 
 function search(g::Granule; kwargs...)
-    initial = (; version = info(g).version, id = g.id)
+    initial = (; version = info(g).version, id = id(g))
     only(search(mission(g), sproduct(g); merge(initial, kwargs)...))
 end
 
 function search(gg::Vector{<:Granule}; kwargs...)
     g = first(gg)
-    initial = (; version = info(g).version, id = map(x -> x.id, gg))
+    initial = (; version = info(g).version, id = map(x -> id(x), gg))
     search(mission(g), sproduct(g); merge(initial, kwargs)...)
 end
 
@@ -217,6 +223,8 @@ end
 
 function granule_info(item)::NamedTuple
     filename = item.producer_granule_id
+    endswith(lowercase(filename), ".h5") || (filename *= ".h5")
+
     urls = filter(x -> endswith(lowercase(get(x, "href", "")), ".h5"), item.links)
 
     https = filter(u -> startswith(u.href, "http"), urls)
@@ -246,6 +254,7 @@ function granule_info_umm(item)::NamedTuple
     s3_url = length(s3) > 0 ? s3[1].URL : nothing
 
     filename = item.meta["native-id"]
+    endswith(lowercase(filename), ".h5") || (filename *= ".h5")
 
     (; filename, https_url, s3_url, polygons = [])
 end
