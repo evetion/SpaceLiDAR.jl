@@ -49,7 +49,7 @@ and return a new list of granules with the local filepaths if they exist.
 function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Granule}
     local_granules = Vector{eltype(granules)}()
     for granule in granules
-        file = joinpath(folder, granule.id)
+        file = joinpath(folder, id(granule))
         if isfile(file)
             g = copy(granule)
             g.url = file

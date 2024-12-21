@@ -58,7 +58,7 @@ end
 
 function add_id(table::PartitionedTable)
     nts = map(table.tables) do t
-        nt = (; id = Fill(table.granule.id, length(first(t))))
+        nt = (; id = Fill(id(table.granule), length(first(t))))
         merge(t, nt)
     end
     return PartitionedTable(nts, table.granule)
@@ -67,7 +67,7 @@ end
 function add_id(table::Table)
     g = _granule(table)
     t = _table(table)
-    nt = (; id = Fill(g.id, length(first(t))))
+    nt = (; id = Fill(id(g), length(first(t))))
     nts = merge(t, nt)
     return Table(nts, g)
 end
@@ -81,7 +81,7 @@ function add_info(table::Table)
     return Table(nts, g)
 end
 
-_info(g::Granule) = merge((; id = g.id), info(g))
+_info(g::Granule) = merge((; id = id(g)), info(g))
 
 DataAPI.metadatasupport(::Type{<:AbstractTable}) = (read = true, write = false)
 DataAPI.metadatakeys(t::AbstractTable) = map(String, keys(pairs(_info(_granule(t)))))

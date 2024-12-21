@@ -34,7 +34,7 @@ or in case of v"2": `GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5`.
 See section 2.4 in the user guide.
 """
 function info(g::GEDI_Granule)
-    gedi_info(g.id)
+    gedi_info(id(g))
 end
 
 function gedi_info(filename)
@@ -80,7 +80,7 @@ function track_angle(g::GEDI_Granule, latitude = 0.0, nparts = 100)
     v, i = findmin(abs.(latitudes .- min(abs(latitude), gedi_inclination)))
     a = angles[i]
 
-    info = gedi_info(g.id)
+    info = gedi_info(id(g))
     if info.sub_orbit <= 2  # ascending
         return a
     else

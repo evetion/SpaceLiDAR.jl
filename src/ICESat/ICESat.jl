@@ -45,7 +45,7 @@ Derive info based on the filename. The name is built up as follows:
 ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5. See section 1.2.5 in the user guide.
 """
 function info(g::ICESat_Granule)
-    return icesat_info(g.id)
+    return icesat_info(id(g))
 end
 
 function icesat_info(filename)
