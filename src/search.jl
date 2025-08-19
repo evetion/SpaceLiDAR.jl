@@ -75,7 +75,7 @@ function search(
     after::Union{Nothing,DateTime} = nothing,
     id::Union{Nothing,String,Vector{String}} = nothing,
     s3::Bool = false,
-    provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
+    provider::String = "NSIDC_CPRD",
 )::Vector{ICESat2_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     if bbox != world
@@ -226,7 +226,6 @@ function granule_info(item)::NamedTuple
     endswith(lowercase(filename), ".h5") || (filename *= ".h5")
 
     urls = filter(x -> endswith(lowercase(get(x, "href", "")), ".h5"), item.links)
-
     https = filter(u -> startswith(u.href, "http"), urls)
     https_url = length(https) > 0 ? https[1].href : nothing
     s3 = filter(u -> startswith(u.href, "s3:"), urls)
