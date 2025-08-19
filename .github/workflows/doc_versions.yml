@@ -24,4 +24,4 @@ jobs:
         run: julia -e 'using Pkg; Pkg.add("JSON")'
       - name: Update versions
         run: julia update_version.jl
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v6
