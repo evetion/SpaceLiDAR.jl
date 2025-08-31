@@ -1,6 +1,6 @@
 [![DOI](https://zenodo.org/badge/241095197.svg)](https://zenodo.org/badge/latestdoi/241095197)
 # SpaceLiDAR
-A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly [search](tutorial/usage.md#search-for-data), download and [load](tutorial/usage.md#derive-points) filtered point data with relevant attributes from the `.h5` granules of each data product. For an overview with code examples, see the FOSS4G Pluto notebook [here](tutorial/foss4g_2021.jl.html).
+A Julia toolbox for researchers working with the space-borne lidar altimetry data from the [ICESat](topics/ICESat.md), [ICESat-2](topics/ICESat-2.md) and [GEDI](topics/GEDI.md) [NASA](http://www.nasa.gov/) missions. Quickly [search](tutorial/usage.md#search-for-data), download, and [load](tutorial/usage.md#derive-points) filtered point data with relevant attributes from the `.h5` granules of each data product. For an overview with code examples, see the Pluto notebook [here](tutorial/foss4g_2021.jl.html).
 
 If you use SpaceLiDAR in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197).
 
@@ -29,3 +29,6 @@ The code produced for the following paper was the beginning of this package:
 The DTM produced using ICESat-2 ATL08 data was in turn used for:
 
 > Hooijer, A., and R. Vernimmen. 2021. ‘Global LiDAR Land Elevation Data Reveal Greatest Sea-Level Rise Vulnerability in the Tropics’. Nature Communications 12 (1): 3592. [https://doi.org/10/gkzf49](https://doi.org/10/gkzf49).
+
+## Contributing
+Contributions are welcome! Please feel free to report issues, feature requests, or submit pull requests on [GitHub](https://github.com/evetion/SpaceLiDAR.jl/issues).
