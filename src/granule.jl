@@ -75,13 +75,17 @@ if it doesn't already exists locally.
 Will require credentials (netrc) which can be set with [`netrc!`](@ref).
 """
 function download!(granule::Granule, folder = ".")
-    fn = joinpath(abspath(folder), id(granule))
+    # Normalize and ensure the directory exists
+    folder = normpath(abspath(folder))
+    mkpath(folder)
+
+    fn = joinpath(folder, id(granule))
     if isfile(fn)
         granule.url = fn
         return granule
     end
     isfile(granule.url) && return granule
-    tmp = tempname(abspath(folder))
+    tmp = tempname(folder)
     if startswith(granule.url, "http")
         _download(granule.url, tmp)
     elseif startswith(granule.url, "s3")
@@ -128,6 +132,9 @@ Like [`download!`](@ref), but for a vector of `granules`.
 Will make use of aria2c (parallel).
 """
 function download!(granules::Vector{<:Granule}, folder::AbstractString = ".")
+    # Normalize and ensure the directory exists
+    folder = normpath(abspath(folder))
+    mkpath(folder)
 
     # Download serially if s3 links are present
     if any(g -> startswith(g.url, "s3"), granules)
