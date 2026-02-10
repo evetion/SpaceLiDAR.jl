@@ -70,7 +70,7 @@ function search(
     product::Symbol = :ATL03;
     bbox::Extent = world,
     extent::Extent = world,
-    version::Int = 6,
+    version::Int = 7,
     before::Union{Nothing,DateTime} = nothing,
     after::Union{Nothing,DateTime} = nothing,
     id::Union{Nothing,String,Vector{String}} = nothing,
@@ -115,7 +115,7 @@ function search(
     after::Union{Nothing,DateTime} = nothing,
     id::Union{Nothing,String,Vector{String}} = nothing,
     s3::Bool = false,
-    provider::String = s3 ? "NSIDC_CPRD" : "NSIDC_ECS",
+    provider::String = "NSIDC_CPRD",
 )::Vector{ICESat_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
     if bbox != world
