@@ -16,6 +16,11 @@ using DataAPI
 const rng = MersenneTwister(54321)
 const SL = SpaceLiDAR
 
+@static if Sys.isapple()
+    using MozillaCACerts_jll
+    ENV["CURL_CA_BUNDLE"] = MozillaCACerts_jll.cacert
+end
+
 # ensure test data is present
 testdir = @__DIR__
 datadir = joinpath(testdir, "data")

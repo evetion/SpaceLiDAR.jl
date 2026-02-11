@@ -1,7 +1,7 @@
 name = "SpaceLiDAR"
 uuid = "29bf0bfc-420f-4fa5-b441-811fd9e6e11d"
-authors = ["Maarten Pronk", "Deltares"]
 version = "0.4.1"
+authors = ["Maarten Pronk", "Deltares"]
 
 [deps]
 AWSS3 = "1c724243-ef5b-51ab-93f4-b0a88ac62a95"
@@ -55,11 +55,11 @@ Tables = "^1.4"
 TimeZones = "1"
 julia = "1.10"
 
-
 [extras]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+MozillaCACerts_jll = "14a3606d-f60d-562e-9121-12d972cd8159"
 
 [targets]
-test = ["Test", "DataFrames", "Documenter"]
+test = ["Test", "DataFrames", "Documenter", "MozillaCACerts_jll"]
