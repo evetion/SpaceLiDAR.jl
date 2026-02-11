@@ -14,17 +14,4 @@ function Makie.convert_arguments(p::Type{<:Makie.Scatter}, geom::SpaceLiDAR.Gran
     Makie.convert_arguments(p, table.longitude .* 110_000 .* cosd.(table.latitude), table.latitude * 110_000, table.height * zscale, kwargs...)
 end
 
-function Makie.plot!(plot::Makie.Plot(SpaceLiDAR.Granule))
-
-    g = plot[1][]
-
-    get!(plot.attributes, :fxaa, true)
-    get!(plot.attributes, :ssao, true)
-
-    valid_attributes = Makie.shared_attributes(plot, Makie.Scatter)
-    valid_attributes[:zscale] = get(plot.attributes, :zscale, Makie.Observable(1))[]
-    Makie.scatter!(plot, valid_attributes, g)
-    plot
-end
-
 end
