@@ -122,12 +122,12 @@ empty_extent = convert(Extent, empty_bbox)
         # Test download! with nested directories that don't exist
         try
             nested_dir = joinpath(tempdir(), "test_spacelidar/nested/path")
-            g2 = copy(granules[1])
+            g2 = copy(granules[2])
             SL.download!(g2, nested_dir)
             @test isfile(g2)
             @test isdir(nested_dir)
             rm(g2)
-            rm(joinpath(tempdir(), "test_spacelidar"); recursive=true)
+            rm(joinpath(tempdir(), "test_spacelidar"); recursive = true)
         catch e
             if e isa Downloads.RequestError
                 @error "Could not download granule due to network error(s)"
@@ -139,15 +139,15 @@ empty_extent = convert(Extent, empty_bbox)
         # Test download! with path that needs normalization
         try
             unnormalized_path = joinpath(tempdir(), "test_spacelidar2", ".", "subdir", "..", "final")
-            g3 = copy(granules[1])
+            g3 = copy(granules[3])
             SL.download!(g3, unnormalized_path)
             @test isfile(g3)
             # The file should be in the normalized path
             expected_path = normpath(unnormalized_path)
             @test isdir(expected_path)
-            @test g3.url == joinpath(expected_path, id(g3))
+            @test g3.url == joinpath(expected_path, g3.id)
             rm(g3)
-            rm(joinpath(tempdir(), "test_spacelidar2"); recursive=true)
+            rm(joinpath(tempdir(), "test_spacelidar2"); recursive = true)
         catch e
             if e isa Downloads.RequestError
                 @error "Could not download granule due to network error(s)"
