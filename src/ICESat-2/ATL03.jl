@@ -273,3 +273,31 @@ function count2index(counts)
     end
     c
 end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+expand_dims(::ICESat2_Granule{:ATL03}) = "geolocation/segment_ph_cnt"
+
+function default_variables(::ICESat2_Granule{:ATL03})
+    expand = ExpandDims("geolocation/segment_ph_cnt")
+    [
+        Variable(:longitude, "heights/lon_ph", Float64),
+        Variable(:latitude, "heights/lat_ph", Float64),
+        Variable(:height, "heights/h_ph", Float32),
+        Variable(:quality, "heights/quality_ph", Int8),
+        Variable(:datetime, "heights/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(:confidence, "heights/signal_conf_ph", Int8, SliceRow(1)),
+        Variable(:uncertainty, "geolocation/sigma_h", Float32, expand),
+        Variable(:segment, "geolocation/segment_id", Int32, expand),
+        Variable(:sun_angle, "geolocation/solar_elevation", Float32, expand),
+        Variable(:height_reference, "geophys_corr/dem_h", Float32, expand),
+    ]
+end
+
+function default_attributes(::ICESat2_Granule{:ATL03})
+    [
+        Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
+        Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
+    ]
+end

@@ -8,7 +8,7 @@ const gedi_inclination = 51.6443
     GEDI_Granule{product} <: Granule
 
 A granule of the GEDI product `product`. Normally created automatically from
-either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
+either [`search`](@ref), [`granule`](@ref) or [`granules`](@ref).
 """
 Base.@kwdef mutable struct GEDI_Granule{product} <: Granule
     id::AbstractString

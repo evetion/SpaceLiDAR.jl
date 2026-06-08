@@ -114,3 +114,24 @@ function points(
         return Table(gt, granule)
     end
 end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat_Granule{:GLAH06})
+    [
+        Variable(:longitude, "Data_40HZ/Geolocation/d_lon", Float64),
+        Variable(:latitude, "Data_40HZ/Geolocation/d_lat", Float64),
+        Variable(:height, "Data_40HZ/Elevation_Surfaces/d_elev", Float64),
+        Variable(:datetime, "Data_40HZ/DS_UTCTime_40", Float64,
+            ToDateTimeConst(j2000_offset)),
+        Variable(:saturation_correction, "Data_40HZ/Elevation_Corrections/d_satElevCorr", Float64),
+        Variable(:elev_use_flg, "Data_40HZ/Quality/elev_use_flg", Int8),
+        Variable(:sigma_att_flg, "Data_40HZ/Quality/sigma_att_flg", Int8),
+        Variable(:i_numPk, "Data_40HZ/Waveform/i_numPk", Int32),
+        Variable(:height_reference, "Data_40HZ/Geophysical/d_DEM_elv", Float64),
+    ]
+end
+
+function default_attributes(::ICESat_Granule{:GLAH06})
+    Attribute[]
+end

@@ -10,7 +10,7 @@ The names of the tuples are based on the following fields:
 | `latitude`         | `Geolocation/d_lat`             | Latitude of segment center, WGS84, North=+  | decimal degrees              |
 | `height`           | `Elevation_Surfaces/d_elev`     | + `Elevation_Corrections/d_satElevCorr`     | m above WGS84 ellipsoid      |
 | `datetime`         | `DS_UTCTime_40`                 | Precise time of aquisiton                   | date-time                    |
-| `quality` [^1]     | `Quality/elev_use_flg`          | & `Quality/sigma_att_flg` = 0               |                              |
+| `quality` [^smith2020]     | `Quality/elev_use_flg`          | & `Quality/sigma_att_flg` = 0               |                              |
 |                    | & `Waveform/i_numPk` = 1        | & `Elevation_Corrections/d_satElevCorr` < 3 | 1=high quality               |
 | `clouds`           | `Elevation_Flags/elv_cloud_flg` | Cloud contamination                         | -                            |
 | `height_reference` | `Geophysical/d_DEM_elv`         | Height of the (best available) DEM          | height above WGS84           |
@@ -21,7 +21,7 @@ The names of the tuples are based on the following fields:
 
 You can get the output in a `DataFrame` with `DataFrame(points(g))`.
 
-[^1]: Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... & Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.
+[^smith2020]: Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... & Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.
 """
 function points(
     granule::ICESat_Granule{:GLAH14};
@@ -117,7 +117,7 @@ function points(
             datetime = datetime,
 
             # NOT SURE THAT THIS FILTERS IS APPLICABLE NON-ICESHEET ELEVATION
-            # quality defined according [^1]
+            # quality defined according [^smith2020]
             quality = (quality .== 0) .&
                       (sigma_att_flg .== 0) .&
                       (i_numPk .== 1) .&
@@ -130,4 +130,29 @@ function points(
         )
         return Table(gt, granule)
     end
+end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat_Granule{:GLAH14})
+    [
+        Variable(:longitude, "Data_40HZ/Geolocation/d_lon", Float64),
+        Variable(:latitude, "Data_40HZ/Geolocation/d_lat", Float64),
+        Variable(:height, "Data_40HZ/Elevation_Surfaces/d_elev", Float64),
+        Variable(:datetime, "Data_40HZ/DS_UTCTime_40", Float64,
+            ToDateTimeConst(j2000_offset)),
+        Variable(:saturation_correction, "Data_40HZ/Elevation_Corrections/d_satElevCorr", Float64),
+        Variable(:clouds, "Data_40HZ/Elevation_Flags/elv_cloud_flg", Int8, ToBool()),
+        Variable(:gain, "Data_40HZ/Waveform/i_gval_rcv", Int32),
+        Variable(:reflectivity, "Data_40HZ/Reflectivity/d_reflctUC", Float64),
+        Variable(:attitude, "Data_40HZ/Quality/sigma_att_flg", Int8),
+        Variable(:saturation, "Data_40HZ/Quality/sat_corr_flg", Int8),
+        Variable(:elev_use_flg, "Data_40HZ/Quality/elev_use_flg", Int8),
+        Variable(:i_numPk, "Data_40HZ/Waveform/i_numPk", Int32),
+        Variable(:height_reference, "Data_40HZ/Geophysical/d_DEM_elv", Float64),
+    ]
+end
+
+function default_attributes(::ICESat_Granule{:GLAH14})
+    Attribute[]
 end

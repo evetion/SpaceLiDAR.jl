@@ -5,3 +5,12 @@
 Please see the <a href="/SpaceLiDAR.jl/stable/changelog/">changelog</a> for recent (deprecation) changes and pin this
 package if you use it in production.
 {% endblock %}
+
+{% block extrahead %}
+<style>
+  /* Push the last nav tab (Changelog) to the right */
+  .md-tabs__list li:nth-last-child(2) {
+    margin-left: auto;
+  }
+</style>
+{% endblock %}

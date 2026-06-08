@@ -127,3 +127,26 @@ function points(
     )
     return nt
 end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat2_Granule{:ATL06})
+    [
+        Variable(:longitude, "land_ice_segments/longitude", Float64),
+        Variable(:latitude, "land_ice_segments/latitude", Float64),
+        Variable(:height, "land_ice_segments/h_li", Float32),
+        Variable(:sigma_geo_h, "land_ice_segments/sigma_geo_h", Float32),
+        Variable(:h_li_sigma, "land_ice_segments/h_li_sigma", Float32),
+        Variable(:datetime, "land_ice_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(:quality, "land_ice_segments/atl06_quality_summary", Int8, InvertBool()),
+        Variable(:height_reference, "land_ice_segments/dem/dem_h", Float32),
+    ]
+end
+
+function default_attributes(::ICESat2_Granule{:ATL06})
+    [
+        Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
+        Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
+    ]
+end

@@ -290,3 +290,46 @@ function bounds(granule::GEDI_Granule)
         )
     end
 end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::GEDI_Granule{:GEDI02_A})
+    [
+        Variable(:longitude, "lon_lowestmode", Float64),
+        Variable(:latitude, "lat_lowestmode", Float64),
+        Variable(:height, "elev_lowestmode", Float32),
+        Variable(:height_error, "elevation_bin0_error", Float32),
+        Variable(:datetime, "delta_time", Float64, ToDateTimeConst(t_offset)),
+        Variable(:intensity, "energy_total", Float32),
+        Variable(:sensitivity, "sensitivity", Float32),
+        Variable(:surface, "surface_flag", UInt8, ToBool()),
+        Variable(:quality, "quality_flag", UInt8, ToBool()),
+        Variable(:nmodes, "num_detectedmodes", UInt8),
+        Variable(:sun_angle, "solar_elevation", Float32),
+        Variable(:height_reference, "digital_elevation_model", Float32),
+    ]
+end
+
+"""GEDI L2A canopy variables — reads highest return instead of lowest mode."""
+function gedi_l2a_canopy_variables()
+    [
+        Variable(:longitude, "lon_highestreturn", Float64),
+        Variable(:latitude, "lat_highestreturn", Float64),
+        Variable(:height, "elev_highestreturn", Float32),
+        Variable(:height_error, "elevation_bin0_error", Float32),
+        Variable(:datetime, "delta_time", Float64, ToDateTimeConst(t_offset)),
+        Variable(:intensity, "energy_total", Float32),
+        Variable(:sensitivity, "sensitivity", Float32),
+        Variable(:surface, "surface_flag", UInt8, ToBool()),
+        Variable(:quality, "quality_flag", UInt8, ToBool()),
+        Variable(:nmodes, "num_detectedmodes", UInt8),
+        Variable(:sun_angle, "solar_elevation", Float32),
+        Variable(:height_reference, "digital_elevation_model", Float32),
+    ]
+end
+
+function default_attributes(::GEDI_Granule{:GEDI02_A})
+    [
+        Attribute(:strong_beam, "description", x -> occursin("Full power", x)),
+    ]
+end

@@ -35,3 +35,4 @@ scripts
 *.pq
 *.parquet
 *.fgb
+/docs/src/CONTRIBUTING.md

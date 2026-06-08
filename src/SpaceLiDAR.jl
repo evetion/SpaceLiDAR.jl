@@ -16,6 +16,15 @@ import DataAPI
 include("granule.jl")
 include("utils.jl")
 include("geom.jl")
+include("H5Table/H5Table.jl")
+Variable = H5Table.Variable
+Attribute = H5Table.Attribute
+ToDateTime = H5Table.ToDateTime
+ToDateTimeConst = H5Table.ToDateTimeConst
+ToBool = H5Table.ToBool
+InvertBool = H5Table.InvertBool
+SliceRow = H5Table.SliceRow
+ExpandDims = H5Table.ExpandDims
 include("GEDI/GEDI.jl")
 include("GEDI/L2A.jl")
 include("ICESat-2/ICESat-2.jl")
@@ -32,29 +41,16 @@ include("search.jl")
 include("geointerface.jl")
 include("env.jl")
 
-export find, search, sync, download!, download, netrc!, instantiate, info, angle, angle!, shift
-export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!
-export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
-export granule_from_file, granules_from_folder, write_granule_urls!
 
-precompile(find, (Symbol, String, NamedTuple, String))
-precompile(find, (Symbol, String))
-precompile(search, (Symbol, Symbol))
-precompile(instantiate, (Vector{GEDI_Granule}, String))
-precompile(instantiate, (Vector{ICESat_Granule}, String))
-precompile(instantiate, (Vector{ICESat2_Granule}, String))
-precompile(granules_from_folder, (String,))
-precompile(granule_from_file, (String,))
-precompile(download!, (GEDI_Granule,))
-precompile(download!, (ICESat_Granule,))
-precompile(download!, (ICESat2_Granule,))
-precompile(points, (GEDI_Granule,))
-precompile(points, (ICESat_Granule,))
-precompile(points, (ICESat2_Granule,))
-precompile(lines, (GEDI_Granule,))
-precompile(lines, (ICESat_Granule,))
-precompile(lines, (ICESat2_Granule,))
-precompile(angle, (Vector{Float32}, Vector{Float32}))
-precompile(shift, (Float32, Float32, Float64, Float64))
+export find, search, sync, download!, download, netrc!, instantiate, info, angle, angle!, shift
+export lines, points, table, explore, in_bbox, bounds, classify, isvalid, rm
+export to_egm2008, to_egm2008!
+export topex_to_wgs84, topex_to_wgs84!
+export icesat_saturation_correct, icesat_saturation_correct!
+export icesat_quality
+export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
+export granule, granules, granule_from_file, granules_from_folder, write_granule_urls!
+
+# include("precompile.jl")
 
 end # module

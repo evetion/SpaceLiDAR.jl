@@ -45,13 +45,14 @@ function points(
     highres::Bool = false,
 )
     if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
         Base.depwarn(
             "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
             "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
             :points,
         )
     end
+    # Resolve bbox type before closure capture to avoid Core.Box
+    _bbox = bbox isa NamedTuple ? convert(Extent, bbox) : bbox
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         f = highres ? _extrapoints : points
@@ -68,7 +69,7 @@ function points(
         end
 
         map(Tuple(zip(ftracks, grounds))) do (track, ground)
-            track_nt = f(granule, file, track, t_offset, step, !ground, canopy_field, ground, ground_field, bbox)
+            track_nt = f(granule, file, track, t_offset, step, !ground, canopy_field, ground, ground_field, _bbox)
             replace!(x -> x === fill_value ? NaN : x, track_nt.height)
             track_nt
         end
@@ -135,8 +136,6 @@ function points(
     else
         start = 1
         stop = length(open_dataset(group, "land_segments/longitude"))
-        x = open_dataset(group, "land_segments/longitude")[start:step:stop]::Vector{Float32}
-        y = open_dataset(group, "land_segments/latitude")[start:step:stop]::Vector{Float32}
     end
 
     if ground
@@ -185,6 +184,56 @@ function points(
         nphotons = nph,
     )
     nt
+end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat2_Granule{:ATL08})
+    [
+        Variable(:longitude, "land_segments/longitude", Float32),
+        Variable(:latitude, "land_segments/latitude", Float32),
+        Variable(:height, "land_segments/terrain/h_te_mean", Float32),
+        Variable(:height_error, "land_segments/terrain/h_te_uncertainty", Float32),
+        Variable(:datetime, "land_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(:quality, "land_segments/terrain_flg", Int32, InvertBool()),
+        Variable(:phr, "land_segments/ph_removal_flag", Int8, ToBool()),
+        Variable(:sensitivity, "land_segments/snr", Float32),
+        Variable(:scattered, "land_segments/msw_flag", Int8),
+        Variable(:saturated, "land_segments/sat_flag", Int8),
+        Variable(:clouds, "land_segments/layer_flag", Int8, ToBool()),
+        Variable(:height_reference, "land_segments/dem_h", Float32),
+        Variable(:reflectance, "land_segments/asr", Float32),
+        Variable(:nphotons, "land_segments/n_seg_ph", Int32),
+    ]
+end
+
+"""ATL08 canopy variables — reads canopy height instead of terrain height."""
+function atl08_canopy_variables()
+    [
+        Variable(:longitude, "land_segments/longitude", Float32),
+        Variable(:latitude, "land_segments/latitude", Float32),
+        Variable(:height, "land_segments/canopy/h_mean_canopy_abs", Float32),
+        Variable(:height_error, "land_segments/canopy/h_canopy_uncertainty", Float32),
+        Variable(:datetime, "land_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(:quality, "land_segments/terrain_flg", Int32, InvertBool()),
+        Variable(:phr, "land_segments/ph_removal_flag", Int8, ToBool()),
+        Variable(:sensitivity, "land_segments/snr", Float32),
+        Variable(:scattered, "land_segments/msw_flag", Int8),
+        Variable(:saturated, "land_segments/sat_flag", Int8),
+        Variable(:clouds, "land_segments/layer_flag", Int8, ToBool()),
+        Variable(:height_reference, "land_segments/dem_h", Float32),
+        Variable(:reflectance, "land_segments/asr", Float32),
+        Variable(:nphotons, "land_segments/n_seg_ph", Int32),
+    ]
+end
+
+function default_attributes(::ICESat2_Granule{:ATL08})
+    [
+        Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
+        Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
+    ]
 end
 
 function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step = 100, quality = 1)

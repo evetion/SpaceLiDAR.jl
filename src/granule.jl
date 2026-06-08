@@ -198,7 +198,7 @@ present in folder(s), to the *first* folder in the list.
     Using sync could result in downloading significant (TB+) amounts of data.
 
 Assumes all folders contain granules of the same product. If not, pass the
-product as Symbol: [`sync(::Symbol, folders, all)`](@ref) instead.
+product as Symbol: [`sync`](@ref) instead.
 
 When `all` is false (the default), sync will search only for granules past the date of
 the latest granule found in `folders`. If true, it will search for all granules.

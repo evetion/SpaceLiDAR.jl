@@ -16,23 +16,40 @@ docs_dir: "build"
 
 nav:
   - Home: "index.md"
-  - Changelog: "changelog.md"
-  - Guides:
-      - "Downloading": "guides/downloads.md"
-      - "Track filtering": "guides/tracks.md"
   - Tutorials:
       - "Installation": "tutorial/installation.md"
       - "Usage": "tutorial/usage.md"
+  - Guides:
+      - "Downloading": "guides/downloads.md"
+      - "Track filtering": "guides/tracks.md"
+      - "Selecting variables": "guides/variables.md"
+      - "Adding a product": "guides/new-schema.md"
+      - "Migration (points → table)": "guides/migration.md"
   - Topics:
-      - "ICESat": "topics/ICESat.md"
-      - "ICESat-2": "topics/ICESat-2.md"
-      - "GEDI": "topics/GEDI.md"
+      - "HDF5": "topics/HDF5.md"
+      - "Granules": "topics/granules.md"
+      - "Search": "topics/search.md"
+  - ICESat:
+      - "Overview": "topics/ICESat.md"
+      - "GLAH06": "topics/icesat/GLAH06.md"
+      - "GLAH14": "topics/icesat/GLAH14.md"
+  - ICESat-2:
+      - "Overview": "topics/ICESat-2.md"
+      - "ATL03": "topics/icesat2/ATL03.md"
+      - "ATL06": "topics/icesat2/ATL06.md"
+      - "ATL08": "topics/icesat2/ATL08.md"
+      - "ATL12": "topics/icesat2/ATL12.md"
+  - GEDI:
+      - "Overview": "topics/GEDI.md"
+      - "L2A": "topics/gedi/L2A.md"
   - Reference:
       - "Search": "reference/search.md"
       - "Granules": "reference/granules.md"
       - "Data": "reference/data.md"
       - "Utilities": "reference/utilities.md"
       - "Index": "reference/api.md"
+  - Contributing: "CONTRIBUTING.md"
+  - Changelog: "changelog.md"
 
 theme:
   name: material
@@ -100,10 +117,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/evetion/SpaceLiDAR.jl
       name: Source code
-    - icon: fontawesome/brands/gitter
-      link: https://gitter.im/evetion/community
-      name: Chat with me on Gitter
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/3vetion
-      name: Twitter
-copyright: Copyright &copy; 2022 Maarten Pronk, Deltares
+    - icon: fontawesome/brands/mastodon
+      link: https://fosstodon.org/@evetion
+      name: Mastodon
+copyright: Copyright &copy; 2026 Maarten Pronk, Deltares | Delft University of Technology

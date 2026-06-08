@@ -1,14 +1,51 @@
 ## Unreleased
 
-- Working on generic retrieval of parameters as a Table from a granule, instead of the hardcoded choices made now for each product. Would result in methods like `points(granule, [vara, varb])`.
+### New features
+- New `H5Table` system: generic, lazy HDF5-to-table reader that handles dimension flattening, nodata masking (`missing`), and transforms automatically.
+- `explore(granule)` opens an interactive terminal browser for inspecting HDF5 contents and selecting variables.
+- `table(g; variables=)` keyword allows reading custom variable sets instead of only the built-in defaults.
+- `table(g; tracks=)` keyword for filtering specific beams/tracks.
+- Variables now support transforms: `ToDateTime`, `ToBool`, `InvertBool`, `SliceRow`.
+- Attributes (track-level metadata like `strong_beam`, `detector_id`) are now included as constant columns.
+- Pre-built alternative schemas: `atl08_canopy_variables()`, `gedi_l2a_canopy_variables()`.
+- Documentation rewrite following the Diátaxis framework (tutorials, guides, topics, reference).
+
+### Breaking
+- `points` is removed. Use `table(granule)` instead (see migration guide).
+- Fill values are now `missing` instead of `NaN`.
+- `granule_from_file` → `granule`, `granules_from_folder` → `granules` (deprecated names still work).
+
+### Changed
+- Column types resolved at read time via transforms (e.g., `delta_time` becomes `DateTime`).
+- All products now use the shared `H5Table` infrastructure instead of per-product hardcoded readers.
+
+## v0.4.2
+
+### Fixed
+- Fix `download!` to create directories and normalize paths (#95).
+- Update Makie compat to 0.24 (#93).
+- Bump CategoricalArrays compat to 1.
+- CI dependency bumps (actions/checkout v6, stefanzweifel/git-auto-commit-action v7).
+
+## v0.4.1
+
+### Fixed
+- Fix ICESat-2 search after data migration to EarthData Cloud.
+
+## v0.4.0
 
 ### New features
 - New types `Table` and `PartitionedTable`, which support the Tables.jl interface. This prevents allocating code like `reduce(vcat, DataFrame.(points(granule)))` to get a DataFrame. You can now just call `DataFrame(table)`.
 - Reduced allocations in retrieving point data.
 - Introduced `before` and `after` keywords in `search`, to search by date(ranges).
+- `sync` utility with aria2c for incremental folder updates.
+- Makie extension for plotting (`plot(granules)`).
+- `search(granule, :OtherProduct)` for cross-product granule lookup.
+- `id` keyword in `search` for fetching specific granules.
 
 ### Fixed
 - Empty (filtered) granules could result in `Vector{BitVector}` columns, which have been changed to `Vector{Bool}`.
+- GEDI search after migration to LPCLOUD.
 
 ### Breaking
 - `points` now return either a `Table` or a `PartitionedTable` instead of `NamedTuple` or `Vector{NamedTuple}`. The old behaviour can be regained by calling `parent` on these tables.
@@ -20,8 +57,8 @@
 - Renamed `write_granule_urls!` to `write_urls`
 
 ### Changed
-- Most of the search functionality has been moved out to the more generic [EarthData.jl](https://github.com/evetion/EarthData.jl)
-- Updated ICESat-2 from version 5 to version 6
+- Most of the search functionality has been moved out to the more generic [EarthData.jl](https://github.com/evetion/EarthData.jl).
+- Updated ICESat-2 from version 5 to version 6.
 
 
 ## v0.3.0

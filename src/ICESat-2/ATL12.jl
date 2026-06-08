@@ -61,3 +61,22 @@ function points(
         detector_id = Fill(parse(Int8, spot_number), length(datetime)),
     )
 end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat2_Granule{:ATL12})
+    [
+        Variable(:longitude, "ssh_segments/longitude", Float64),
+        Variable(:latitude, "ssh_segments/latitude", Float64),
+        Variable(:height, "ssh_segments/heights/h", Float32),
+        Variable(:datetime, "ssh_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+    ]
+end
+
+function default_attributes(::ICESat2_Granule{:ATL12})
+    [
+        Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
+        Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
+    ]
+end

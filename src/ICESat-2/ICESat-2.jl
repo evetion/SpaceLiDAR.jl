@@ -14,7 +14,7 @@ const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
     ICESat2_Granule{product} <: Granule
 
 A granule of the ICESat-2 product `product`. Normally created automatically from
-either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
+either [`search`](@ref), [`granule`](@ref) or [`granules`](@ref).
 """
 Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
     id::String

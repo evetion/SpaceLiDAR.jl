@@ -8,7 +8,7 @@ const icesat_fill = 1.7976931348623157E308
     ICESat_Granule{product} <: Granule
 
 A granule of the ICESat product `product`. Normally created automatically from
-either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
+either [`search`](@ref), [`granule`](@ref) or [`granules`](@ref).
 """
 Base.@kwdef mutable struct ICESat_Granule{product} <: Granule
     id::String
@@ -42,7 +42,7 @@ Base.isfile(g::ICESat_Granule) = Base.isfile(g.url)
     info(g::ICESat_Granule)
 
 Derive info based on the filename. The name is built up as follows:
-ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5. See section 1.2.5 in the user guide.
+`GLAH06_[release]_[orbit]_[cycle]_[track]_[segment]_[revision]_[filetype].H5`.
 """
 function info(g::ICESat_Granule)
     return icesat_info(id(g))
