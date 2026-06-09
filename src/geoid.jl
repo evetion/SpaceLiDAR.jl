@@ -85,6 +85,14 @@ end
 # `H5Table` / `PartitionedH5Table` are read-only, so only the non-mutating
 # `fun(t)` is provided for them (it materialises via `collect`).
 
+"""Materialize a fresh column table with copied columns (for non-mutating wrappers)."""
+function _copy_columntable(t)
+    cols = Tables.columntable(t)
+    names = propertynames(cols)
+    vals = map(name -> copy(Tables.getcolumn(cols, name)), names)
+    return NamedTuple{names}(vals)
+end
+
 
 # ─── to_egm2008 ────────────────────────────────────────────────────────────────
 
@@ -131,7 +139,7 @@ function to_egm2008!(trans, lat, lon, h)
     return h
 end
 
-to_egm2008(t) = to_egm2008!(copy(t))
+to_egm2008(t) = to_egm2008!(_copy_columntable(t))
 to_egm2008(t::H5Table.H5Table) = to_egm2008!(collect(t))
 to_egm2008(t::H5Table.PartitionedH5Table) = to_egm2008!(collect(t))
 
@@ -180,7 +188,7 @@ function topex_to_wgs84!(pipe, lon, lat, h)
     return h
 end
 
-topex_to_wgs84(t) = topex_to_wgs84!(copy(t))
+topex_to_wgs84(t) = topex_to_wgs84!(_copy_columntable(t))
 topex_to_wgs84(t::H5Table.H5Table) = topex_to_wgs84!(collect(t))
 topex_to_wgs84(t::H5Table.PartitionedH5Table) = topex_to_wgs84!(collect(t))
 
@@ -217,7 +225,7 @@ function icesat_saturation_correct!(h, sc)
     return h
 end
 
-icesat_saturation_correct(t) = icesat_saturation_correct!(copy(t))
+icesat_saturation_correct(t) = icesat_saturation_correct!(_copy_columntable(t))
 icesat_saturation_correct(t::H5Table.H5Table) = icesat_saturation_correct!(collect(t))
 icesat_saturation_correct(t::H5Table.PartitionedH5Table) = icesat_saturation_correct!(collect(t))
 

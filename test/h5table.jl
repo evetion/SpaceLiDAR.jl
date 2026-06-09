@@ -397,6 +397,11 @@ using SpaceLiDAR.H5Table: H5Table, explore, get_dimensions, get_references,
                 @test first(selected_attrs).first == :units
                 @test first(selected_attrs).second == "gt1l/land_segments/latitude/units"
 
+                # Reset clears attribute selections too
+                state = ExplorerState(false, false, String[], Dict{String,Int}())
+                reset_selection!(root, state)
+                @test isempty(collect_selected_attrs(root))
+
                 # Deselect
                 attr_node.data.selected = false
                 @test isempty(collect_selected_attrs(root))

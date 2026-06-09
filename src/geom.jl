@@ -29,7 +29,7 @@ GeoInterface.getcoord(::PointTrait, geom::Point, i) = geom.c[i]
 """
     angle!(table)
 
-Sets the `angle` column in `table` as returned from [`points`](@ref). See [`angle!`](@ref) for details.
+Sets the `angle` column in `table` as returned from [`points`](@ref). See [`track_angle`](@ref) for details.
 """
 function angle!(t)
     # this assumes the DataFrame is ordered by time (ascending)

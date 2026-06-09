@@ -283,10 +283,8 @@ function reset_selection!(root, state)
 end
 
 function _clear_selected!(node)
-    # Clear datasets and group "has selected child" markers
-    if node.data.is_dataset || !node.data.is_attr
-        node.data.selected = false
-    end
+    # Clear datasets, attributes, and group "has selected child" markers
+    node.data.selected = false
     for child in node.children
         _clear_selected!(child)
     end

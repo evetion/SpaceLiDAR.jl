@@ -374,6 +374,11 @@ end
         @test r.height[1] ≈ -17.0154953
         @test nt.height[1] ≈ -17.0154953  # mutated in place
 
+        nt2 = (; longitude = [1.0], latitude = [2.0], height = [0.0])
+        r2 = SL.to_egm2008(nt2)
+        @test r2.height[1] ≈ -17.0154953
+        @test nt2.height[1] == 0.0  # non-mutating wrapper must not mutate input
+
         # SpaceLiDAR.Table
         g = SL.granule(GLAH06_fn)
         t = SL.points(g)
@@ -423,6 +428,11 @@ end
         r = SL.topex_to_wgs84!(nt)
         @test r.height[1] ≈ 99.3 atol = 0.1
 
+        nt2 = (; longitude = [131.0], latitude = [-35.0], height = [100.0])
+        r2 = SL.topex_to_wgs84(nt2)
+        @test r2.height[1] ≈ 99.3 atol = 0.1
+        @test nt2.height[1] == 100.0  # non-mutating wrapper must not mutate input
+
         # SpaceLiDAR.Table (from points, has height_reference)
         g = SL.granule(GLAH06_fn)
         t = SL.points(g)
@@ -456,6 +466,12 @@ end
         @test nt.height[1] ≈ 10.5
         @test ismissing(nt.height[2])       # missing height stays missing
         @test nt.height[3] ≈ 30.0           # missing correction → unchanged
+
+        nt2 = (; height = Union{Missing,Float64}[10.0, missing, 30.0],
+                    saturation_correction = Union{Missing,Float64}[0.5, 1.0, missing])
+        r2 = SL.icesat_saturation_correct(nt2)
+        @test r2.height[1] ≈ 10.5
+        @test nt2.height[1] ≈ 10.0          # non-mutating wrapper must not mutate input
 
         # H5Table (non-mutating)
         g = SL.granule(GLAH06_fn)
@@ -563,6 +579,7 @@ end
     @test nrow(df) == 4295820
     @test ncol(df) >= 10
     @test all(length(col) == nrow(df) for col in eachcol(df))
+    @test_throws ErrorException SL.table(g; tracks = ["not_a_track"])
 
     g = SL.granule(ATL06_fn)
     df = DataFrame(SL.table(g))
@@ -652,4 +669,3 @@ end
     @test Proj.CRS(crs_glah06.val) isa Proj.CRS  # round-trips through PROJ
     @test GeoInterface.crs(SL.granule(GLAH14_fn)) == crs_glah06
 end
-

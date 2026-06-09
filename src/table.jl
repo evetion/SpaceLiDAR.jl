@@ -226,6 +226,10 @@ function table(g::Granule; tracks=default_tracks(g), variables=default_variables
         end
         push!(tables, t)
     end
+    if isempty(tables)
+        close(file)
+        error("No tracks found in $(g.id) for tracks=$(collect(tracks))")
+    end
     H5Table.PartitionedH5Table(tables)
 end
 
@@ -278,6 +282,10 @@ function explore(g::Granule; tracks=default_tracks(g))
         all(haskey(file[track], sp) for sp in suffix_paths) || continue
         vars = vcat([Symbol(split(sp, "/")[end]) => "$track/$sp" for sp in suffix_paths], shared_vars)
         push!(tables, H5Table.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false))
+    end
+    if isempty(tables)
+        close(file)
+        error("No tracks found in $(g.id) with selected variables")
     end
     H5Table.PartitionedH5Table(tables)
 end

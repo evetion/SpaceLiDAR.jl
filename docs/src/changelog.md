@@ -11,7 +11,7 @@
 - Documentation rewrite following the Diátaxis framework (tutorials, guides, topics, reference).
 
 ### Breaking
-- `points` is removed. Use `table(granule)` instead (see migration guide).
+- `table(granule)` is now the recommended interface; `points()` remains available for compatibility (see migration guide).
 - Fill values are now `missing` instead of `NaN`.
 - `granule_from_file` → `granule`, `granules_from_folder` → `granules` (deprecated names still work).
 
