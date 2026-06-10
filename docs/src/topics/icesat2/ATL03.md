@@ -4,7 +4,7 @@ Version 6 — [User Guide](https://nsidc.org/sites/default/files/documents/user-
 
 ```@setup atl03
 using SpaceLiDAR
-using SpaceLiDAR.H5Table: ToDateTime, ToDateTimeConst, ToBool, InvertBool, SliceRow
+using SpaceLiDAR.H5Tables: ToDateTime, ToDateTimeConst, ToBool, InvertBool, SliceRow
 using Markdown
 
 function resolved_type(v)

@@ -1,13 +1,13 @@
 
 """Node data for the HDF5 explorer tree."""
 mutable struct H5NodeData
-    label::String
-    path::String
-    is_dataset::Bool
-    is_attr::Bool       # attribute display node (selectable with space)
+    const label::String
+    const path::String
+    const is_dataset::Bool
+    const is_attr::Bool       # attribute display node (selectable with space)
     selected::Bool
     compatible::Bool
-    size_str::String
+    const size_str::String
     description::String
     dims::Union{Nothing,Vector{String}}
     dim_sizes::Union{Nothing,Dict{String,Int}}

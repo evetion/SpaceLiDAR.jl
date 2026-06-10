@@ -1,7 +1,6 @@
-using HDF5
 import Downloads
 import AWSS3
-using Aria2_jll
+import Aria2_jll
 
 # Custom downloader for Julia 1.6 which doensn't have NETRC + Cookie support
 # This is a method because it will segfault if precompiled.

@@ -8,7 +8,7 @@ using REPL.TerminalMenus
 using REPL.TerminalMenus: ARROW_LEFT, ARROW_RIGHT
 using FoldingTrees: TreeMenu
 using DataAPI: metadata, colmetadata
-using SpaceLiDAR.H5Table: H5Table, explore, get_dimensions, get_references,
+using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
     resolve_global_dims, is_dim_compatible, _h5read_attr,
     build_tree, resolve_children!, recompute_global!, update_compatibility!,
     ExplorerState, _set_selected!, _mark_groups!, expand_attrs!,

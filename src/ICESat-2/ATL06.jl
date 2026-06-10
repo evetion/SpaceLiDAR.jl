@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
+    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox::Union{Nothing,Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL06 (Land Ice) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -25,16 +25,8 @@ function points(
     granule::ICESat2_Granule{:ATL06};
     tracks = icesat2_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "land_ice_segments"), tracks)

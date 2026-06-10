@@ -1,5 +1,5 @@
 """
-    points(g::ICESat_Granule{:GLAH06}, step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
+    points(g::ICESat_Granule{:GLAH06}, step=1, bbox::Union{Nothing,Extent} = nothing)
 
 Retrieve the points for a given ICESat GLAH06 (Land Ice) granule as a list of namedtuples
 The names of the tuples are based on the following fields:
@@ -21,17 +21,9 @@ You can get the output in a `DataFrame` with `DataFrame(points(g))`.
 function points(
     granule::ICESat_Granule{:GLAH06};
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
 
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     HDF5.h5open(granule.url, "r") do file
         if !isnothing(bbox)
             x = read_dataset(file, "Data_40HZ/Geolocation/d_lon")::Vector{Float64}

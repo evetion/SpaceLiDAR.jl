@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks; step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
+    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks; step=1, bbox::Union{Nothing,Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL03 (Global Geolocated Photon Data) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -27,16 +27,8 @@ function points(
     granule::ICESat2_Granule{:ATL03};
     tracks = icesat2_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "heights"), tracks)
@@ -51,20 +43,29 @@ function points(
     return PartitionedTable(nts, granule)
 end
 
+"""
+    lines(g::ICESat2_Granule; tracks=icesat2_tracks, step=100, kwargs...)
+    lines(g::GEDI_Granule; tracks=gedi_tracks, step=1, kwargs...)
+
+Retrieve the data of a granule as a line geometry per track, instead of
+the per-point representation returned by [`points`](@ref). Returns a
+`PartitionedTable` with one row per track, each carrying a `geom` column
+(a `Line` of the track's `(longitude, latitude, height)` coordinates)
+together with a few summary fields (such as `track`, `strong_beam` and a
+representative `datetime`).
+
+Use `step` to subsample the vertices that make up each line (the default
+keeps every `step`th point), and `tracks` to limit which beams are
+included. A `bbox::Extent` keyword restricts the output to a bounding box.
+The resulting table integrates with `GeoInterface` and can be written to
+any geospatial format via the geometry column.
+"""
 function lines(
     granule::ICESat2_Granule{:ATL03},
     tracks = icesat2_tracks;
     step = 100,
     bbox::Union{Nothing,Extent} = nothing,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 

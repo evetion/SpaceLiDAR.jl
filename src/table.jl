@@ -30,15 +30,15 @@ function _show(io, t::Table)
     isnothing(g) ? print(io, "Table") : print(io, "Table of $g")
 end
 
-struct PartitionedTable{N,K,V,G} <: AbstractTable
-    tables::NTuple{N,NamedTuple{K,V}}
+struct PartitionedTable{T<:Tuple{Vararg{NamedTuple}},G} <: AbstractTable
+    tables::T
     granule::G
 end
 PartitionedTable(t::NamedTuple) = PartitionedTable((t,))
 Base.size(t::PartitionedTable) = (length(t.tables),)
-Base.length(t::PartitionedTable{N}) where {N} = N
+Base.length(t::PartitionedTable) = length(t.tables)
 Base.getindex(t::PartitionedTable, i) = t.tables[i]
-Base.lastindex(t::PartitionedTable{N}) where {N} = N
+Base.lastindex(t::PartitionedTable) = length(t.tables)
 Base.show(io::IO, t::PartitionedTable) = _show(io, t)
 Base.show(io::IO, ::MIME"text/plain", t::PartitionedTable) = _show(io, t)
 Base.iterate(table::PartitionedTable, args...) = iterate(table.tables, args...)
@@ -108,29 +108,29 @@ function DataAPI.metadata(t::AbstractTable, k; style::Bool = false)
     end
 end
 
-Tables.istable(::Type{<:SpaceLiDAR.Granule}) = true
-Tables.columnaccess(::Type{<:SpaceLiDAR.Granule}) = true
-Tables.partitions(g::SpaceLiDAR.Granule) = points(g)
-Tables.columns(g::SpaceLiDAR.Granule) = Tables.CopiedColumns(joinpartitions(g))
+Tables.istable(::Type{<:Granule}) = true
+Tables.columnaccess(::Type{<:Granule}) = true
+Tables.partitions(g::Granule) = points(g)
+Tables.columns(g::Granule) = Tables.CopiedColumns(joinpartitions(g))
 
-Tables.istable(::Type{<:SpaceLiDAR.PartitionedTable}) = true
-Tables.columnaccess(::Type{<:SpaceLiDAR.PartitionedTable}) = true
-Tables.partitions(g::SpaceLiDAR.PartitionedTable) = getfield(g, :tables)
-Tables.columns(g::SpaceLiDAR.PartitionedTable) = Tables.CopiedColumns(joinpartitions(g))
+Tables.istable(::Type{<:PartitionedTable}) = true
+Tables.columnaccess(::Type{<:PartitionedTable}) = true
+Tables.partitions(g::PartitionedTable) = getfield(g, :tables)
+Tables.columns(g::PartitionedTable) = Tables.CopiedColumns(joinpartitions(g))
 
 # ICESat has no beams, so no need for partitions
-Tables.istable(::Type{<:SpaceLiDAR.ICESat_Granule}) = true
-Tables.columnaccess(::Type{<:SpaceLiDAR.ICESat_Granule}) = true
-Tables.columns(g::SpaceLiDAR.ICESat_Granule) = getfield(points(g), :table)
+Tables.istable(::Type{<:ICESat_Granule}) = true
+Tables.columnaccess(::Type{<:ICESat_Granule}) = true
+Tables.columns(g::ICESat_Granule) = getfield(points(g), :table)
 
-Tables.istable(::Type{<:SpaceLiDAR.Table}) = true
-Tables.columnaccess(::Type{<:SpaceLiDAR.Table}) = true
-Tables.columns(g::SpaceLiDAR.Table) = getfield(g, :table)
+Tables.istable(::Type{<:Table}) = true
+Tables.columnaccess(::Type{<:Table}) = true
+Tables.columns(g::Table) = getfield(g, :table)
 
 # ─── collect: materialize H5Table into SpaceLiDAR Table types ─────────────────
 
-Base.collect(t::H5Table.H5Table) = Table(Tables.columntable(t), nothing)
-function Base.collect(t::H5Table.PartitionedH5Table)
+Base.collect(t::H5Tables.H5Table) = Table(Tables.columntable(t), nothing)
+function Base.collect(t::H5Tables.PartitionedH5Table)
     nts = Tuple(Tables.columntable(p) for p in Tables.partitions(t))
     PartitionedTable(nts, nothing)
 end
@@ -168,18 +168,18 @@ function _h5table_for_track(file::HDF5.File, g::Granule, track::AbstractString, 
     vars = [v.name => "$track/$(v.path)" for v in dvars]
     transforms = Dict{Symbol,Any}(v.name => v.f for v in dvars if v.f !== identity)
     attrs = [a.name => "$track/$(a.attribute)" for a in default_attributes(g)]
-    H5Table.H5Table(file; vars, attrs, transforms, include_dimensions=false, nrow)
+    H5Tables.H5Table(file; vars, attrs, transforms, include_dimensions=false, nrow)
 end
 
 """Check if an H5Table can be used as a template (trivial flattening, no track-dependent transforms)."""
-function _is_flat(t::H5Table.H5Table)
+function _is_flat(t::H5Tables.H5Table)
     all(t.vars) do v
         v.inner == 1 && v.outer == 1
     end
 end
 
 """Check if any default variable has a track-dependent transform (e.g. ExpandDims)."""
-_has_track_transform(dvars) = any(v -> v.f isa H5Table.ExpandDims, dvars)
+_has_track_transform(dvars) = any(v -> v.f isa H5Tables.ExpandDims, dvars)
 
 """
     _quick_nrow(file, track, dvars) -> Union{Int, Nothing}
@@ -205,7 +205,7 @@ end
 
 function table(g::Granule; tracks=default_tracks(g), variables=default_variables(g))
     file = HDF5.h5open(g.url, "r")
-    tables = H5Table.H5Table[]
+    tables = H5Tables.H5Table[]
     template = nothing
     first_track = nothing
     can_template = !_has_track_transform(variables)
@@ -222,7 +222,7 @@ function table(g::Granule; tracks=default_tracks(g), variables=default_variables
             end
         else
             # Reuse template structure — just remap paths
-            t = H5Table.H5Table(template, track, first_track)
+            t = H5Tables.H5Table(template, track, first_track)
         end
         push!(tables, t)
     end
@@ -230,7 +230,7 @@ function table(g::Granule; tracks=default_tracks(g), variables=default_variables
         close(file)
         error("No tracks found in $(g.id) for tracks=$(collect(tracks))")
     end
-    H5Table.PartitionedH5Table(tables)
+    H5Tables.PartitionedH5Table(tables)
 end
 
 function table(g::ICESat_Granule; variables=default_variables(g))
@@ -238,7 +238,7 @@ function table(g::ICESat_Granule; variables=default_variables(g))
     vars = [v.name => v.path for v in variables]
     transforms = Dict{Symbol,Any}(v.name => v.f for v in variables if v.f !== identity)
     attrs = Pair{Symbol,String}[]
-    H5Table.H5Table(file; vars, attrs, transforms)
+    H5Tables.H5Table(file; vars, attrs, transforms)
 end
 
 # ─── explore(::Granule) → interactive selection with track replication ─────────
@@ -273,26 +273,26 @@ end
 
 function explore(g::Granule; tracks=default_tracks(g))
     file = HDF5.h5open(g.url, "r")
-    selected_paths, selected_attrs = H5Table.select(file)
+    selected_paths, selected_attrs = H5Tables.select(file)
     suffix_paths, shared_paths = _split_track_paths(selected_paths, tracks)
     shared_vars = [Symbol(split(p, "/")[end]) => p for p in shared_paths]
-    tables = H5Table.H5Table[]
+    tables = H5Tables.H5Table[]
     for track in tracks
         haskey(file, track) || continue
         all(haskey(file[track], sp) for sp in suffix_paths) || continue
         vars = vcat([Symbol(split(sp, "/")[end]) => "$track/$sp" for sp in suffix_paths], shared_vars)
-        push!(tables, H5Table.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false))
+        push!(tables, H5Tables.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false))
     end
     if isempty(tables)
         close(file)
         error("No tracks found in $(g.id) with selected variables")
     end
-    H5Table.PartitionedH5Table(tables)
+    H5Tables.PartitionedH5Table(tables)
 end
 
 function explore(g::ICESat_Granule)
     file = HDF5.h5open(g.url, "r")
-    selected_paths, selected_attrs = H5Table.select(file)
+    selected_paths, selected_attrs = H5Tables.select(file)
     vars = [Symbol(split(p, "/")[end]) => p for p in selected_paths]
-    H5Table.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false)
+    H5Tables.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false)
 end

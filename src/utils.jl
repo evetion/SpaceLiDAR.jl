@@ -1,5 +1,4 @@
-using Printf
-using DataFrames
+using Printf: Printf, @sprintf
 
 """
     granule(filename::AbstractString)
@@ -25,7 +24,6 @@ function granule(filename::AbstractString)
         error("Unknown granule.")
     end
 end
-@deprecate granule_from_file(filename::AbstractString) granule(filename::AbstractString)
 
 """
     granules(foldername::AbstractString)
@@ -38,10 +36,9 @@ function granules(foldername::AbstractString)
         file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5" && !isfile("$(file).aria2")
     ]
 end
-@deprecate granules_from_folder(foldername::AbstractString) granules(foldername::AbstractString)
 
 """
-    instantiate(granules::Vector{::Granule}, folder::AbstractString)
+    instantiate(granules::Vector{<:Granule}, folder::AbstractString)
 
 For a given list of `granules` from [`search`](@ref), match the granules to the local files
 and return a new list of granules with the local filepaths if they exist.
@@ -61,6 +58,24 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Gran
 end
 
 
+"""
+    in_bbox(xyz::DataFrame, bbox::NamedTuple)
+    in_bbox(g::Granule, bbox::NamedTuple)
+    in_bbox(g::Vector{<:Granule}, bbox::NamedTuple)
+
+Filter to what falls inside the bounding box `bbox`, given as a
+`NamedTuple` with fields `(min_x, min_y, max_x, max_y)`.
+
+For a `DataFrame` of points, return the subset of rows whose `:longitude`
+and `:latitude` fall within `bbox`. For a single [`Granule`](@ref), return
+`true` if the granule's [`bounds`](@ref) overlap `bbox`. For a vector of
+granules, return the granules whose bounds overlap `bbox`.
+
+!!! warning
+
+    The granule methods open each `.h5` file to read its bounds, so they
+    are slow. See [`bounds`](@ref).
+"""
 function in_bbox(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
     subset(
         xyz,
@@ -107,7 +122,6 @@ function write_urls(fn::String, granules::AbstractVector{<:Granule})
     end
     abspath(fn)
 end
-@deprecate write_granule_urls! write_urls
 
 function write_urls(granules::AbstractVector{<:Granule})
     fn, io = mktemp()

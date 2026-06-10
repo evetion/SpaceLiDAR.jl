@@ -1,5 +1,3 @@
-using Dates
-
 const j2000_offset = datetime2unix(DateTime(2000, 1, 1, 12, 0, 0))
 const icesat_inclination = 86.0  # actually 94, so this is 180. - 94.
 const icesat_fill = 1.7976931348623157E308
@@ -11,10 +9,10 @@ A granule of the ICESat product `product`. Normally created automatically from
 either [`search`](@ref), [`granule`](@ref) or [`granules`](@ref).
 """
 Base.@kwdef mutable struct ICESat_Granule{product} <: Granule
-    id::String
+    const id::String
     url::String
-    info::NamedTuple
-    polygons::MultiPolygonType = MultiPolygonType()
+    const info::NamedTuple
+    const polygons::MultiPolygonType = MultiPolygonType()
 end
 
 sproduct(::ICESat_Granule{product}) where {product} = product

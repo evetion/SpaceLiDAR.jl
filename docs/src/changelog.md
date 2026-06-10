@@ -13,7 +13,11 @@
 ### Breaking
 - `table(granule)` is now the recommended interface; `points()` remains available for compatibility (see migration guide).
 - Fill values are now `missing` instead of `NaN`.
-- `granule_from_file` → `granule`, `granules_from_folder` → `granules` (deprecated names still work).
+- Removed deprecated `granule_from_file` (use `granule`) and `granules_from_folder` (use `granules`).
+- Removed deprecated `find` (use `search`).
+- Removed deprecated `write_granule_urls!` (use `write_urls`).
+- Removed the deprecated `bbox` keyword on `search`; use `extent` instead.
+- `points`/`lines` no longer accept a `NamedTuple` for `bbox`; pass an `Extents.Extent` (e.g. `convert(Extent, (min_x=..., min_y=..., max_x=..., max_y=...))`).
 
 ### Changed
 - Column types resolved at read time via transforms (e.g., `delta_time` becomes `DateTime`).

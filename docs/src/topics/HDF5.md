@@ -31,7 +31,7 @@ SpaceLiDAR extends H5Table with product-specific schemas via multiple dispatch.
 ### Level 1: Generic HDF5 (any file)
 
 ```julia
-using SpaceLiDAR.H5Table, HDF5
+using SpaceLiDAR.H5Tables, HDF5
 
 file = h5open("any_file.h5", "r")
 t = H5Table(file; vars=[:lat => "data/latitude", :lon => "data/longitude"])

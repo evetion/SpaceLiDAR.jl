@@ -1,4 +1,4 @@
-using Proj
+import Proj
 import Tables
 import DataAPI
 import GeoFormatTypes
@@ -140,8 +140,9 @@ function to_egm2008!(trans, lat, lon, h)
 end
 
 to_egm2008(t) = to_egm2008!(_copy_columntable(t))
-to_egm2008(t::H5Table.H5Table) = to_egm2008!(collect(t))
-to_egm2008(t::H5Table.PartitionedH5Table) = to_egm2008!(collect(t))
+to_egm2008(t::H5Tables.H5Table) = to_egm2008!(collect(t))
+to_egm2008(t::H5Tables.PartitionedH5Table) = to_egm2008!(collect(t))
+@doc (@doc to_egm2008!) to_egm2008
 
 
 # ─── topex_to_wgs84 ────────────────────────────────────────────────────────────
@@ -189,8 +190,9 @@ function topex_to_wgs84!(pipe, lon, lat, h)
 end
 
 topex_to_wgs84(t) = topex_to_wgs84!(_copy_columntable(t))
-topex_to_wgs84(t::H5Table.H5Table) = topex_to_wgs84!(collect(t))
-topex_to_wgs84(t::H5Table.PartitionedH5Table) = topex_to_wgs84!(collect(t))
+topex_to_wgs84(t::H5Tables.H5Table) = topex_to_wgs84!(collect(t))
+topex_to_wgs84(t::H5Tables.PartitionedH5Table) = topex_to_wgs84!(collect(t))
+@doc (@doc topex_to_wgs84!) topex_to_wgs84
 
 
 # ─── icesat_saturation_correct ─────────────────────────────────────────────────
@@ -226,8 +228,9 @@ function icesat_saturation_correct!(h, sc)
 end
 
 icesat_saturation_correct(t) = icesat_saturation_correct!(_copy_columntable(t))
-icesat_saturation_correct(t::H5Table.H5Table) = icesat_saturation_correct!(collect(t))
-icesat_saturation_correct(t::H5Table.PartitionedH5Table) = icesat_saturation_correct!(collect(t))
+icesat_saturation_correct(t::H5Tables.H5Table) = icesat_saturation_correct!(collect(t))
+icesat_saturation_correct(t::H5Tables.PartitionedH5Table) = icesat_saturation_correct!(collect(t))
+@doc (@doc icesat_saturation_correct!) icesat_saturation_correct
 
 
 # ─── icesat_quality ────────────────────────────────────────────────────────────
@@ -273,5 +276,5 @@ function icesat_quality(elev, att, npk, sc)
     return q
 end
 
-icesat_quality(t::H5Table.H5Table) = icesat_quality(collect(t))
-icesat_quality(t::H5Table.PartitionedH5Table) = icesat_quality(collect(t))
+icesat_quality(t::H5Tables.H5Table) = icesat_quality(collect(t))
+icesat_quality(t::H5Tables.PartitionedH5Table) = icesat_quality(collect(t))

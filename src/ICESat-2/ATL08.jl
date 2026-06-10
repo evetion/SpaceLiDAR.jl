@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
+    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true, bbox::Union{Nothing,Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL08 (Land and Vegetation Height) granule as a list of namedtuples, one for each beam.
 With the `tracks` keyword, you can specify which tracks to include. The default is to include all tracks.
@@ -41,18 +41,9 @@ function points(
     canopy_field = "h_mean_canopy_abs",
     ground = true,
     ground_field = "h_te_mean",
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
     highres::Bool = false,
 )
-    if bbox isa NamedTuple
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
-    # Resolve bbox type before closure capture to avoid Core.Box
-    _bbox = bbox isa NamedTuple ? convert(Extent, bbox) : bbox
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         f = highres ? _extrapoints : points
@@ -69,7 +60,7 @@ function points(
         end
 
         map(Tuple(zip(ftracks, grounds))) do (track, ground)
-            track_nt = f(granule, file, track, t_offset, step, !ground, canopy_field, ground, ground_field, _bbox)
+            track_nt = f(granule, file, track, t_offset, step, !ground, canopy_field, ground, ground_field, bbox)
             replace!(x -> x === fill_value ? NaN : x, track_nt.height)
             track_nt
         end

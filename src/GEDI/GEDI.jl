@@ -1,5 +1,3 @@
-using Dates
-
 const gedi_tracks = ("BEAM0000", "BEAM0001", "BEAM0010", "BEAM0011", "BEAM0101", "BEAM0110", "BEAM1000", "BEAM1011")
 const gedi_date_format = dateformat"yyyymmddHHMMSS"
 const gedi_inclination = 51.6443
@@ -11,10 +9,10 @@ A granule of the GEDI product `product`. Normally created automatically from
 either [`search`](@ref), [`granule`](@ref) or [`granules`](@ref).
 """
 Base.@kwdef mutable struct GEDI_Granule{product} <: Granule
-    id::AbstractString
+    const id::AbstractString
     url::AbstractString
-    info::NamedTuple
-    polygons::MultiPolygonType = MultiPolygonType()
+    const info::NamedTuple
+    const polygons::MultiPolygonType = MultiPolygonType()
 end
 
 sproduct(::GEDI_Granule{product}) where {product} = product
@@ -75,7 +73,7 @@ julia> track_angle(g, 0.0)
 """
 function track_angle(g::GEDI_Granule, latitude = 0.0, nparts = 100)
 
-    latitudes, _, angles = SpaceLiDAR.greatcircle(0.0, 0.0, gedi_inclination, 85.0, nparts)
+    latitudes, _, angles = greatcircle(0.0, 0.0, gedi_inclination, 85.0, nparts)
     clamp!(angles, 0, 90)
     v, i = findmin(abs.(latitudes .- min(abs(latitude), gedi_inclination)))
     a = angles[i]

@@ -36,19 +36,11 @@ function points(
     granule::GEDI_Granule{:GEDI02_A};
     tracks = gedi_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
 
         # Determine number of loops over tracks and ground and/or canopy
@@ -223,19 +215,11 @@ function lines(
     granule::GEDI_Granule{:GEDI02_A};
     tracks = gedi_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
 
         ftracks = filter(track -> haskey(file, track), tracks)

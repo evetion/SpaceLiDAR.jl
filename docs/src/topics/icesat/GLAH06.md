@@ -4,7 +4,7 @@ Version 34 — [User Guide](https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01
 
 ```@setup glah06
 using SpaceLiDAR
-using SpaceLiDAR.H5Table: ToDateTime, ToDateTimeConst, ToBool, InvertBool, SliceRow
+using SpaceLiDAR.H5Tables: ToDateTime, ToDateTimeConst, ToBool, InvertBool, SliceRow
 using Markdown
 
 function resolved_type(v)

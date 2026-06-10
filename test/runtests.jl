@@ -1,5 +1,7 @@
 using SpaceLiDAR
 using Test
+using Aqua
+using ExplicitImports
 using Dates
 using Distances
 import Downloads
@@ -47,6 +49,28 @@ empty_bbox = (min_x = 0.0, min_y = 0.0, max_x = 0.0, max_y = 0.0)
 empty_extent = convert(Extent, empty_bbox)
 
 @testset "SpaceLiDAR.jl" begin
+    @testset "Aqua" begin
+        Aqua.test_all(
+            SpaceLiDAR;
+            deps_compat = (; check_extras = false),
+            piracies = (; treat_as_own = [Extents.Extent]),
+        )
+    end
+    @testset "ExplicitImports" begin
+        # The public-ness and ownership checks are disabled because the package
+        # necessarily relies on non-public / re-exported API of its dependencies
+        # (e.g. HDF5.API low-level calls, Tables/DataAPI interface functions,
+        # Proj and TerminalMenus internals, TableOperations.joinpartitions,
+        # AWSS3/Downloads.Curl re-exports). The remaining four checks (implicit
+        # imports, stale imports, explicit-import ownership, self-qualified
+        # accesses) are enforced.
+        test_explicit_imports(
+            SpaceLiDAR;
+            all_explicit_imports_are_public = false,
+            all_qualified_accesses_via_owners = false,
+            all_qualified_accesses_are_public = false,
+        )
+    end
     include("sl.jl")
     include("h5table.jl")
 end

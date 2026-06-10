@@ -1,5 +1,3 @@
-using GeoInterface
-
 const earth_radius_m = 6378.137 * 1000
 
 abstract type Geometry end

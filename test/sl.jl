@@ -21,10 +21,6 @@ end
     bbox = (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)
     ex = convert(Extent, bbox)
 
-    # Deprecation
-    @test length(find(:ICESat, "GLAH06", bbox)) > 0
-    @test length(search(:ICESat, :GLAH06, bbox = ex)) > 0
-
     @test length(search(:ICESat, :GLAH06, extent = ex)) > 0
     @test length(search(:ICESat, :GLAH14, extent = ex)) > 0
     @test length(search(:ICESat2, :ATL03, extent = ex)) > 0
@@ -37,8 +33,8 @@ end
     id = "GEDI02_A_2023003040347_O22988_03_T06105_02_003_02_V002.h5"
     @test length(search(:GEDI, :GEDI02_A; version = 2, id = id)) == 1
 
-    @test_throws ArgumentError find(:ICESat2, "GLAH14")
-    @test_throws ArgumentError find(:Foo, "GLAH14")
+    @test_throws ArgumentError search(:ICESat2, :GLAH14)
+    @test_throws ArgumentError search(:Foo, :GLAH14)
 
     # Time
     @test length(SpaceLiDAR.search(:ICESat2, :ATL08, after = DateTime(2019, 12, 12), before = DateTime(2019, 12, 13))) == 161
@@ -55,7 +51,7 @@ end
             get(ENV, "EARTHDATA_PW", ""),
         )
     end
-    granules = search(:ICESat, :GLAH06, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+    granules = search(:ICESat, :GLAH06, extent = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
     g = granules[1]
 
     try
@@ -108,8 +104,8 @@ end
     end
 
     # Test syncing of granules
-    sync(["data/"], after = now(), bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
-    sync(:GLAH14, "data/", after = now(), bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+    sync(["data/"], after = now(), extent = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
+    sync(:GLAH14, "data/", after = now(), extent = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)))
 
     # This only works on us-west-2 region in AWS
     # granules = search(:ICESat2, :ATL08, bbox = convert(Extent, (min_x = 4.0, min_y = 40.0, max_x = 5.0, max_y = 50.0)), s3 = true)
@@ -120,13 +116,13 @@ end
 end
 
 @testset "granules" begin
-    og = SL.granule_from_file(GLAH06_fn)
+    og = SL.granule(GLAH06_fn)
     g = SL.granule(GLAH06_fn)
-    @test og == g  # deprecation
+    @test og == g
 
-    ogs = SL.granules_from_folder("data")
+    ogs = SL.granules("data")
     gs = SL.granules("data")
-    @test ogs == gs  # deprecation
+    @test ogs == gs
     @test length(gs) == 7
     copies = copy.(gs)
 
@@ -144,7 +140,7 @@ end
 @testset "GLAH06" begin
     g = SL.granule(GLAH06_fn)
 
-    bbox = (min_x = 131.0, min_y = -40, max_x = 132, max_y = -30)
+    bbox = convert(Extent, (min_x = 131.0, min_y = -40, max_x = 132, max_y = -30))
     points = SL.points(g; bbox = bbox)
     @test points isa SL.AbstractTable
     @test length(points.latitude) == 287
@@ -169,7 +165,7 @@ end
     @test points isa SL.AbstractTable
     @test length(points) == 11
 
-    bbox = (min_x = -20.0, min_y = -85, max_x = -2, max_y = 20)
+    bbox = convert(Extent, (min_x = -20.0, min_y = -85, max_x = -2, max_y = 20))
     fpoints = SL.points(g; bbox = bbox)
     @test length(fpoints.latitude) == 375791
     @test typeof(fpoints.gain[1010]) == Int32
@@ -199,7 +195,7 @@ end
     @test points[end].strong_beam[1] == false
     @test points[end].track[1] == "gt3r"
 
-    bbox = (min_x = 174.0, min_y = -50.0, max_x = 176.0, max_y = -30.0)
+    bbox = convert(Extent, (min_x = 174.0, min_y = -50.0, max_x = 176.0, max_y = -30.0))
     fpoints = SL.points(g, step = 1, bbox = bbox)
     @test length(fpoints) == 6
     @test length(fpoints[1].longitude) == 1158412
@@ -264,7 +260,7 @@ end
     @test length(lines) == 6
 
     # Test partially intersecting bbox, resulting in at least 1 emtpy track
-    bbox = (min_x = 175.0, min_y = -50.0, max_x = 175.5, max_y = -30.0)
+    bbox = convert(Extent, (min_x = 175.0, min_y = -50.0, max_x = 175.5, max_y = -30.0))
     points = SL.points(g, step = 1, bbox = bbox)
     @test length(points) == 6
     @test length(points[2].longitude) == 1
@@ -311,7 +307,7 @@ end
     lines = SL.lines(gg, step = 1000)
     @test length(lines) == 8
 
-    bbox = (min_x = 160.0, min_y = -46.0, max_x = 170.0, max_y = -38.0)
+    bbox = convert(Extent, (min_x = 160.0, min_y = -46.0, max_x = 170.0, max_y = -38.0))
     points = SL.points(gg; step = 10, bbox = bbox, canopy = true)
     @test length(points[1].longitude) == 1166
     @test length(points[6].latitude) == 1168
@@ -668,4 +664,125 @@ end
     @test occursin("a=6378136.3", crs_glah06.val)
     @test Proj.CRS(crs_glah06.val) isa Proj.CRS  # round-trips through PROJ
     @test GeoInterface.crs(SL.granule(GLAH14_fn)) == crs_glah06
+end
+
+struct UnknownGranule <: SpaceLiDAR.Granule end
+
+@testset "GeoInterface granule accessors" begin
+    g = SL.granule(GLAH06_fn)
+
+    @test GeoInterface.geomtrait(g) isa GeoInterface.MultiPointTrait
+    @test GeoInterface.ncoord(g) == 3
+
+    n = GeoInterface.ngeom(g)
+    @test n > 0
+
+    # getgeom without index returns a lazy iterator of (lon, lat, height)
+    geoms = GeoInterface.getgeom(g)
+    first_pt = first(geoms)
+    @test length(first_pt) == 3
+
+    # getgeom with index returns a single tuple
+    pt = GeoInterface.getgeom(g, 1)
+    @test length(pt) == 3
+    @test pt == first_pt
+
+    # extent matches bounds()
+    ext = GeoInterface.extent(g)
+    @test ext isa Extent
+    @test ext == convert(Extent, SL.bounds(g))
+
+    # crs fallback for an unknown granule type
+    @test GeoInterface.crs(UnknownGranule()) == GeoFormatTypes.EPSG(4326)
+end
+
+@testset "Line and Point geometries" begin
+    l = SL.Line([0.0, 1.0, 2.0], [10.0, 11.0, 12.0], [100.0, 101.0, 102.0])
+    p = SL.Point(1.0, 2.0, 3.0)
+
+    @test GeoInterface.isgeometry(SL.Line)
+    @test GeoInterface.geomtrait(l) isa GeoInterface.LineStringTrait
+    @test GeoInterface.geomtrait(p) isa GeoInterface.PointTrait
+
+    @test GeoInterface.ncoord(l) == 3
+    @test GeoInterface.ngeom(l) == 3
+    sub = GeoInterface.getgeom(l, 2)
+    @test sub isa SL.Point
+    @test GeoInterface.getcoord(sub, 1) == 1.0
+    @test GeoInterface.getcoord(sub, 2) == 11.0
+    @test GeoInterface.getcoord(sub, 3) == 101.0
+
+    @test GeoInterface.ncoord(p) == 3
+    @test GeoInterface.getcoord(p, 1) == 1.0
+    @test GeoInterface.getcoord(p, 2) == 2.0
+    @test GeoInterface.getcoord(p, 3) == 3.0
+end
+
+@testset "track_angle vector methods" begin
+    # raw longitude/latitude vector method (geom.jl)
+    angle = SL.track_angle([0.0, 0.0, 1.0], [0.0, 1.0, 1.0])
+    @test length(angle) == 3
+    @test angle[1] == angle[2]   # first angle is set to the second
+    @test angle[3] ≈ 90.0
+    @test_throws "`longitude` and `latitude` should have the same length." SL.track_angle([0.0, 1.0], [0.0])
+
+    # granule + latitude-vector method (ICESat-2.jl)
+    g = SL.granule(ATL08_fn)
+    lats = Real[0.0, 30.0, 60.0]
+    av = SL.track_angle(g, lats)
+    @test length(av) == 3
+    @test av[1] ≈ SL.track_angle(g, 0.0) atol = 1e-6
+end
+
+@testset "utils helpers" begin
+    # granule() error paths
+    @test_throws "Granule must be a .h5 file" SL.granule("foo.txt")
+    @test_throws "Unknown granule." SL.granule("foo.h5")
+
+    gs = SL.granules("data")
+
+    # instantiate matches local files
+    inst = SL.instantiate(gs, "data")
+    @test length(inst) == length(gs)
+    @test all(isfile, SL.url.(inst))
+
+    # write_urls: in-place file, returns-path file, and IOStream variants
+    tmp = SL.write_urls(gs)
+    @test isfile(tmp)
+    @test length(readlines(tmp)) == length(gs)
+    rm(tmp)
+
+    named = tempname()
+    ret = SL.write_urls(named, gs)
+    @test ret == abspath(named)
+    @test length(readlines(named)) == length(gs)
+    rm(named)
+
+    # isvalid: real granule is valid, missing file is not
+    @test SL.isvalid(gs[1])
+    bogus = SL.granule(GLAH06_fn)
+    bogus.url = "/nonexistent/path.h5"
+    @test !SL.isvalid(bogus)
+
+    # filter_rgt keeps only matching rgt/cycle
+    g8 = SL.granule(ATL08_fn)
+    i = SL.info(g8)
+    @test length(SL.filter_rgt([g8], i.rgt, i.cycle)) == 1
+    @test length(SL.filter_rgt([g8], i.rgt + 1, i.cycle)) == 0
+
+    # Extent → NamedTuple conversion
+    nt = convert(NamedTuple, Extent(X = (1.0, 3.0), Y = (2.0, 4.0)))
+    @test nt == (min_x = 1.0, min_y = 2.0, max_x = 3.0, max_y = 4.0)
+end
+
+@testset "GEDI info helpers" begin
+    gg = SL.granule(GEDI02_fn)
+    @test SL.mission(gg) == :GEDI
+    @test SL.info(gg).type == :GEDI02_A
+    @test SL.sproduct(gg) == :GEDI02_A
+
+    # v1 (non-V002) filename parsing is currently broken: the else-branch in
+    # gedi_info does not assign `sub_orbit`/`pge_version`, which the returned
+    # NamedTuple references, so it throws UndefVarError.
+    @test_broken SL.gedi_info("GEDI02_A_2019110014613_O01991_T04905_02_001_01.h5").type == :GEDI02_A
 end
