@@ -59,6 +59,7 @@ include("ICESat/GLAH06.jl")
 include("ICESat/GLAH14.jl")
 include("geoid.jl")
 include("table.jl")
+include("operations.jl")
 include("search.jl")
 include("geointerface.jl")
 include("env.jl")
@@ -70,6 +71,8 @@ export to_egm2008, to_egm2008!
 export topex_to_wgs84, topex_to_wgs84!
 export icesat_saturation_correct, icesat_saturation_correct!
 export icesat_quality
+export Operation, apply, apply!, inputs, outputs
+export ToEGM2008, TopexToWGS84, SaturationCorrect, ICESatQuality, InExtent
 export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
 export granule, granules
 

@@ -13,6 +13,7 @@ using StyledStrings: StyledStrings, @styled_str
 export H5Table, Variable, Attribute, explore, select, get_dimensions, get_references
 export ToDateTime, ToDateTimeConst, ToBool, InvertBool, SliceRow, ExpandDims
 export PartitionedH5Table
+export h5handle, source_metadata, resolve_variable
 
 include("table.jl")
 include("explore.jl")

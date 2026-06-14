@@ -177,21 +177,45 @@ resolve_transform(e::ExpandDims, file::HDF5.File, path::AbstractString) = let
     data -> data[idx]
 end
 
-Base.@kwdef struct H5Table
-    f::HDF5.File
+# ─── Source interface ──────────────────────────────────────────────────────────
+# An `H5Table` reads from a *source*. The trivial source is an `HDF5.File`, but a
+# richer source (e.g. SpaceLiDAR's `GranuleSource`, or a future cloud reference)
+# can carry provenance and resolve variables by name. A source must implement:
+#
+#   h5handle(source)::HDF5.File              — the (cached) open file to read from
+#   source_metadata(source)::AbstractDict    — extra metadata merged into DataAPI
+#   resolve_variable(source, name)::Union{Variable,Nothing}  — name → Variable spec
+#
+# `HDF5.File` is the trivial implementation (no extra metadata, no name
+# resolution), which keeps this submodule usable as a standalone reader.
+
+"""Return the open `HDF5.File` to read from for a given source."""
+h5handle(f::HDF5.File) = f
+
+"""Extra table-level metadata (`String` keys) contributed by a source, merged
+with the HDF5 file attributes. Defaults to empty."""
+source_metadata(::Any) = Dict{String,Any}()
+
+"""Resolve a column `name` to a [`Variable`](@ref) spec using source context
+(e.g. a granule's `default_variables`). Returns `nothing` when the source has no
+knowledge of `name`. Generic sources (a bare `HDF5.File`) cannot resolve names."""
+resolve_variable(::Any, ::Symbol) = nothing
+
+Base.@kwdef struct H5Table{S}
+    f::S
     vars::Vector{Variable}
     attrs::Vector{Attribute}
     nrow::Int=0
 end
 
 function Base.show(io::IO, t::H5Table)
-    print(io, "H5Table($(basename(HDF5.filename(t.f))), $(length(t.vars)) columns, $(t.nrow) rows)")
+    print(io, "H5Table($(basename(HDF5.filename(h5handle(t.f)))), $(length(t.vars)) columns, $(t.nrow) rows)")
 end
 
 _show_transform(f) = f === identity ? "" : "  → $f"
 
 function Base.show(io::IO, ::MIME"text/plain", t::H5Table)
-    println(io, "H5Table: $(basename(HDF5.filename(t.f)))")
+    println(io, "H5Table: $(basename(HDF5.filename(h5handle(t.f))))")
     println(io, "  Rows: $(t.nrow)")
     println(io, "  Columns: $(length(t.vars) + length(t.attrs))")
     println(io, "  ─────────────────────────────────")
@@ -667,7 +691,8 @@ function include_related_paths!(pairs, included_paths, paths)
     end
 end
 
-function H5Table(file::HDF5.File; vars::Vector{Pair{Symbol,String}}, attrs::Vector{Pair{Symbol,String}}=Pair{Symbol,String}[], transforms::Dict{Symbol}=Dict{Symbol,Any}(), include_dimensions::Bool=false, include_references::Bool=false, nrow::Union{Int,Nothing}=nothing)
+function H5Table(source; vars::Vector{Pair{Symbol,String}}, attrs::Vector{Pair{Symbol,String}}=Pair{Symbol,String}[], transforms::Dict{Symbol}=Dict{Symbol,Any}(), include_dimensions::Bool=false, include_references::Bool=false, nrow::Union{Int,Nothing}=nothing)
+    file = h5handle(source)
     # 1. Collect all name => path pairs (no Variable structs yet)
     pairs = copy(vars)
     included_paths = Set(last.(vars))
@@ -740,9 +765,9 @@ function H5Table(file::HDF5.File; vars::Vector{Pair{Symbol,String}}, attrs::Vect
         HDF5.API.h5o_close(obj_id)
         push!(attribute_structs, attribute)
     end
-    return H5Table(f=file, vars=variable_structs, attrs=attribute_structs, nrow=nrow)
+    return H5Table(f=source, vars=variable_structs, attrs=attribute_structs, nrow=nrow)
 end
-H5Table(fn::AbstractString; kwargs...) = H5Table(HDF5.h5open(fn, "r"), kwargs...)
+H5Table(fn::AbstractString; kwargs...) = H5Table(HDF5.h5open(fn, "r"); kwargs...)
 
 """
     H5Table(template::H5Table, track::AbstractString, old_track::AbstractString)
@@ -759,7 +784,7 @@ function H5Table(template::H5Table, track::AbstractString, old_track::AbstractSt
         Variable(name=v.name, path=path, f=v.f, eltype=v.eltype, inner=v.inner, outer=v.outer)
     end
     # Determine nrow from the first variable's dataset length
-    nrow = length(template.f[variable_structs[1].path])
+    nrow = length(h5handle(template.f)[variable_structs[1].path])
     attribute_structs = map(template.attrs) do a
         group = replace(a.group, prefix_old => prefix_new; count=1)
         Attribute(name=a.name, group=group, attribute=a.attribute, f=Base.Fix2(Fill, nrow), eltype=a.eltype)
@@ -828,8 +853,8 @@ end
 _h5read_attr(file::HDF5.File, parent_path::String, attr_name::String) =
     _h5read_attr(file, parent_path, attr_name, Any)
 
-Tables.istable(::Type{H5Table}) = true
-Tables.columnaccess(::Type{H5Table}) = true
+Tables.istable(::Type{<:H5Table}) = true
+Tables.columnaccess(::Type{<:H5Table}) = true
 Tables.columns(x::H5Table) = x
 function Tables.columnnames(x::H5Table)
     names = Symbol[v.name for v in x.vars]
@@ -842,7 +867,7 @@ function Tables.getcolumn(table::H5Table, name::Symbol)
     vari = findfirst(v -> v.name == name, table.vars)
     if !isnothing(vari)
         var = table.vars[vari]
-        raw = _h5read(table.f, var.path, var.eltype)
+        raw = _h5read(h5handle(table.f), var.path, var.eltype)
         data = vec(var.f(raw))
         if var.inner > 1 || var.outer > 1
             data = repeat(data, inner=var.inner, outer=var.outer)
@@ -852,7 +877,7 @@ function Tables.getcolumn(table::H5Table, name::Symbol)
     attri = findfirst(a -> a.name == name, table.attrs)
     if !isnothing(attri)
         attr = table.attrs[attri]
-        data = _h5read_attr(table.f, attr.group, attr.attribute, attr.eltype)
+        data = _h5read_attr(h5handle(table.f), attr.group, attr.attribute, attr.eltype)
         return attr.f(data)
     end
     throw(ArgumentError("Column $name not found"))
@@ -890,12 +915,12 @@ DataAPI.ncol(x::PartitionedH5Table) = isempty(x.tables) ? 0 : DataAPI.ncol(x.tab
 
 function Base.show(io::IO, ts::PartitionedH5Table)
     total = sum(t.nrow for t in ts.tables)
-    print(io, "$(length(ts.tables))×H5Table($(basename(HDF5.filename(ts.tables[1].f))), $(DataAPI.ncol(ts.tables[1])) columns, $total rows)")
+    print(io, "$(length(ts.tables))×H5Table($(basename(HDF5.filename(h5handle(ts.tables[1].f)))), $(DataAPI.ncol(ts.tables[1])) columns, $total rows)")
 end
 
 function Base.show(io::IO, ::MIME"text/plain", ts::PartitionedH5Table)
     total = sum(t.nrow for t in ts.tables)
-    println(io, "$(length(ts.tables))×H5Table: $(basename(HDF5.filename(ts.tables[1].f)))")
+    println(io, "$(length(ts.tables))×H5Table: $(basename(HDF5.filename(h5handle(ts.tables[1].f))))")
     println(io, "  Partitions: $(length(ts.tables))")
     println(io, "  Total rows: $total")
     println(io, "  Rows per partition: $(join([string(t.nrow) for t in ts.tables], ", "))")
@@ -920,26 +945,51 @@ function Base.show(io::IO, ::MIME"text/plain", ts::PartitionedH5Table)
     end
 end
 
+# Metadata — delegated to the first partition (its schema is read from there
+# too). Partitions share column structure and source metadata, so the first
+# partition is representative.
+DataAPI.metadatasupport(::Type{<:PartitionedH5Table}) = (read=true, write=false)
+function DataAPI.metadatakeys(table::PartitionedH5Table)
+    isempty(table.tables) ? () : DataAPI.metadatakeys(table.tables[1])
+end
+function DataAPI.metadata(table::PartitionedH5Table, key::String; style=false)
+    isempty(table.tables) && throw(ArgumentError("PartitionedH5Table has no partitions"))
+    DataAPI.metadata(table.tables[1], key; style)
+end
+DataAPI.colmetadatasupport(::Type{<:PartitionedH5Table}) = (read=true, write=false)
+function DataAPI.colmetadatakeys(table::PartitionedH5Table)
+    isempty(table.tables) ? () : DataAPI.colmetadatakeys(table.tables[1])
+end
+function DataAPI.colmetadata(table::PartitionedH5Table, col; style=false)
+    isempty(table.tables) && throw(ArgumentError("PartitionedH5Table has no partitions"))
+    DataAPI.colmetadata(table.tables[1], col; style)
+end
+function DataAPI.colmetadata(table::PartitionedH5Table, col, key::String; style=false)
+    isempty(table.tables) && throw(ArgumentError("PartitionedH5Table has no partitions"))
+    DataAPI.colmetadata(table.tables[1], col, key; style)
+end
+
 DataAPI.nrow(x::H5Table) = x.nrow
 DataAPI.ncol(x::H5Table) = length(x.vars) + length(x.attrs)
 
 # Metadata
-DataAPI.metadatasupport(::Type{H5Table}) = (read=true, write=false)
+DataAPI.metadatasupport(::Type{<:H5Table}) = (read=true, write=false)
 function DataAPI.metadatakeys(table::H5Table)
-    keys(attrs(table.f))
+    file_keys = collect(keys(attrs(h5handle(table.f))))
+    src_keys = collect(keys(source_metadata(table.f)))
+    return unique!(vcat(src_keys, file_keys))
 end
 function DataAPI.metadata(table::H5Table, key::String; style=false)
-    if style
-        (read_attribute(table.f, key), :note)
-    else
-        read_attribute(table.f, key)
-    end
+    smeta = source_metadata(table.f)
+    val = haskey(smeta, key) ? smeta[key] : read_attribute(h5handle(table.f), key)
+    style ? (val, :note) : val
 end
 
 # Column metadata
-DataAPI.colmetadatasupport(::Type{H5Table}) = (read=true, write=false)
+DataAPI.colmetadatasupport(::Type{<:H5Table}) = (read=true, write=false)
 function DataAPI.colmetadatakeys(table::H5Table)
-    Dict(var.name => filter(Base.Fix1(!in, ["DIMENSION_LIST", "REFERENCE_LIST"]), keys(attrs(table.f[var.path]))) for var in table.vars)
+    file = h5handle(table.f)
+    Dict(var.name => filter(Base.Fix1(!in, ["DIMENSION_LIST", "REFERENCE_LIST"]), keys(attrs(file[var.path]))) for var in table.vars)
 end
 function DataAPI.colmetadata(table::H5Table, col::Symbol; style=false)
     vari = findfirst(v -> v.name == col, table.vars)
@@ -953,17 +1003,19 @@ function DataAPI.colmetadata(table::H5Table, col::Symbol, key::String; style=fal
 end
 function DataAPI.colmetadata(table::H5Table, col::Int; style=false)
     var = table.vars[col]
+    file = h5handle(table.f)
     if style
-        Dict(key => (value, :note) for (key,value) in attrs(table.f[var.path]))
+        Dict(key => (value, :note) for (key,value) in attrs(file[var.path]))
     else
-        attrs(table.f[var.path])
+        attrs(file[var.path])
     end
 end
 function DataAPI.colmetadata(table::H5Table, col::Int, key::String; style=false)
     var = table.vars[col]
+    file = h5handle(table.f)
     if style
-        (read_attribute(table.f[var.path], key), :note)
+        (read_attribute(file[var.path], key), :note)
     else
-        read_attribute(table.f[var.path], key)
+        read_attribute(file[var.path], key)
     end
 end

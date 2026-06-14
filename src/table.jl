@@ -127,12 +127,50 @@ Tables.istable(::Type{<:Table}) = true
 Tables.columnaccess(::Type{<:Table}) = true
 Tables.columns(g::Table) = getfield(g, :table)
 
+# ─── GranuleSource: a granule-backed H5Table source ──────────────────────────
+# Wraps a `Granule` together with its open `HDF5.File` (and, for multi-track
+# instruments, the track this table belongs to). This is what lets a generic,
+# read-only `H5Table` keep its provenance: granule id/info become table
+# metadata, and `resolve_variable` can pull a known column on demand using the
+# granule's `default_variables` template (see operations.jl auto-pull).
+struct GranuleSource{G<:Granule}
+    granule::G
+    file::HDF5.File
+    track::String
+end
+GranuleSource(g::Granule, file::HDF5.File) = GranuleSource(g, file, "")
+
+H5Tables.h5handle(s::GranuleSource) = s.file
+H5Tables.source_metadata(s::GranuleSource) =
+    Dict{String,Any}(string(k) => v for (k, v) in pairs(_info(s.granule)))
+
+"""Resolve `name` to a fully-built [`Variable`](@ref) using the granule's
+`default_variables` template, prefixed with this source's track. Returns
+`nothing` if the granule has no such column or it is absent from the file."""
+function H5Tables.resolve_variable(s::GranuleSource, name::Symbol)
+    dvars = default_variables(s.granule)
+    i = findfirst(v -> v.name == name, dvars)
+    isnothing(i) && return nothing
+    dv = dvars[i]
+    fullpath = isempty(s.track) ? dv.path : "$(s.track)/$(dv.path)"
+    haskey(s.file, fullpath) || return nothing
+    return H5Tables.make_variable(s.file, name, fullpath; transform = dv.f)
+end
+
+"""The granule backing a table, or `nothing` for a sourceless/generic table."""
+granuleof(t::H5Tables.H5Table) = _granuleof(getfield(t, :f))
+function granuleof(t::H5Tables.PartitionedH5Table)
+    isempty(t.tables) ? nothing : granuleof(t.tables[1])
+end
+_granuleof(s::GranuleSource) = s.granule
+_granuleof(::Any) = nothing
+
 # ─── collect: materialize H5Table into SpaceLiDAR Table types ─────────────────
 
-Base.collect(t::H5Tables.H5Table) = Table(Tables.columntable(t), nothing)
+Base.collect(t::H5Tables.H5Table) = Table(Tables.columntable(t), granuleof(t))
 function Base.collect(t::H5Tables.PartitionedH5Table)
     nts = Tuple(Tables.columntable(p) for p in Tables.partitions(t))
-    PartitionedTable(nts, nothing)
+    PartitionedTable(nts, granuleof(t))
 end
 
 
@@ -168,7 +206,15 @@ function _h5table_for_track(file::HDF5.File, g::Granule, track::AbstractString, 
     vars = [v.name => "$track/$(v.path)" for v in dvars]
     transforms = Dict{Symbol,Any}(v.name => v.f for v in dvars if v.f !== identity)
     attrs = [a.name => "$track/$(a.attribute)" for a in default_attributes(g)]
-    H5Tables.H5Table(file; vars, attrs, transforms, include_dimensions=false, nrow)
+    source = GranuleSource(g, file, String(track))
+    H5Tables.H5Table(source; vars, attrs, transforms, include_dimensions=false, nrow)
+end
+
+"""Rebuild `t` carrying a `GranuleSource` for `track` (used after the cheap
+template-reuse path, which copies the template's source)."""
+function _retrack(t::H5Tables.H5Table, g::Granule, file::HDF5.File, track::AbstractString)
+    source = GranuleSource(g, file, String(track))
+    H5Tables.H5Table(f=source, vars=t.vars, attrs=t.attrs, nrow=t.nrow)
 end
 
 """Check if an H5Table can be used as a template (trivial flattening, no track-dependent transforms)."""
@@ -221,8 +267,9 @@ function table(g::Granule; tracks=default_tracks(g), variables=default_variables
                 first_track = track
             end
         else
-            # Reuse template structure — just remap paths
+            # Reuse template structure — just remap paths, then re-source for this track
             t = H5Tables.H5Table(template, track, first_track)
+            t = _retrack(t, g, file, track)
         end
         push!(tables, t)
     end
@@ -238,7 +285,7 @@ function table(g::ICESat_Granule; variables=default_variables(g))
     vars = [v.name => v.path for v in variables]
     transforms = Dict{Symbol,Any}(v.name => v.f for v in variables if v.f !== identity)
     attrs = Pair{Symbol,String}[]
-    H5Tables.H5Table(file; vars, attrs, transforms)
+    H5Tables.H5Table(GranuleSource(g, file); vars, attrs, transforms)
 end
 
 # ─── explore(::Granule) → interactive selection with track replication ─────────
@@ -281,7 +328,7 @@ function explore(g::Granule; tracks=default_tracks(g))
         haskey(file, track) || continue
         all(haskey(file[track], sp) for sp in suffix_paths) || continue
         vars = vcat([Symbol(split(sp, "/")[end]) => "$track/$sp" for sp in suffix_paths], shared_vars)
-        push!(tables, H5Tables.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false))
+        push!(tables, H5Tables.H5Table(GranuleSource(g, file, String(track)); vars, attrs=selected_attrs, include_dimensions=false))
     end
     if isempty(tables)
         close(file)
@@ -294,5 +341,5 @@ function explore(g::ICESat_Granule)
     file = HDF5.h5open(g.url, "r")
     selected_paths, selected_attrs = H5Tables.select(file)
     vars = [Symbol(split(p, "/")[end]) => p for p in selected_paths]
-    H5Tables.H5Table(file; vars, attrs=selected_attrs, include_dimensions=false)
+    H5Tables.H5Table(GranuleSource(g, file); vars, attrs=selected_attrs, include_dimensions=false)
 end

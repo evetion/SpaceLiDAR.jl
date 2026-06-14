@@ -619,3 +619,108 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
         end
     end
 end
+
+@testset "GranuleSource + Operations" begin
+    using SpaceLiDAR.H5Tables: resolve_variable, source_metadata, h5handle
+
+    @testset "provenance via GranuleSource" begin
+        g = SL.granule(GLAH14_fn)
+        t = SL.table(g)
+        # granule info is merged into table metadata
+        @test metadata(t, "id") == SL.id(g)
+        @test "rgt" in metadatakeys(t)
+        # provenance is recoverable and survives collect
+        @test SL.granuleof(t) == g
+        @test SL._granule(collect(t)) == g
+    end
+
+    @testset "resolve_variable" begin
+        g = SL.granule(ATL08_fn)
+        t = SL.table(g)
+        # non-first partition carries its own track (template-reuse path)
+        p = t.tables[end]
+        src = getfield(p, :f)
+        v = resolve_variable(src, :longitude)
+        @test startswith(v.path, src.track * "/")
+        @test endswith(v.path, "longitude")
+        @test resolve_variable(src, :no_such_column) === nothing
+    end
+
+    @testset "auto-pull on under-selection" begin
+        g = SL.granule(GLAH14_fn)
+        dv = SL.default_variables(g)
+        minimal = filter(v -> v.name === :height, dv)
+        t = SL.table(g; variables = minimal)
+        @test Tables.columnnames(t) == [:height]
+
+        # transform auto-pulls lon/lat, then drops them again
+        r = apply(ToEGM2008(), t)
+        @test Set(Tables.columnnames(r)) == Set([:height])
+        @test sum(skipmissing(r.height)) != sum(skipmissing(collect(t).height))
+
+        # filter auto-pulls lon/lat, drops them, and removes rows
+        ext = Extent(X = (-180.0, 0.0), Y = (-90.0, 90.0))
+        f = filter(InExtent(ext), t)
+        @test Set(Tables.columnnames(f)) == Set([:height])
+        @test length(f.height) < DataAPI.nrow(t)
+    end
+
+    @testset "product-aware ICESatQuality" begin
+        g14 = SL.granule(GLAH14_fn)
+        @test SL.resolve(ICESatQuality(), g14).attitude === :attitude
+        g6 = SL.granule(GLAH06_fn)
+        @test SL.resolve(ICESatQuality(), g6).attitude === :sigma_att_flg
+
+        t = SL.table(g14)
+        f = filter(ICESatQuality(), t)
+        @test f isa SL.Table
+        @test length(f.height) < DataAPI.nrow(t)
+        # mask agrees with the legacy function
+        @test count(SL.icesat_quality(t)) == length(f.height)
+    end
+
+    @testset "partitioned apply" begin
+        g = SL.granule(ATL08_fn)
+        t = SL.table(g)
+        r = apply(ToEGM2008(), t)
+        @test r isa SL.PartitionedTable
+        @test length(r.height) == DataAPI.nrow(t)
+    end
+
+    @testset "partitioned metadata" begin
+        g = SL.granule(ATL08_fn)
+        t = SL.table(g)
+        @test t isa SL.H5Tables.PartitionedH5Table
+        p1 = t.tables[1]
+        # table-level metadata delegates to the first partition / granule
+        @test metadata(t, "id") == SL.id(g)
+        @test "id" in metadatakeys(t)
+        @test "rgt" in metadatakeys(t)
+        @test collect(metadatakeys(t)) == collect(metadatakeys(p1))
+        # column metadata delegates to the first partition
+        @test colmetadatakeys(t) == colmetadatakeys(p1)
+        @test colmetadata(t, :latitude) == colmetadata(p1, :latitude)
+    end
+
+    @testset "mutating verbs" begin
+        g = SL.granule(GLAH14_fn)
+        mt = collect(SL.table(g))
+        s0 = sum(skipmissing(mt.height))
+        apply!(SaturationCorrect(), mt)
+        @test sum(skipmissing(mt.height)) != s0
+
+        n0 = length(mt.height)
+        filter!(ICESatQuality(), mt)
+        @test length(mt.height) < n0
+    end
+
+    @testset "errors and guard rails" begin
+        df = DataFrame(height = [1.0, 2.0, 3.0])
+        # transform on a sourceless table missing inputs → instructive error
+        @test_throws ErrorException apply(ToEGM2008(), df)
+        # wrong verb for the kind of op
+        g = SL.granule(GLAH14_fn)
+        @test_throws ArgumentError filter(ToEGM2008(), SL.table(g))
+        @test_throws ArgumentError apply(ICESatQuality(), SL.table(g))
+    end
+end
