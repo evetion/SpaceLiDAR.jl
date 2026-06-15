@@ -667,9 +667,10 @@ end
 
     @testset "product-aware ICESatQuality" begin
         g14 = SL.granule(GLAH14_fn)
-        @test SL.resolve(ICESatQuality(), g14).attitude === :attitude
+        # the attitude column is selected by granule dispatch in `inputs`
+        @test any(v -> v.name === :attitude, SL.inputs(ICESatQuality(), g14))
         g6 = SL.granule(GLAH06_fn)
-        @test SL.resolve(ICESatQuality(), g6).attitude === :sigma_att_flg
+        @test any(v -> v.name === :sigma_att_flg, SL.inputs(ICESatQuality(), g6))
 
         t = SL.table(g14)
         f = filter(ICESatQuality(), t)
@@ -722,5 +723,9 @@ end
         g = SL.granule(GLAH14_fn)
         @test_throws ArgumentError filter(ToEGM2008(), SL.table(g))
         @test_throws ArgumentError apply(ICESatQuality(), SL.table(g))
+        # product-bound op on a non-ICESat granule → applicability error
+        gedi = SL.granule(GEDI02_fn)
+        @test_throws ArgumentError apply(TopexToWGS84(), SL.table(gedi))
+        @test_throws ArgumentError filter(ICESatQuality(), SL.table(gedi))
     end
 end

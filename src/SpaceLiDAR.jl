@@ -28,7 +28,7 @@ using FillArrays: FillArrays, Fill
 using GeoFormatTypes
 using GeoInterface: GeoInterface, LineStringTrait, MultiPointTrait, PointTrait
 using HDF5: HDF5, attributes, open_dataset, open_group, read_attribute, read_dataset
-using Tables
+using Tables: Tables
 using TableOperations: joinpartitions
 using DataFrames: DataFrames, DataFrame, subset, subset!
 using TimeZones: TimeZones, DateTime, UTC
@@ -47,6 +47,9 @@ ToBool = H5Tables.ToBool
 InvertBool = H5Tables.InvertBool
 SliceRow = H5Tables.SliceRow
 ExpandDims = H5Tables.ExpandDims
+include("table.jl")
+include("operations.jl")
+include("geoid.jl")
 include("GEDI/GEDI.jl")
 include("GEDI/L2A.jl")
 include("ICESat-2/ICESat-2.jl")
@@ -57,9 +60,6 @@ include("ICESat-2/ATL12.jl")
 include("ICESat/ICESat.jl")
 include("ICESat/GLAH06.jl")
 include("ICESat/GLAH14.jl")
-include("geoid.jl")
-include("table.jl")
-include("operations.jl")
 include("search.jl")
 include("geointerface.jl")
 include("env.jl")

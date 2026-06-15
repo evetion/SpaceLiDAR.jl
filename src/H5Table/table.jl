@@ -201,6 +201,17 @@ source_metadata(::Any) = Dict{String,Any}()
 knowledge of `name`. Generic sources (a bare `HDF5.File`) cannot resolve names."""
 resolve_variable(::Any, ::Symbol) = nothing
 
+"""Resolve a [`Variable`](@ref) spec against a source, returning a build-ready
+`Variable` (nodata mask + transform composed via [`make_variable`](@ref)) or
+`nothing` if its dataset is absent. The generic method reads `v.path` verbatim;
+richer sources (e.g. a granule source carrying a track) may override to rewrite
+the path first."""
+function resolve_variable(source, v::Variable)
+    file = h5handle(source)
+    haskey(file, v.path) || return nothing
+    return make_variable(file, v.name, v.path; transform = v.f)
+end
+
 Base.@kwdef struct H5Table{S}
     f::S
     vars::Vector{Variable}

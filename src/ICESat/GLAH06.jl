@@ -127,3 +127,7 @@ end
 function default_attributes(::ICESat_Granule{:GLAH06})
     Attribute[]
 end
+
+# Attitude quality column for `ICESatQuality` (GLAH06 names it `:sigma_att_flg`).
+_attitude_variable(::ICESat_Granule{:GLAH06}) =
+    Variable(:sigma_att_flg, "Data_40HZ/Quality/sigma_att_flg", Int8)

@@ -118,11 +118,6 @@ Tables.columnaccess(::Type{<:PartitionedTable}) = true
 Tables.partitions(g::PartitionedTable) = getfield(g, :tables)
 Tables.columns(g::PartitionedTable) = Tables.CopiedColumns(joinpartitions(g))
 
-# ICESat has no beams, so no need for partitions
-Tables.istable(::Type{<:ICESat_Granule}) = true
-Tables.columnaccess(::Type{<:ICESat_Granule}) = true
-Tables.columns(g::ICESat_Granule) = getfield(points(g), :table)
-
 Tables.istable(::Type{<:Table}) = true
 Tables.columnaccess(::Type{<:Table}) = true
 Tables.columns(g::Table) = getfield(g, :table)
@@ -157,6 +152,15 @@ function H5Tables.resolve_variable(s::GranuleSource, name::Symbol)
     return H5Tables.make_variable(s.file, name, fullpath; transform = dv.f)
 end
 
+"""Resolve a [`Variable`](@ref) spec (e.g. an operation's declared input) against
+this source, prefixing the track onto its track-less path. Returns `nothing` if
+the dataset is absent."""
+function H5Tables.resolve_variable(s::GranuleSource, v::H5Tables.Variable)
+    fullpath = isempty(s.track) ? v.path : "$(s.track)/$(v.path)"
+    haskey(s.file, fullpath) || return nothing
+    return H5Tables.make_variable(s.file, v.name, fullpath; transform = v.f)
+end
+
 """The granule backing a table, or `nothing` for a sourceless/generic table."""
 granuleof(t::H5Tables.H5Table) = _granuleof(getfield(t, :f))
 function granuleof(t::H5Tables.PartitionedH5Table)
@@ -186,10 +190,9 @@ function materialize!(df::DataFrame)
 end
 
 # ─── table(::Granule) → H5Table dispatch ─────────────────────────────────────
-
-default_tracks(::ICESat2_Granule) = icesat2_tracks
-default_tracks(::GEDI_Granule) = gedi_tracks
-default_tracks(::ICESat_Granule) = ()
+#
+# `default_tracks(g)` (per-mission, in the product files) supplies the tracks to
+# iterate; single-track ICESat overrides `table`/`explore` directly.
 
 """
     table(g::Granule; tracks=default_tracks(g), variables=default_variables(g))
@@ -280,14 +283,6 @@ function table(g::Granule; tracks=default_tracks(g), variables=default_variables
     H5Tables.PartitionedH5Table(tables)
 end
 
-function table(g::ICESat_Granule; variables=default_variables(g))
-    file = HDF5.h5open(g.url, "r")
-    vars = [v.name => v.path for v in variables]
-    transforms = Dict{Symbol,Any}(v.name => v.f for v in variables if v.f !== identity)
-    attrs = Pair{Symbol,String}[]
-    H5Tables.H5Table(GranuleSource(g, file); vars, attrs, transforms)
-end
-
 # ─── explore(::Granule) → interactive selection with track replication ─────────
 
 """
@@ -335,11 +330,4 @@ function explore(g::Granule; tracks=default_tracks(g))
         error("No tracks found in $(g.id) with selected variables")
     end
     H5Tables.PartitionedH5Table(tables)
-end
-
-function explore(g::ICESat_Granule)
-    file = HDF5.h5open(g.url, "r")
-    selected_paths, selected_attrs = H5Tables.select(file)
-    vars = [Symbol(split(p, "/")[end]) => p for p in selected_paths]
-    H5Tables.H5Table(GranuleSource(g, file); vars, attrs=selected_attrs, include_dimensions=false)
 end

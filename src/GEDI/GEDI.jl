@@ -18,6 +18,8 @@ end
 sproduct(::GEDI_Granule{product}) where {product} = product
 mission(::GEDI_Granule) = :GEDI
 
+default_tracks(::GEDI_Granule) = gedi_tracks
+
 function Base.copy(g::GEDI_Granule{product}) where {product}
     GEDI_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end

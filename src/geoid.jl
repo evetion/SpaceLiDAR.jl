@@ -278,3 +278,25 @@ end
 
 icesat_quality(t::H5Tables.H5Table) = icesat_quality(collect(t))
 icesat_quality(t::H5Tables.PartitionedH5Table) = icesat_quality(collect(t))
+
+
+# ─── ToEGM2008 operation ───────────────────────────────────────────────────────
+
+"""
+    ToEGM2008()
+
+Transform: convert ellipsoidal `:height` to EGM2008 geoid height (using
+`:longitude`, `:latitude`). Generic — applies to any granule. Equivalent to
+[`to_egm2008`](@ref).
+"""
+struct ToEGM2008 <: Operation end
+inputs(::ToEGM2008, granule) = _point_variables(granule)
+outputs(::ToEGM2008) = Symbol[:height]
+function _run!(::ToEGM2008, cols)
+    Proj.enable_network!()
+    trans = Proj.Transformation("EPSG:4979", "EPSG:3855")
+    to_egm2008!(trans,
+        Tables.getcolumn(cols, :latitude),
+        Tables.getcolumn(cols, :longitude),
+        Tables.getcolumn(cols, :height))
+end

@@ -24,6 +24,8 @@ end
 sproduct(::ICESat2_Granule{product}) where {product} = product
 mission(::ICESat2_Granule) = :ICESat2
 
+default_tracks(::ICESat2_Granule) = icesat2_tracks
+
 function Base.copy(g::ICESat2_Granule{product}) where {product}
     ICESat2_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end
