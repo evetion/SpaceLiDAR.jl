@@ -653,24 +653,24 @@ end
         t = SL.table(g; variables = minimal)
         @test Tables.columnnames(t) == [:height]
 
-        # transform auto-pulls lon/lat, then drops them again
-        r = apply(ToEGM2008(), t)
-        @test Set(Tables.columnnames(r)) == Set([:height])
+        # transform auto-pulls lon/lat and keeps them in the result
+        r = map(ToEGM2008(), t)
+        @test Set(Tables.columnnames(r)) == Set([:height, :longitude, :latitude])
         @test sum(skipmissing(r.height)) != sum(skipmissing(collect(t).height))
 
-        # filter auto-pulls lon/lat, drops them, and removes rows
+        # filter auto-pulls lon/lat, keeps them, and removes rows
         ext = Extent(X = (-180.0, 0.0), Y = (-90.0, 90.0))
         f = filter(InExtent(ext), t)
-        @test Set(Tables.columnnames(f)) == Set([:height])
+        @test Set(Tables.columnnames(f)) == Set([:height, :longitude, :latitude])
         @test length(f.height) < DataAPI.nrow(t)
     end
 
     @testset "product-aware ICESatQuality" begin
         g14 = SL.granule(GLAH14_fn)
         # the attitude column is selected by granule dispatch in `inputs`
-        @test any(v -> v.name === :attitude, SL.inputs(ICESatQuality(), g14))
+        @test any(v -> v.name === :attitude, SL._inputs(ICESatQuality(), g14))
         g6 = SL.granule(GLAH06_fn)
-        @test any(v -> v.name === :sigma_att_flg, SL.inputs(ICESatQuality(), g6))
+        @test any(v -> v.name === :sigma_att_flg, SL._inputs(ICESatQuality(), g6))
 
         t = SL.table(g14)
         f = filter(ICESatQuality(), t)
@@ -680,10 +680,10 @@ end
         @test count(SL.icesat_quality(t)) == length(f.height)
     end
 
-    @testset "partitioned apply" begin
+    @testset "partitioned map" begin
         g = SL.granule(ATL08_fn)
         t = SL.table(g)
-        r = apply(ToEGM2008(), t)
+        r = map(ToEGM2008(), t)
         @test r isa SL.PartitionedTable
         @test length(r.height) == DataAPI.nrow(t)
     end
@@ -707,7 +707,7 @@ end
         g = SL.granule(GLAH14_fn)
         mt = collect(SL.table(g))
         s0 = sum(skipmissing(mt.height))
-        apply!(SaturationCorrect(), mt)
+        map!(SaturationCorrect(), mt)
         @test sum(skipmissing(mt.height)) != s0
 
         n0 = length(mt.height)
@@ -718,14 +718,14 @@ end
     @testset "errors and guard rails" begin
         df = DataFrame(height = [1.0, 2.0, 3.0])
         # transform on a sourceless table missing inputs → instructive error
-        @test_throws ErrorException apply(ToEGM2008(), df)
-        # wrong verb for the kind of op
+        @test_throws ArgumentError map(ToEGM2008(), df)
+        # wrong verb for the kind of op → no method (filter wants a Filter, map a Transform)
         g = SL.granule(GLAH14_fn)
-        @test_throws ArgumentError filter(ToEGM2008(), SL.table(g))
-        @test_throws ArgumentError apply(ICESatQuality(), SL.table(g))
+        @test_throws MethodError filter(ToEGM2008(), SL.table(g))
+        @test_throws MethodError map(ICESatQuality(), SL.table(g))
         # product-bound op on a non-ICESat granule → applicability error
         gedi = SL.granule(GEDI02_fn)
-        @test_throws ArgumentError apply(TopexToWGS84(), SL.table(gedi))
+        @test_throws ArgumentError map(TopexToWGS84(), SL.table(gedi))
         @test_throws ArgumentError filter(ICESatQuality(), SL.table(gedi))
     end
 end

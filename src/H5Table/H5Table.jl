@@ -17,5 +17,7 @@ export h5handle, source_metadata, resolve_variable
 
 include("table.jl")
 include("explore.jl")
+include("utils.jl")
+include("metadata.jl")
 
 end

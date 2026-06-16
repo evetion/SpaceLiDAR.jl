@@ -289,9 +289,8 @@ Transform: convert ellipsoidal `:height` to EGM2008 geoid height (using
 `:longitude`, `:latitude`). Generic — applies to any granule. Equivalent to
 [`to_egm2008`](@ref).
 """
-struct ToEGM2008 <: Operation end
-inputs(::ToEGM2008, granule) = _point_variables(granule)
-outputs(::ToEGM2008) = Symbol[:height]
+struct ToEGM2008 <: Transform end
+_inputs(::ToEGM2008, granule) = _point_variables(granule)
 function _run!(::ToEGM2008, cols)
     Proj.enable_network!()
     trans = Proj.Transformation("EPSG:4979", "EPSG:3855")
