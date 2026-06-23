@@ -26,6 +26,11 @@ Base.@kwdef struct H5Table{S}
     nrow::Int=0
 end
 
+function Base.close(t::H5Table)
+    close(h5handle(t.f))
+    return nothing
+end
+
 function Base.show(io::IO, t::H5Table)
     print(io, "H5Table($(basename(HDF5.filename(h5handle(t.f)))), $(length(t.vars)) columns, $(t.nrow) rows)")
 end
@@ -115,27 +120,32 @@ function (nd::NodataRange)(data::AbstractArray)
     return T[nd.lo <= v <= nd.hi ? v : missing for v in data]
 end
 
+_as_variable(v::Variable) = v
+_as_variable(p::Pair{Symbol,<:AbstractString}) =
+    Variable(name = first(p), path = String(last(p)))
+
 function H5Table(
     source;
-    vars::Vector{Pair{Symbol,String}},
+    vars::AbstractVector,
     attrs::Vector{Pair{Symbol,String}} = Pair{Symbol,String}[],
-    transforms::Dict{Symbol} = Dict{Symbol,Any}(),
     include_dimensions::Bool = false,
     include_references::Bool = false,
     nrow::Union{Int,Nothing} = nothing,
 )
     file = h5handle(source)
-    # 1. Collect all name => path pairs (no Variable structs yet)
-    pairs = copy(vars)
-    included_paths = Set(last.(vars))
+    # 1. Collect all variable specs. Pair syntax is a convenience for
+    # untransformed columns; transformed columns are represented by Variable.f.
+    variable_specs = Variable[_as_variable(v) for v in vars]
+    included_paths = Set(v.path for v in variable_specs)
 
-    for (_, path) in vars
+    for v in copy(variable_specs)
+        path = v.path
         ds = HDF5.open_dataset(file, path)
         if include_references
-            include_related_paths!(pairs, included_paths, get_reference_paths(ds))
+            include_related_paths!(variable_specs, included_paths, get_reference_paths(ds))
         end
         if include_dimensions
-            include_related_paths!(pairs, included_paths, get_dimension_paths(ds))
+            include_related_paths!(variable_specs, included_paths, get_dimension_paths(ds))
         end
         close(ds)
     end
@@ -148,9 +158,10 @@ function H5Table(
     # Schema-based constructors (SpaceLiDAR templates) bypass this by passing an
     # explicit `nrow`, which skips dimension resolution entirely for speed.
     #
-    # Transform-aware: each variable's raw axes are filtered through
-    # `apply_transform_dims(transform, vdims)` before resolving the global
-    # context. For example `SliceRow(row)` does `data[row, :]` on a 2D dataset,
+    # Transform-aware: each variable's raw axes are filtered through its
+    # `Variable.f` via `apply_transform_dims(transform, vdims)` before resolving
+    # the global context. For example `SliceRow(row)` does `data[row, :]` on a
+    # 2D dataset,
     # collapsing Julia axis 1 (HDF5 fast axis) while keeping axis 2. The dropped
     # axis must not inflate the global row count, but the remaining axis still
     # needs to participate so the resulting 1D vector is correctly aligned with
@@ -321,6 +332,11 @@ _h5read_attr(file::HDF5.File, parent_path::String, attr_name::String) =
 
 struct PartitionedH5Table
     tables::Vector{H5Table}
+end
+
+function Base.close(ts::PartitionedH5Table)
+    foreach(close, ts.tables)
+    return nothing
 end
 
 Tables.istable(::Type{PartitionedH5Table}) = true

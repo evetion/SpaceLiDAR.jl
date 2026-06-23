@@ -202,15 +202,20 @@ the specified variables and `default_attributes` for the granule type.
 
 For multi-track instruments (ICESat-2, GEDI), returns a `PartitionedH5Table`.
 For single-track instruments (ICESat), returns a single `H5Table`.
+
+The returned table is lazy and keeps the HDF5 file handle open. Call `close(t)`
+when finished with the table in long-running sessions.
 """
 function table end
 
 function _h5table_for_track(file::HDF5.File, g::Granule, track::AbstractString, dvars; nrow::Union{Int,Nothing}=nothing)
-    vars = [v.name => "$track/$(v.path)" for v in dvars]
-    transforms = Dict{Symbol,Any}(v.name => v.f for v in dvars if v.f !== identity)
+    vars = [
+        H5Tables.Variable(name = v.name, path = "$track/$(v.path)", f = v.f, eltype = v.eltype)
+        for v in dvars
+    ]
     attrs = [a.name => "$track/$(a.attribute)" for a in default_attributes(g)]
     source = GranuleSource(g, file, String(track))
-    H5Tables.H5Table(source; vars, attrs, transforms, include_dimensions=false, nrow)
+    H5Tables.H5Table(source; vars, attrs, include_dimensions=false, nrow)
 end
 
 """Rebuild `t` carrying a `GranuleSource` for `track` (used after the cheap

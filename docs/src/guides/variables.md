@@ -54,6 +54,15 @@ Variable(:time, "land_segments/delta_time", Float64,
     ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", SpaceLiDAR.gps_offset))
 ```
 
+Direct `H5Table` construction uses the same `Variable` form for transformed
+columns:
+
+```julia
+H5Table(file; vars=[
+    Variable(:is_land, "land_segments/surf_type", Int8, ToBool()),
+])
+```
+
 Available transforms:
 
 | Transform | Effect |

@@ -216,7 +216,8 @@ function build_mask(ds::HDF5.Dataset)
 end
 
 """
-Collect related datasets (dimensions or references) as name=>path pairs.
+Collect related datasets (dimensions or references) as untransformed
+`Variable` specs.
 """
 function include_related!(pairs, included_paths, related)
     isnothing(related) && return
@@ -225,12 +226,13 @@ function include_related!(pairs, included_paths, related)
         path in included_paths && continue
         push!(included_paths, path)
         name = Symbol(split(path, "/")[end])
-        push!(pairs, name => path)
+        push!(pairs, Variable(name = name, path = path))
     end
 end
 
 """
-Collect related paths (from get_dimension_paths/get_reference_paths) as name=>path pairs.
+Collect related paths (from get_dimension_paths/get_reference_paths) as
+untransformed `Variable` specs.
 """
 function include_related_paths!(pairs, included_paths, paths)
     isnothing(paths) && return
@@ -239,7 +241,7 @@ function include_related_paths!(pairs, included_paths, paths)
         path in included_paths && continue
         push!(included_paths, path)
         name = Symbol(split(path, "/")[end])
-        push!(pairs, name => path)
+        push!(pairs, Variable(name = name, path = path))
     end
 end
 

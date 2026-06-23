@@ -28,10 +28,8 @@ Tables.columns(g::ICESat_Granule) = getfield(points(g), :table)
 
 function table(g::ICESat_Granule; variables=default_variables(g))
     file = HDF5.h5open(g.url, "r")
-    vars = [v.name => v.path for v in variables]
-    transforms = Dict{Symbol,Any}(v.name => v.f for v in variables if v.f !== identity)
     attrs = Pair{Symbol,String}[]
-    H5Tables.H5Table(GranuleSource(g, file); vars, attrs, transforms)
+    H5Tables.H5Table(GranuleSource(g, file); vars=variables, attrs)
 end
 
 function explore(g::ICESat_Granule)

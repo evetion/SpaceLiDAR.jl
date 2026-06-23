@@ -198,6 +198,8 @@ end
 
 In-place version of [`map`](@ref). Requires `t` to be a materialized, mutable
 table (e.g. `DataFrame`, `Table`, `PartitionedTable`, `NamedTuple` of vectors).
+Lazy `H5Table`/`PartitionedH5Table` inputs are read-only; use `map(op, t)` or
+materialize to a mutable sink such as `DataFrame(t)` first.
 """
 function Base.map!(op::Transform, t::OpTable)
     _validate(t, _input_names(op, _opgranule(t)))
@@ -221,7 +223,8 @@ end
     filter!(op::Filter, t)
 
 In-place version of [`filter`](@ref). Requires `t` to be a materialized, mutable
-table.
+table. Lazy `H5Table`/`PartitionedH5Table` inputs are read-only; use
+`filter(op, t)` or materialize to a mutable sink such as `DataFrame(t)` first.
 """
 function Base.filter!(op::Filter, t::OpTable)
     _validate(t, _input_names(op, _opgranule(t)))

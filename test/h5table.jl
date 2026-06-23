@@ -14,7 +14,7 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
     ExplorerState, _set_selected!, _mark_groups!, expand_attrs!,
     auto_select_dims!, auto_select_refs!, reset_selection!, collect_selected,
     collect_selected_attrs, check_compatible,
-    SliceRow, apply_transform_dims, resolve_var_dims
+    Variable, SliceRow, apply_transform_dims, resolve_var_dims
 
 @testset "H5Table" begin
 
@@ -189,8 +189,7 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
 
             # SliceRow var alone: nrow should be the photon dim length, not 1.
             t1 = H5Table(h5,
-                vars=[:conf => path],
-                transforms=Dict{Symbol,Any}(:conf => SliceRow(1)),
+                vars=[Variable(:conf, path, Int8, SliceRow(1))],
             )
             @test nrow(t1) == n_photons
             @test length(Tables.getcolumn(t1, :conf)) == n_photons
@@ -198,10 +197,9 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
             # SliceRow + sibling 1D var on the same photon axis: aligned, no inflation.
             t2 = H5Table(h5,
                 vars=[
-                    :dt => "gt1l/heights/delta_time",
-                    :conf => path,
+                    Variable(:dt, "gt1l/heights/delta_time", Float64),
+                    Variable(:conf, path, Int8, SliceRow(1)),
                 ],
-                transforms=Dict{Symbol,Any}(:conf => SliceRow(1)),
             )
             @test nrow(t2) == n_photons
             @test length(Tables.getcolumn(t2, :dt)) == n_photons
@@ -632,6 +630,24 @@ end
         # provenance is recoverable and survives collect
         @test SL.granuleof(t) == g
         @test SL._granule(collect(t)) == g
+    end
+
+    @testset "close lazy tables" begin
+        g = SL.granule(GLAH14_fn)
+        t = SL.table(g)
+        file = h5handle(getfield(t, :f))
+        @test isopen(file)
+        @test close(t) === nothing
+        @test !isopen(file)
+        @test close(t) === nothing
+
+        g8 = SL.granule(ATL08_fn)
+        pt = SL.table(g8; tracks = ["gt1l", "gt1r"])
+        pfile = h5handle(getfield(pt.tables[1], :f))
+        @test isopen(pfile)
+        @test close(pt) === nothing
+        @test !isopen(pfile)
+        @test close(pt) === nothing
     end
 
     @testset "resolve_variable" begin

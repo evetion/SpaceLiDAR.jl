@@ -40,6 +40,8 @@ t = H5Table(file; vars=[:lat => "data/latitude", :lon => "data/longitude"])
 Returns an `H5Table` implementing Tables.jl — columns are read lazily on access.
 Nodata values (`_FillValue`, `valid_range`) are automatically converted to `missing`.
 Dimension scales are resolved to determine how multi-dimensional variables flatten.
+Because reads are lazy, the underlying HDF5 file handle stays open; call
+`close(t)` when you are done with a long-lived table.
 
 ### Level 2: Granule-aware (schema via dispatch)
 
@@ -69,6 +71,15 @@ This replaces the old `FillNaN`/`ClampNaN` approach — no NaN pollution in your
 
 Transforms convert raw HDF5 data into useful types. They are composed with
 the nodata mask at construction time: `f = transform ∘ mask`.
+
+Pass transforms on the `Variable` spec itself:
+
+```julia
+t = H5Table(file; vars=[
+    Variable(:quality, "data/quality_flag", Int8, InvertBool()),
+    Variable(:time, "data/delta_time", Float64, ToDateTimeConst(0.0)),
+])
+```
 
 | Transform | Purpose | Example |
 |:---|:---|:---|
