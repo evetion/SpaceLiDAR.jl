@@ -14,21 +14,22 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
     ExplorerState, _set_selected!, _mark_groups!, expand_attrs!,
     auto_select_dims!, auto_select_refs!, reset_selection!, collect_selected,
     collect_selected_attrs, check_compatible,
-    Variable, SliceRow, apply_transform_dims, resolve_var_dims
+    Variable, SliceRow, apply_transform_dims, resolve_var_dims, _pick_global_dims,
+    _resolve_var_dims_cached!
 
 @testset "H5Table" begin
 
     @testset "basic construction and metadata" begin
         h5open(ATL08_fn, "r") do h5
             table = H5Table(h5,
-                vars=[
+                vars = [
                     :longitude => "gt1l/land_segments/longitude",
                     :latitude => "gt1l/land_segments/latitude",
                     :brightness_flag => "gt1l/land_segments/brightness_flag",
                 ],
-                attrs=[:units => "gt1l/land_segments/latitude/units"],
-                include_dimensions=true,
-                include_references=true,
+                attrs = [:units => "gt1l/land_segments/latitude/units"],
+                include_dimensions = true,
+                include_references = true,
             )
 
             @test Tables.istable(table)
@@ -55,11 +56,11 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
         # Expected: all columns flattened to 998*5 = 4990 rows
         h5open(ATL08_fn, "r") do h5
             table = H5Table(h5,
-                vars=[
+                vars = [
                     :latitude_20m => "gt1l/land_segments/latitude_20m",
                     :latitude => "gt1l/land_segments/latitude",
                 ],
-                include_dimensions=true,
+                include_dimensions = true,
             )
 
             @test nrow(table) == 4990
@@ -85,9 +86,9 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
     @testset "include_references" begin
         h5open(ATL08_fn, "r") do h5
             table = H5Table(h5,
-                vars=[:delta_time => "gt1l/land_segments/delta_time"],
-                include_dimensions=false,
-                include_references=true,
+                vars = [:delta_time => "gt1l/land_segments/delta_time"],
+                include_dimensions = false,
+                include_references = true,
             )
             cols = Tables.columnnames(table)
 
@@ -108,6 +109,32 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
             @test is_dim_compatible(h5, gd, ds, "gt1l/land_segments/latitude")
             # delta_time is a dim scale in global_dims → compatible
             @test is_dim_compatible(h5, gd, ds, "gt1l/land_segments/delta_time")
+        end
+    end
+
+    @testset "_pick_global_dims" begin
+        @test _pick_global_dims([["segment", "photon"], ["photon"], String[]]) ==
+              ["segment", "photon"]
+        @test _pick_global_dims([["photon"], ["segment", "photon"]]) ==
+              ["segment", "photon"]
+        @test _pick_global_dims(Dict("a" => ["segment", "photon"], "b" => ["photon"])) ==
+              ["segment", "photon"]
+        @test_throws ArgumentError _pick_global_dims([["segment", "photon"], ["photon", "segment"]])
+    end
+
+    @testset "_resolve_var_dims_cached!" begin
+        h5open(ATL03_fn, "r") do h5
+            path = "gt1l/heights/signal_conf_ph"
+            cache = Dict{String,Vector{String}}()
+            dim_sizes = Dict{String,Int}()
+
+            vdims1 = _resolve_var_dims_cached!(cache, dim_sizes, h5, path)
+            vdims2 = _resolve_var_dims_cached!(cache, dim_sizes, h5, path)
+
+            @test vdims1 === vdims2
+            @test cache[path] === vdims1
+            @test length(cache) == 1
+            @test all(d -> haskey(dim_sizes, d), vdims1)
         end
     end
 
@@ -141,8 +168,8 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
         h5open(GEDI02_fn, "r") do h5
             @testset "rh (101×41946)" begin
                 table = H5Table(h5,
-                    vars=[:lat => "BEAM0000/lat_lowestmode", :rh => "BEAM0000/rh"],
-                    include_dimensions=false,
+                    vars = [:lat => "BEAM0000/lat_lowestmode", :rh => "BEAM0000/rh"],
+                    include_dimensions = false,
                 )
                 @test nrow(table) == 101 * 41946
                 lat = Tables.getcolumn(table, :lat)
@@ -152,8 +179,8 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
 
             @testset "elevs_allmodes (20×41946)" begin
                 table = H5Table(h5,
-                    vars=[:lat => "BEAM0000/lat_lowestmode", :elev => "BEAM0000/geolocation/elevs_allmodes_a1"],
-                    include_dimensions=false,
+                    vars = [:lat => "BEAM0000/lat_lowestmode", :elev => "BEAM0000/geolocation/elevs_allmodes_a1"],
+                    include_dimensions = false,
                 )
                 @test nrow(table) == 20 * 41946
                 lat = Tables.getcolumn(table, :lat)
@@ -163,8 +190,8 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
 
             @testset "1D only (no flattening)" begin
                 table = H5Table(h5,
-                    vars=[:lat => "BEAM0000/lat_lowestmode", :dt => "BEAM0000/delta_time"],
-                    include_dimensions=false,
+                    vars = [:lat => "BEAM0000/lat_lowestmode", :dt => "BEAM0000/delta_time"],
+                    include_dimensions = false,
                 )
                 @test nrow(table) == 41946
             end
@@ -189,14 +216,14 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
 
             # SliceRow var alone: nrow should be the photon dim length, not 1.
             t1 = H5Table(h5,
-                vars=[Variable(:conf, path, Int8, SliceRow(1))],
+                vars = [Variable(:conf, path, Int8, SliceRow(1))],
             )
             @test nrow(t1) == n_photons
             @test length(Tables.getcolumn(t1, :conf)) == n_photons
 
             # SliceRow + sibling 1D var on the same photon axis: aligned, no inflation.
             t2 = H5Table(h5,
-                vars=[
+                vars = [
                     Variable(:dt, "gt1l/heights/delta_time", Float64),
                     Variable(:conf, path, Int8, SliceRow(1)),
                 ],
@@ -582,7 +609,7 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
                     return clamped
                 end
 
-                menu = TreeMenu(root; pagesize=19, dynamic=true, maxsize=19, keypress=(m,i)->false)
+                menu = TreeMenu(root; pagesize = 19, dynamic = true, maxsize = 19, keypress = (m, i)->false)
 
                 # Test: fold parent from a deep leaf
                 cursor_ref[] = 30
@@ -679,6 +706,31 @@ end
         f = filter(InExtent(ext), t)
         @test Set(Tables.columnnames(f)) == Set([:height, :longitude, :latitude])
         @test length(f.height) < DataAPI.nrow(t)
+    end
+
+    @testset "lazy operation pipeline" begin
+
+        g = SL.granule(GLAH14_fn)
+        minimal = filter(v -> v.name === :height, SL.default_variables(g))
+        t = SL.table(g; variables = minimal)
+        ext = Extent(X = (170.0, 180.0), Y = (-90.0, -85))
+
+        # Eager chaining materializes after the first op and cannot auto-pull later inputs.
+        @test_throws ArgumentError filter(ICESatQuality(), map(SaturationCorrect(), t))
+
+        df = (t |>
+              SaturationCorrect() |>
+              InExtent(ext) |>
+              ICESatQuality() |>
+              DataFrame)
+        @test nrow(df) == 478
+        @test df.height[1] == 2257.6730000000002
+        @test Set(names(df)) == Set(string.([
+            :height, :saturation_correction, :longitude, :latitude,
+            :elev_use_flg, :attitude, :i_numPk,
+        ]))
+
+        close(t)
     end
 
     @testset "product-aware ICESatQuality" begin

@@ -135,7 +135,9 @@ function H5Table(
     file = h5handle(source)
     # 1. Collect all variable specs. Pair syntax is a convenience for
     # untransformed columns; transformed columns are represented by Variable.f.
+    # `variable_specs` is the canonical, ordered list of requested columns.
     variable_specs = Variable[_as_variable(v) for v in vars]
+    # Tracks HDF5 datasets already selected so auto-included dims/refs are unique.
     included_paths = Set(v.path for v in variable_specs)
 
     for v in copy(variable_specs)
@@ -170,31 +172,39 @@ function H5Table(
     # ExpandDims, ...) are dim-preserving and fall through unchanged — see
     # `apply_transform_dims` for the per-transform rules.
     if isnothing(nrow)
-        all_var_dims = Dict{String,Vector{String}}()
+        # Dimension scale path/name -> size; shared by all variables.
         dim_sizes = Dict{String,Int}()
-        for (name, path) in pairs
-            vdims, vsizes = resolve_var_dims(file, path)
-            t = get(transforms, name, identity)
-            all_var_dims[path] = apply_transform_dims(t, vdims)
-            merge!(dim_sizes, vsizes)
+        # Raw HDF5 dims by path; duplicate selected columns can share metadata.
+        dims_cache = Dict{String,Vector{String}}()
+        # Post-transform dims by variable index, reused when computing repeats.
+        effective_dims = Vector{Vector{String}}(undef, length(variable_specs))
+        for (i, v) in pairs(variable_specs)
+            # Raw HDF5 axes before considering shape-changing transforms.
+            vdims = _resolve_var_dims_cached!(dims_cache, dim_sizes, file, v.path)
+            # Effective table axes after transforms such as SliceRow drop axes.
+            effective_dims[i] = apply_transform_dims(v.f, vdims)
         end
-        global_dims = _pick_global_dims(all_var_dims)
+        # The longest compatible effective dim list defines the flattened row order.
+        global_dims = _pick_global_dims(effective_dims)
         nrow = isempty(global_dims) ? 1 : prod(dim_sizes[d] for d in global_dims)
     else
+        # Explicit nrow is the schema fast path: callers promise all variables
+        # are already flat/aligned, so skip dimension resolution entirely.
         global_dims = String[]
         dim_sizes = Dict{String,Int}()
-        all_var_dims = Dict{String,Vector{String}}()
+        effective_dims = fill(String[], length(variable_specs))
     end
 
     # 3. Build Variable structs using cached dims
     variable_structs = Variable[]
-    sizehint!(variable_structs, length(pairs))
+    sizehint!(variable_structs, length(variable_specs))
+    # Used when there is no global dim context, or explicit nrow bypassed it.
     trivial_flat = (inner = 1, outer = 1)
-    for (name, path) in pairs
-        vdims = get(all_var_dims, path, String[])
+    for (i, v) in pairs(variable_specs)
+        vdims = effective_dims[i]
+        # inner/outer tell Tables.getcolumn how to repeat lower-dimensional cols.
         flat = isempty(global_dims) ? trivial_flat : compute_repeat(global_dims, dim_sizes, vdims)
-        transform = get(transforms, name, identity)
-        push!(variable_structs, make_variable(file, name, path, flat; transform))
+        push!(variable_structs, make_variable(file, v.name, v.path, flat; transform = v.f))
     end
 
     attribute_structs = Attribute[]

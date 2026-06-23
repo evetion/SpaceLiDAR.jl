@@ -1,25 +1,3 @@
-"""
-    SpaceLiDAR
-
-Read, search, download and process data from spaceborne LiDAR missions —
-ICESat (GLAH06/GLAH14), ICESat-2 (ATL03/06/08/12) and GEDI (L2A) — as
-Julia tables.
-
-HDF5 granules are exposed through the [`Tables.jl`](https://github.com/JuliaData/Tables.jl)
-interface, so they integrate directly with `DataFrame` and the wider
-data ecosystem. The package also covers granule search and download from
-NASA's CMR, geoid/datum conversions ([`to_egm2008`](@ref),
-[`topex_to_wgs84`](@ref)) and a [`GeoInterface`](https://github.com/JuliaGeo/GeoInterface.jl)
-adapter.
-
-# Getting started
-
-Create a granule from a local file with [`granule`](@ref) (or a folder
-with [`granules`](@ref)), then turn it into points with [`points`](@ref),
-line geometries with [`lines`](@ref), or a generic table with
-[`table`](@ref). Use [`search`](@ref) and [`download`](@ref) to fetch new
-granules from NASA.
-"""
 module SpaceLiDAR
 
 using Dates: Dates, @dateformat_str, Day, datetime2unix, unix2datetime

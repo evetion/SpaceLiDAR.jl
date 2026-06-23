@@ -33,6 +33,7 @@
 # Verbs (extending Base, mirroring the mutating/non-mutating split):
 #   filter(op, t) / filter!(op, t)   — `Filter` ops → subset rows
 #   map(op, t)    / map!(op, t)      — `Transform` ops → overwrite columns
+#   t |> op1 |> op2 |> collect       — lazy pipeline, materialized once at sink
 # Using the wrong verb for an op's kind is a `MethodError`.
 #
 # The non-mutating verbs accept lazy `H5Table`/`PartitionedH5Table` (auto-pull +
@@ -56,6 +57,20 @@ An [`Operation`](@ref) that overwrites columns. Used via [`map`](@ref)/[`map!`].
 Implements the internal `_run!(op, cols)`.
 """
 abstract type Transform <: Operation end
+
+"""
+    table(g) |> op1 |> op2 |> collect
+    table(g) |> op1 |> op2 |> DataFrame
+
+Lazy operation chain. Piped operations on an `H5Table`/`PartitionedH5Table`
+record the requested filters/transforms and defer reading until a materializing
+sink such as `collect` or `DataFrame`. All required columns are auto-pulled
+before materialization, so later operations can still use granule context.
+"""
+struct OperationPipeline{S,O<:Tuple}
+    source::S
+    ops::O
+end
 
 """
     _inputs(op::Operation, granule) -> Vector{Variable}
@@ -110,6 +125,8 @@ const OpTable = Union{
     AbstractTable,
     DataFrame,
 }
+const LazyOpTable = Union{H5Tables.H5Table,H5Tables.PartitionedH5Table}
+const MaterializedOpTable = Union{AbstractTable,DataFrame}
 
 # Mutable column containers an operation works over. A `PartitionedTable`
 # exposes one container per partition (so in-place column mutation persists and
@@ -178,6 +195,37 @@ _copytable(t::PartitionedTable) = PartitionedTable(map(nt -> map(copy, nt), t.ta
 _copytable(t::DataFrame) = copy(t)
 
 # ─── public verbs ─────────────────────────────────────────────────────────────
+
+(op::Operation)(t::LazyOpTable) = OperationPipeline(t, (op,))
+(op::Operation)(p::OperationPipeline) = OperationPipeline(p.source, (p.ops..., op))
+(op::Filter)(t::MaterializedOpTable) = filter(op, t)
+(op::Transform)(t::MaterializedOpTable) = map(op, t)
+
+Tables.istable(::Type{<:OperationPipeline}) = true
+Tables.columnaccess(::Type{<:OperationPipeline}) = true
+Tables.columns(p::OperationPipeline) = Tables.columns(collect(p))
+
+function _inputs(ops::Tuple, granule)
+    need = Variable[]
+    seen = Set{Symbol}()
+    for op in ops, v in _inputs(op, granule)
+        v.name in seen && continue
+        push!(need, v)
+        push!(seen, v.name)
+    end
+    return need
+end
+
+_apply(op::Filter, t) = _filter_rows(op, t)
+_apply(op::Transform, t) = (_transform!(op, t); t)
+
+function Base.collect(p::OperationPipeline)
+    t = _materialize_for(p.source, _inputs(p.ops, _opgranule(p.source)))
+    for op in p.ops
+        t = _apply(op, t)
+    end
+    return t
+end
 
 """
     map(op::Transform, t)

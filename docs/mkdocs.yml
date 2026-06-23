@@ -23,6 +23,7 @@ nav:
       - "Downloading": "guides/downloads.md"
       - "Track filtering": "guides/tracks.md"
       - "Selecting variables": "guides/variables.md"
+      - "Chaining operations": "guides/operations.md"
       - "Adding a product": "guides/new-schema.md"
       - "Migration (points → table)": "guides/migration.md"
   - Topics:

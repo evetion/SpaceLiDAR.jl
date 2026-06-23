@@ -1,7 +1,11 @@
 [![DOI](https://zenodo.org/badge/241095197.svg)](https://zenodo.org/badge/latestdoi/241095197)
 # SpaceLiDAR
 
-A Julia toolbox for the spaceborne lidar data from the ICESat, ICESat-2 and GEDI NASA missions. Quickly [search](tutorial/usage.md#1-search-for-granules), download and [load](tutorial/usage.md#4-read-as-a-table) filtered point data with relevant attributes from the `.h5` granules of each data product.
+SpaceLiDAR.jl searches, downloads, and reads spaceborne lidar data
+from the ICESat, ICESat-2, and GEDI NASA missions. Granules are exposed as lazy
+[Tables.jl](https://github.com/JuliaData/Tables.jl)-compatible HDF5 tables, so
+you can inspect product data quickly and materialize only when you need a sink
+such as a `DataFrame`.
 
 If you use SpaceLiDAR in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197). Feel free to submit issues and PRs to support more products. Note that you can also use SpaceLiDAR.jl for unsupported products.
 

@@ -428,41 +428,64 @@ julia> resolve_global_dims(file, ["gt1l/.../latitude_20m", "gt1l/.../latitude"])
 function resolve_global_dims(file, paths)
     all_dims = Dict{String,Vector{String}}()
     dim_sizes = Dict{String,Int}()
+    dim_lists = Vector{Vector{String}}()
+    dims_cache = Dict{String,Vector{String}}()
     for path in paths
-        vdims, vsizes = resolve_var_dims(file, path)
+        vdims = _resolve_var_dims_cached!(dims_cache, dim_sizes, file, path)
         all_dims[path] = vdims
-        merge!(dim_sizes, vsizes)
+        push!(dim_lists, vdims)
     end
 
-    global_dims = _pick_global_dims(all_dims)
+    global_dims = _pick_global_dims(dim_lists)
 
     return global_dims, dim_sizes, all_dims
 end
 
-"""
-    _pick_global_dims(all_dims) -> Vector{String}
+function _resolve_var_dims_cached!(cache::Dict{String,Vector{String}}, dim_sizes::Dict{String,Int}, file, path::AbstractString)
+    path = String(path)
+    get!(cache, path) do
+        vdims, vsizes = resolve_var_dims(file, path)
+        for (dim, size) in vsizes
+            dim_sizes[dim] = size
+        end
+        vdims
+    end
+end
 
-Pick the global dimension order from a `path => dims` mapping: the variable
-with the most dimensions wins. Validates that every variable's dims appear
-in the same relative order as the chosen global order — flattening `(a, b)`
-against `(b, a)` is unsupported and throws `ArgumentError`.
 """
-function _pick_global_dims(all_dims::AbstractDict{<:AbstractString,Vector{String}})
+    _pick_global_dims(dim_lists) -> Vector{String}
+
+Pick the global dimension order from variable dimension lists: the variable with
+the most dimensions wins. Validates that every variable's dims appear in the
+same relative order as the chosen global order — flattening `(a, b)` against
+`(b, a)` is unsupported and throws `ArgumentError`.
+
+# Examples
+
+```julia
+_pick_global_dims([["segment", "photon"], ["photon"]])
+# → ["segment", "photon"]
+
+_pick_global_dims([["segment", "photon"], ["photon", "segment"]])
+# throws ArgumentError
+```
+"""
+function _pick_global_dims(dim_lists::AbstractVector{<:AbstractVector{String}})
     global_dims = String[]
-    for (_, dpaths) in all_dims
+    for dpaths in dim_lists
         if length(dpaths) > length(global_dims)
-            global_dims = dpaths
+            global_dims = collect(dpaths)
         end
     end
 
     if length(global_dims) > 1
         global_order = Dict(d => i for (i, d) in enumerate(global_dims))
-        for (path, dpaths) in all_dims
+        for dpaths in dim_lists
             positions = [global_order[d] for d in dpaths if haskey(global_order, d)]
             if !issorted(positions)
                 throw(
                     ArgumentError(
-                        "Variable at '$path' has dimensions in an order inconsistent with " *
+                        "Variable dimensions $dpaths are inconsistent with " *
                         "the global dimension order. Cannot flatten (a,b) with (b,a)."),
                 )
             end
@@ -471,6 +494,9 @@ function _pick_global_dims(all_dims::AbstractDict{<:AbstractString,Vector{String
 
     return global_dims
 end
+
+_pick_global_dims(all_dims::AbstractDict{<:AbstractString,<:AbstractVector{String}}) =
+    _pick_global_dims(collect(values(all_dims)))
 
 """
     compute_repeat(global_dims, dim_sizes, var_dims) -> (inner::Int, outer::Int)
