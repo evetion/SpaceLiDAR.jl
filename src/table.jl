@@ -232,8 +232,10 @@ function _is_flat(t::H5Tables.H5Table)
     end
 end
 
-"""Check if any default variable has a track-dependent transform (e.g. ExpandDims)."""
-_has_track_transform(dvars) = any(v -> v.f isa H5Tables.ExpandDims, dvars)
+"""Check if any default variable has a transform whose row count cannot be inferred from raw dataset length."""
+_has_track_transform(dvars) = any(dvars) do v
+    v.f isa H5Tables.ExpandDims || v.f isa H5Tables.SliceRow
+end
 
 """
     _quick_nrow(file, track, dvars) -> Union{Int, Nothing}

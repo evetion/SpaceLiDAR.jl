@@ -42,8 +42,12 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
             @test md isa AbstractDict
             cmd = colmetadata(table, :latitude)
             @test cmd isa AbstractDict
+            @test !haskey(cmd, "DIMENSION_LIST")
+            @test !haskey(cmd, "REFERENCE_LIST")
             cmd_idx = colmetadata(table, 1)
             @test cmd_idx isa AbstractDict
+            @test !haskey(cmd_idx, "DIMENSION_LIST")
+            @test !haskey(cmd_idx, "REFERENCE_LIST")
 
             df = DataFrame(table)
             @test metadata(df) == md
@@ -109,6 +113,27 @@ using SpaceLiDAR.H5Tables: H5Table, explore, get_dimensions, get_references,
             @test is_dim_compatible(h5, gd, ds, "gt1l/land_segments/latitude")
             # delta_time is a dim scale in global_dims → compatible
             @test is_dim_compatible(h5, gd, ds, "gt1l/land_segments/delta_time")
+        end
+    end
+
+    @testset "resolve_var_dims closes datasets" begin
+        h5open(ATL08_fn, "r") do h5
+            count_datasets() = HDF5.API.h5f_get_obj_count(h5.id, HDF5.API.H5F_OBJ_DATASET)
+            before = count_datasets()
+
+            resolve_var_dims(h5, "gt1l/land_segments/latitude_20m")
+            @test count_datasets() == before
+
+            resolve_var_dims(h5, "gt1l/land_segments/latitude")
+            @test count_datasets() == before
+        end
+
+        h5open(GEDI02_fn, "r") do h5
+            count_datasets() = HDF5.API.h5f_get_obj_count(h5.id, HDF5.API.H5F_OBJ_DATASET)
+            before = count_datasets()
+
+            resolve_var_dims(h5, "BEAM0000/elev_highestreturn")
+            @test count_datasets() == before
         end
     end
 
@@ -689,6 +714,19 @@ end
         @test resolve_variable(src, :no_such_column) === nothing
     end
 
+    @testset "SliceRow disables template reuse" begin
+        g = SL.granule(ATL03_fn)
+        vars = [Variable(:confidence, "heights/signal_conf_ph", Int8, SliceRow(1))]
+        t = SL.table(g; tracks = ["gt1l", "gt1r"], variables = vars)
+
+        @test length(t.tables) == 2
+        for part in t.tables
+            @test DataAPI.nrow(part) == length(Tables.getcolumn(part, :confidence))
+        end
+
+        close(t)
+    end
+
     @testset "auto-pull on under-selection" begin
         g = SL.granule(GLAH14_fn)
         dv = SL.default_variables(g)
@@ -725,6 +763,11 @@ end
               DataFrame)
         @test nrow(df) == 478
         @test df.height[1] == 2257.6730000000002
+        @test metadata(df, "id") == SL.id(g)
+        @test colmetadata(df, :height) == colmetadata(t, :height)
+        @test colmetadata(df, :saturation_correction, "units") == "meters"
+        @test !haskey(colmetadata(df, :saturation_correction), "DIMENSION_LIST")
+        @test !haskey(colmetadata(df, :saturation_correction), "REFERENCE_LIST")
         @test Set(names(df)) == Set(string.([
             :height, :saturation_correction, :longitude, :latitude,
             :elev_use_flg, :attitude, :i_numPk,

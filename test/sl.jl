@@ -457,14 +457,14 @@ end
 
         # NamedTuple with Missing (simulates collected H5Table)
         nt = (; height = Union{Missing,Float64}[10.0, missing, 30.0],
-                  saturation_correction = Union{Missing,Float64}[0.5, 1.0, missing])
+            saturation_correction = Union{Missing,Float64}[0.5, 1.0, missing])
         SL.icesat_saturation_correct!(nt)
         @test nt.height[1] ≈ 10.5
         @test ismissing(nt.height[2])       # missing height stays missing
         @test nt.height[3] ≈ 30.0           # missing correction → unchanged
 
         nt2 = (; height = Union{Missing,Float64}[10.0, missing, 30.0],
-                    saturation_correction = Union{Missing,Float64}[0.5, 1.0, missing])
+            saturation_correction = Union{Missing,Float64}[0.5, 1.0, missing])
         r2 = SL.icesat_saturation_correct(nt2)
         @test r2.height[1] ≈ 10.5
         @test nt2.height[1] ≈ 10.0          # non-mutating wrapper must not mutate input

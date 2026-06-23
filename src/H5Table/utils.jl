@@ -344,8 +344,10 @@ function resolve_var_dims(file, path)
             dp = HDF5.name(dim)
             push!(dpaths, dp)
             dim_sizes[dp] = length(dim)
+            close(dim)
         end
         # HDF5 lists dims slow→fast; Julia is column-major (axis 1 = fast)
+        close(ds)
         return reverse(dpaths), dim_sizes
     end
 
@@ -354,6 +356,7 @@ function resolve_var_dims(file, path)
        !isnothing(get(HDF5.attrs(ds), "REFERENCE_LIST", nothing))
         dp = HDF5.name(ds)
         dim_sizes[dp] = length(ds)
+        close(ds)
         return [dp], dim_sizes
     end
 
@@ -370,6 +373,7 @@ function resolve_var_dims(file, path)
             cds = file[cpath]
             clen = length(cds)
             canonical = HDF5.name(cds)
+            close(cds)
             # First coordinate of a given size becomes canonical for that axis
             haskey(seen_sizes, clen) && continue
             seen_sizes[clen] = canonical
@@ -394,6 +398,7 @@ function resolve_var_dims(file, path)
                 dim_sizes[synthetic] = sz[i]
             end
         end
+        close(ds)
         return axis_dims, dim_sizes
     end
 
@@ -401,6 +406,7 @@ function resolve_var_dims(file, path)
     if ndims(ds) == 1
         dp = HDF5.name(ds)
         dim_sizes[dp] = sz[1]
+        close(ds)
         return [dp], dim_sizes
     end
     throw(

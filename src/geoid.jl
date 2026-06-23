@@ -43,10 +43,12 @@ _sat_ok(x::Number) = x < 3                             # saturation_correction
 
 const _CRS_KEY = "GEOINTERFACE:crs"
 const _CRS_WGS84_3D = GeoFormatTypes.EPSG(4979)               # WGS 84 ellipsoidal 3D
-const _CRS_EGM2008  = GeoFormatTypes.EPSG(4326, 3855)         # WGS 84 + EGM2008 height
+const _CRS_EGM2008 = GeoFormatTypes.EPSG(4326, 3855)         # WGS 84 + EGM2008 height
 
-"""Read `"GEOINTERFACE:crs"` from `t`'s metadata. Returns `nothing` if the
-table doesn't support metadata reads or the key is absent."""
+"""
+Read `"GEOINTERFACE:crs"` from `t`'s metadata. Returns `nothing` if the
+table doesn't support metadata reads or the key is absent.
+"""
 function _get_crs(t)
     DataAPI.metadatasupport(typeof(t)).read || return nothing
     keys = try
@@ -62,7 +64,9 @@ function _get_crs(t)
     end
 end
 
-"""Best-effort write of `"GEOINTERFACE:crs"`. No-op for read-only tables."""
+"""
+Best-effort write of `"GEOINTERFACE:crs"`. No-op for read-only tables.
+"""
 function _try_set_crs!(t, crs)
     DataAPI.metadatasupport(typeof(t)).write || return t
     DataAPI.metadata!(t, _CRS_KEY, crs; style = :default)
@@ -85,7 +89,9 @@ end
 # `H5Table` / `PartitionedH5Table` are read-only, so only the non-mutating
 # `fun(t)` is provided for them (it materialises via `collect`).
 
-"""Materialize a fresh column table with copied columns (for non-mutating wrappers)."""
+"""
+Materialize a fresh column table with copied columns (for non-mutating wrappers).
+"""
 function _copy_columntable(t)
     cols = Tables.columntable(t)
     names = propertynames(cols)
@@ -117,7 +123,6 @@ For read-only `H5Table` / `PartitionedH5Table`, only the non-mutating
 function to_egm2008!(t)
     src = _get_crs(t)
     if src !== nothing && src == _CRS_EGM2008
-        @info "to_egm2008!: table already in $(_CRS_EGM2008), skipping"
         return t
     end
     Proj.enable_network!()
@@ -166,7 +171,6 @@ are left untouched.
 function topex_to_wgs84!(t)
     src = _get_crs(t)
     if src !== nothing && (src == _CRS_WGS84_3D || src == _CRS_EGM2008)
-        @info "topex_to_wgs84!: table already in $src, skipping"
         return t
     end
     pipe = topex_to_wgs84_ellipsoid()
@@ -251,7 +255,7 @@ filtering (e.g. `t.height[icesat_quality(t)]`). Pass `nothing` for any
 optional column to skip that predicate.
 
 [^1]: Smith, B., et al. (2020). Pervasive ice sheet mass loss reflects competing
-      ocean and atmosphere processes. Science, 368(6496), 1239-1242.
+    ocean and atmosphere processes. Science, 368(6496), 1239-1242.
 """
 function icesat_quality(t)
     hasproperty(t, :elev_use_flg) || error("Table needs :elev_use_flg column")
@@ -267,11 +271,12 @@ end
 function icesat_quality(elev, att, npk, sc)
     n = length(elev)
     q = BitVector(undef, n)
-    @inbounds for i in 1:n
-        q[i] = _is_valid(elev[i]) &
-               (att === nothing || _is_good(att[i])) &
-               (npk === nothing || _one_peak(npk[i])) &
-               (sc === nothing || _sat_ok(sc[i]))
+    @inbounds for i = 1:n
+        q[i] =
+            _is_valid(elev[i]) &
+            (att === nothing || _is_good(att[i])) &
+            (npk === nothing || _one_peak(npk[i])) &
+            (sc === nothing || _sat_ok(sc[i]))
     end
     return q
 end

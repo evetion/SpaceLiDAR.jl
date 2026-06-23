@@ -1,5 +1,7 @@
 
-"""Node data for the HDF5 explorer tree."""
+"""
+Node data for the HDF5 explorer tree.
+"""
 mutable struct H5NodeData
     const label::String
     const path::String
@@ -15,7 +17,9 @@ end
 H5NodeData(label, path, is_dataset, selected, compatible, size_str, desc, dims) =
     H5NodeData(label, path, is_dataset, false, selected, compatible, size_str, desc, dims, nothing)
 
-"""Explorer state shared across callbacks."""
+"""
+Explorer state shared across callbacks.
+"""
 mutable struct ExplorerState
     auto_dims::Bool
     auto_refs::Bool
@@ -23,7 +27,9 @@ mutable struct ExplorerState
     dim_sizes::Dict{String,Int}
 end
 
-"""Render a StyledString to ANSI escape codes."""
+"""
+Render a StyledString to ANSI escape codes.
+"""
 function styled_ansi(s)
     io = IOContext(IOBuffer(), :color => true)
     print(io, s)
@@ -33,8 +39,10 @@ end
 # Module-level context for the dynamic header (set by explore(), read by header())
 const _EXPLORER_CTX = Ref{Any}(nothing)
 
-"""Dynamic header for TreeMenu: shows D/R flags and breadcrumb path to cursor.
-Always returns exactly 1 line to keep terminal line-count accounting stable."""
+"""
+Dynamic header for TreeMenu: shows D/R flags and breadcrumb path to cursor.
+Always returns exactly 1 line to keep terminal line-count accounting stable.
+"""
 function TerminalMenus.header(menu::TreeMenu{Node{H5NodeData}})
     ctx = _EXPLORER_CTX[]
     ctx === nothing && return " "
@@ -71,7 +79,9 @@ function TerminalMenus.header(menu::TreeMenu{Node{H5NodeData}})
     return styled_ansi(styled"{shadow:$crumb}") * flag_str
 end
 
-"""Override printmenu to sync cursoridx (clamped) and fix pageoffset after folds."""
+"""
+Override printmenu to sync cursoridx (clamped) and fix pageoffset after folds.
+"""
 function TerminalMenus.printmenu(out::IO, menu::TreeMenu{Node{H5NodeData}}, cursoridx::Int; kwargs...)
     # Clamp: after fold, AbstractMenu's cursor[] may exceed visible node count
     n_opts = max(1, TerminalMenus.numoptions(menu))
@@ -86,20 +96,22 @@ function TerminalMenus.printmenu(out::IO, menu::TreeMenu{Node{H5NodeData}}, curs
     elseif cursoridx > menu.pageoffset + menu.pagesize
         menu.pageoffset = cursoridx - menu.pagesize
     end
-    invoke(TerminalMenus.printmenu, Tuple{IO, TerminalMenus.AbstractMenu, Int}, out, menu, cursoridx; kwargs...)
+    invoke(TerminalMenus.printmenu, Tuple{IO,TerminalMenus.AbstractMenu,Int}, out, menu, cursoridx; kwargs...)
 end
 
 # Clamp cursor to valid range before standard navigation (fixes stuck cursor after fold)
-function TerminalMenus.move_up!(menu::TreeMenu{Node{H5NodeData}}, cursor::Int, lastoption::Int=TerminalMenus.numoptions(menu))
+function TerminalMenus.move_up!(menu::TreeMenu{Node{H5NodeData}}, cursor::Int, lastoption::Int = TerminalMenus.numoptions(menu))
     cursor = min(cursor, lastoption)
-    invoke(TerminalMenus.move_up!, Tuple{TerminalMenus.AbstractMenu, Int, Int}, menu, cursor, lastoption)
+    invoke(TerminalMenus.move_up!, Tuple{TerminalMenus.AbstractMenu,Int,Int}, menu, cursor, lastoption)
 end
-function TerminalMenus.move_down!(menu::TreeMenu{Node{H5NodeData}}, cursor::Int, lastoption::Int=TerminalMenus.numoptions(menu))
+function TerminalMenus.move_down!(menu::TreeMenu{Node{H5NodeData}}, cursor::Int, lastoption::Int = TerminalMenus.numoptions(menu))
     cursor = min(cursor, lastoption)
-    invoke(TerminalMenus.move_down!, Tuple{TerminalMenus.AbstractMenu, Int, Int}, menu, cursor, lastoption)
+    invoke(TerminalMenus.move_down!, Tuple{TerminalMenus.AbstractMenu,Int,Int}, menu, cursor, lastoption)
 end
 
-"""Build a FoldingTrees.Node tree from an HDF5 group, recursively."""
+"""
+Build a FoldingTrees.Node tree from an HDF5 group, recursively.
+"""
 function build_tree(file::HDF5.File)
     root_data = H5NodeData(basename(HDF5.filename(file)), "", false, false, true, "", "", nothing)
     root = Node(root_data, true)
@@ -125,7 +137,9 @@ function _build_tree!(parent_node, group)
     end
 end
 
-"""Resolve dims and load description for all dataset children (called on unfold)."""
+"""
+Resolve dims and load description for all dataset children (called on unfold).
+"""
 function resolve_children!(node, file)
     for child in node.children
         d = child.data
@@ -144,7 +158,9 @@ function resolve_children!(node, file)
     end
 end
 
-"""Collect all selected paths from the tree."""
+"""
+Collect all selected paths from the tree.
+"""
 function collect_selected(root)
     paths = String[]
     _collect_selected!(paths, root)
@@ -158,7 +174,9 @@ function _collect_selected!(paths, node)
     end
 end
 
-"""Collect all selected attribute paths from the tree as name => path pairs."""
+"""
+Collect all selected attribute paths from the tree as name => path pairs.
+"""
 function collect_selected_attrs(root)
     attrs = Pair{Symbol,String}[]
     _collect_selected_attrs!(attrs, root)
@@ -176,7 +194,9 @@ function _collect_selected_attrs!(attrs, node)
     end
 end
 
-"""Recompute global dims from cached node data for selected vars."""
+"""
+Recompute global dims from cached node data for selected vars.
+"""
 function recompute_global!(state, root, file)
     state.global_dims = String[]
     empty!(state.dim_sizes)
@@ -213,7 +233,7 @@ Handles subset (candidate ⊆ global), equal, and superset (global ⊆ candidate
 Dimensions with the same size are treated as equivalent (for files without shared dim scales).
 Returns false for partial overlap or reversed ordering.
 """
-function check_compatible(global_dims, candidate_dims, global_sizes=Dict{String,Int}(), candidate_sizes=Dict{String,Int}())
+function check_compatible(global_dims, candidate_dims, global_sizes = Dict{String,Int}(), candidate_sizes = Dict{String,Int}())
     isempty(global_dims) && return true
     isempty(candidate_dims) && return false
 
@@ -243,7 +263,7 @@ function check_compatible(global_dims, candidate_dims, global_sizes=Dict{String,
         issorted(positions) || return false
         length(positions) <= 1 && return true
         min_p, max_p = extrema(positions)
-        return all(global_dims[i] ∈ cset for i in min_p:max_p)
+        return all(global_dims[i] ∈ cset for i = min_p:max_p)
     end
 
     if gset ⊆ cset
@@ -252,18 +272,20 @@ function check_compatible(global_dims, candidate_dims, global_sizes=Dict{String,
         issorted(positions) || return false
         length(positions) <= 1 && return true
         min_p, max_p = extrema(positions)
-        return all(matched_candidate[i] ∈ gset for i in min_p:max_p)
+        return all(matched_candidate[i] ∈ gset for i = min_p:max_p)
     end
 
     return false
 end
 
-"""Update compatibility for all resolved nodes (uses cached dims only — no I/O)."""
+"""
+Update compatibility for all resolved nodes (uses cached dims only — no I/O).
+"""
 function update_compatibility!(root, state)
     _update_compat!(root, state.global_dims, state.dim_sizes)
 end
 
-function _update_compat!(node, global_dims, global_sizes=Dict{String,Int}())
+function _update_compat!(node, global_dims, global_sizes = Dict{String,Int}())
     d = node.data
     if d.is_dataset && !d.selected && !isnothing(d.dims)
         candidate_sizes = something(d.dim_sizes, Dict{String,Int}())
@@ -274,7 +296,9 @@ function _update_compat!(node, global_dims, global_sizes=Dict{String,Int}())
     end
 end
 
-"""Clear all selections and reset state."""
+"""
+Clear all selections and reset state.
+"""
 function reset_selection!(root, state)
     _clear_selected!(root)
     state.global_dims = String[]
@@ -290,7 +314,9 @@ function _clear_selected!(node)
     end
 end
 
-"""Auto-select dimension variables for a path."""
+"""
+Auto-select dimension variables for a path.
+"""
 function auto_select_dims!(root, file, path)
     ds = file[path]
     dim_paths = get_dimension_paths(ds)
@@ -300,7 +326,9 @@ function auto_select_dims!(root, file, path)
     end
 end
 
-"""Auto-select referenced variables for a path."""
+"""
+Auto-select referenced variables for a path.
+"""
 function auto_select_refs!(root, file, path)
     ds = file[path]
     ref_paths = get_reference_paths(ds)
@@ -321,7 +349,9 @@ function _set_selected!(node, path, val)
     return false
 end
 
-"""Check if a node has any selected descendants."""
+"""
+Check if a node has any selected descendants.
+"""
 function _has_selected_child(node)
     for child in node.children
         child.data.selected && return true
@@ -330,7 +360,9 @@ function _has_selected_child(node)
     return false
 end
 
-"""Mark group nodes that contain selected descendants (for display coloring)."""
+"""
+Mark group nodes that contain selected descendants (for display coloring).
+"""
 function _mark_groups!(node)
     if !node.data.is_dataset && !node.data.is_attr
         node.data.selected = _has_selected_child(node)
@@ -343,7 +375,9 @@ end
 # HDF5 internal attributes that are not useful for display
 const _INTERNAL_ATTRS = Set(["DIMENSION_LIST", "REFERENCE_LIST", "CLASS", "NAME"])
 
-"""Expand attributes as children of a dataset or group node (called on 'a' key)."""
+"""
+Expand attributes as children of a dataset or group node (called on 'a' key).
+"""
 function expand_attrs!(node, file)
     !isempty(node.children) && node.data.is_dataset && return
     d = node.data
@@ -377,8 +411,10 @@ function expand_attrs!(node, file)
     end
 end
 
-"""Custom display for H5NodeData in the tree menu using StyledStrings."""
-function FoldingTrees.writeoption(buf::IO, data::H5NodeData, charsused::Int; width::Int=(displaysize(stdout)::Tuple{Int,Int})[2])
+"""
+Custom display for H5NodeData in the tree menu using StyledStrings.
+"""
+function FoldingTrees.writeoption(buf::IO, data::H5NodeData, charsused::Int; width::Int = (displaysize(stdout)::Tuple{Int,Int})[2])
     if data.is_attr
         # Show selection state for attrs; internal attrs (compatible=false): shadow
         str = if data.selected
@@ -417,23 +453,24 @@ end
 Interactively explore an HDF5 file with a tree menu. Select variables to build an H5Table.
 
 # Controls
-- **↑/↓**: navigate
-- **←/→**: fold/unfold groups
-- **Space**: toggle selection on datasets and attributes
-- **a**: expand attributes on the current node (dataset or group)
-- **d**: toggle auto-include dimensions (header shows [D])
-- **r**: toggle auto-include references (header shows [R])
-- **c**: clear all selections
-- **q/Enter**: confirm selection and return H5Table
-- **Ctrl-C**: cancel
+
+  - **↑/↓**: navigate
+  - **←/→**: fold/unfold groups
+  - **Space**: toggle selection on datasets and attributes
+  - **a**: expand attributes on the current node (dataset or group)
+  - **d**: toggle auto-include dimensions (header shows [D])
+  - **r**: toggle auto-include references (header shows [R])
+  - **c**: clear all selections
+  - **q/Enter**: confirm selection and return H5Table
+  - **Ctrl-C**: cancel
 
 Incompatible variables (can't flatten with current selection) are shown as `[-]` in grey.
 Dims and descriptions are resolved lazily as you unfold groups.
 """
-function explore(file::HDF5.File; pagesize::Int=min(displaysize(stdout)[1] - 3, 40))
+function explore(file::HDF5.File; pagesize::Int = min(displaysize(stdout)[1] - 3, 40))
     selected_paths, selected_attrs = select(file; pagesize)
     vars = [Symbol(split(p, "/")[end]) => p for p in selected_paths]
-    return H5Table(file; vars, attrs=selected_attrs, include_dimensions=false)
+    return H5Table(file; vars, attrs = selected_attrs, include_dimensions = false)
 end
 
 function explore(filename::AbstractString; kwargs...)
@@ -447,7 +484,7 @@ end
 Run the interactive explorer and return the selected dataset paths and attribute paths.
 This is the building block for `explore(file)` and `explore(::Granule)`.
 """
-function select(file::HDF5.File; pagesize::Int=min(displaysize(stdout)[1] - 3, 40))
+function select(file::HDF5.File; pagesize::Int = min(displaysize(stdout)[1] - 3, 40))
     root = build_tree(file)
     state = ExplorerState(false, false, String[], Dict{String,Int}())
 
@@ -606,8 +643,8 @@ function select(file::HDF5.File; pagesize::Int=min(displaysize(stdout)[1] - 3, 4
         return false
     end
 
-    menu = TreeMenu(root; pagesize=pagesize - 1, dynamic=true, maxsize=pagesize - 1, keypress)
-    TerminalMenus.request(menu; cursor=cursor_ref)
+    menu = TreeMenu(root; pagesize = pagesize - 1, dynamic = true, maxsize = pagesize - 1, keypress)
+    TerminalMenus.request(menu; cursor = cursor_ref)
     _EXPLORER_CTX[] = nothing  # cleanup
 
     selected_paths = collect_selected(root)

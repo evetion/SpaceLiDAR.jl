@@ -204,6 +204,17 @@ _copytable(t::DataFrame) = copy(t)
 Tables.istable(::Type{<:OperationPipeline}) = true
 Tables.columnaccess(::Type{<:OperationPipeline}) = true
 Tables.columns(p::OperationPipeline) = Tables.columns(collect(p))
+DataAPI.metadatasupport(::Type{<:OperationPipeline}) = (read = true, write = false)
+DataAPI.metadatakeys(p::OperationPipeline) = DataAPI.metadatakeys(p.source)
+DataAPI.metadata(p::OperationPipeline, key::String; style = false) =
+    DataAPI.metadata(p.source, key; style)
+DataAPI.colmetadatasupport(::Type{<:OperationPipeline}) = (read = true, write = false)
+_metadata_source(p::OperationPipeline) = _augment(p.source, _inputs(p.ops, _opgranule(p.source)))
+DataAPI.colmetadatakeys(p::OperationPipeline) = DataAPI.colmetadatakeys(_metadata_source(p))
+DataAPI.colmetadata(p::OperationPipeline, col; style = false) =
+    DataAPI.colmetadata(_metadata_source(p), col; style)
+DataAPI.colmetadata(p::OperationPipeline, col, key::String; style = false) =
+    DataAPI.colmetadata(_metadata_source(p), col, key; style)
 
 function _inputs(ops::Tuple, granule)
     need = Variable[]

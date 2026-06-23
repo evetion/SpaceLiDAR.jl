@@ -345,7 +345,7 @@ struct PartitionedH5Table
 end
 
 function Base.close(ts::PartitionedH5Table)
-    foreach(close, ts.tables)
+    close(first(ts.tables))
     return nothing
 end
 

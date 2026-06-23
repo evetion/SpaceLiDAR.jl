@@ -41,9 +41,10 @@ end
 
 # Column metadata
 DataAPI.colmetadatasupport(::Type{<:H5Table}) = (read = true, write = false)
+_colmetadata_keys(obj) = filter(k -> !(k in _INTERNAL_ATTRS), keys(attrs(obj)))
 function DataAPI.colmetadatakeys(table::H5Table)
     file = h5handle(table.f)
-    Dict(var.name => filter(Base.Fix1(!in, ["DIMENSION_LIST", "REFERENCE_LIST"]), keys(attrs(file[var.path]))) for var in table.vars)
+    Dict(var.name => _colmetadata_keys(file[var.path]) for var in table.vars)
 end
 function DataAPI.colmetadata(table::H5Table, col::Symbol; style = false)
     vari = findfirst(v -> v.name == col, table.vars)
@@ -57,11 +58,11 @@ function DataAPI.colmetadata(table::H5Table, col::Symbol, key::String; style = f
 end
 function DataAPI.colmetadata(table::H5Table, col::Int; style = false)
     var = table.vars[col]
-    file = h5handle(table.f)
+    obj = h5handle(table.f)[var.path]
     if style
-        Dict(key => (value, :note) for (key, value) in attrs(file[var.path]))
+        Dict(key => (read_attribute(obj, key), :note) for key in _colmetadata_keys(obj))
     else
-        attrs(file[var.path])
+        Dict(key => read_attribute(obj, key) for key in _colmetadata_keys(obj))
     end
 end
 function DataAPI.colmetadata(table::H5Table, col::Int, key::String; style = false)
