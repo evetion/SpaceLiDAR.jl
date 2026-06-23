@@ -12,13 +12,13 @@
         <meta name="author" content="Maarten Pronk">
       
       
-        <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/guides/tracks/">
+        <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/topics/granules/">
       
       
-        <link rel="prev" href="../downloads/">
+        <link rel="prev" href="../HDF5/">
       
       
-        <link rel="next" href="../variables/">
+        <link rel="next" href="../search/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Track filtering - SpaceLiDAR.jl</title>
+        <title>Granules - SpaceLiDAR.jl</title>
       
     
     
@@ -91,7 +91,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#track-filtering" class="md-skip">
+        <a href="#granules" class="md-skip">
           Skip to content
         </a>
       
@@ -150,7 +150,7 @@ package if you use it in production.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Track filtering
+              Granules
             
           </span>
         </div>
@@ -294,13 +294,11 @@ package if you use it in production.
   
   
   
-    
-  
   
     
     
-      <li class="md-tabs__item md-tabs__item--active">
-        <a href="../downloads/" class="md-tabs__link">
+      <li class="md-tabs__item">
+        <a href="../../guides/downloads/" class="md-tabs__link">
           
   
   
@@ -316,11 +314,13 @@ package if you use it in production.
   
   
   
+    
+  
   
     
     
-      <li class="md-tabs__item">
-        <a href="../../topics/HDF5/" class="md-tabs__link">
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../HDF5/" class="md-tabs__link">
           
   
   
@@ -340,7 +340,7 @@ package if you use it in production.
     
     
       <li class="md-tabs__item">
-        <a href="../../topics/ICESat/" class="md-tabs__link">
+        <a href="../ICESat/" class="md-tabs__link">
           
   
   
@@ -360,7 +360,7 @@ package if you use it in production.
     
     
       <li class="md-tabs__item">
-        <a href="../../topics/ICESat-2/" class="md-tabs__link">
+        <a href="../ICESat-2/" class="md-tabs__link">
           
   
   
@@ -380,7 +380,7 @@ package if you use it in production.
     
     
       <li class="md-tabs__item">
-        <a href="../../topics/GEDI/" class="md-tabs__link">
+        <a href="../GEDI/" class="md-tabs__link">
           
   
   
@@ -651,6 +651,235 @@ package if you use it in production.
       
   
   
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/downloads/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Downloading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/tracks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Track filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selecting variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaining operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/new-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a product
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration (points → table)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -672,17 +901,17 @@ package if you use it in production.
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
         
           
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
             
   
   
   <span class="md-ellipsis">
     
   
-    Guides
+    Topics
   
 
     
@@ -693,12 +922,12 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_3">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
             <span class="md-nav__icon md-icon"></span>
             
   
-    Guides
+    Topics
   
 
           </label>
@@ -711,14 +940,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../downloads/" class="md-nav__link">
+      <a href="../HDF5/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Downloading
+    HDF5
   
 
     
@@ -755,7 +984,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Track filtering
+    Granules
   
 
     
@@ -773,7 +1002,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Track filtering
+    Granules
   
 
     
@@ -799,10 +1028,10 @@ package if you use it in production.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#icesat-2-beams" class="md-nav__link">
+  <a href="#what-is-a-granule" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ICESat-2 beams
+        What is a Granule?
       
     </span>
   </a>
@@ -810,10 +1039,10 @@ package if you use it in production.
 </li>
       
         <li class="md-nav__item">
-  <a href="#gedi-beams" class="md-nav__link">
+  <a href="#granule-types" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GEDI beams
+        Granule Types
       
     </span>
   </a>
@@ -821,10 +1050,10 @@ package if you use it in production.
 </li>
       
         <li class="md-nav__item">
-  <a href="#default-tracks" class="md-nav__link">
+  <a href="#getting-granules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Default tracks
+        Getting Granules
       
     </span>
   </a>
@@ -832,10 +1061,10 @@ package if you use it in production.
 </li>
       
         <li class="md-nav__item">
-  <a href="#iterating-over-tracks" class="md-nav__link">
+  <a href="#dispatching-on-granules" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Iterating over tracks
+        Dispatching on Granules
       
     </span>
   </a>
@@ -858,236 +1087,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../variables/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Selecting variables
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../operations/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Chaining operations
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../new-schema/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Adding a product
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../migration/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Migration (points → table)
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-      
-      
-        
-      
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
-        
-          
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
-            
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Topics
-  
-
-    
-  </span>
-  
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
-            <span class="md-nav__icon md-icon"></span>
-            
-  
-    Topics
-  
-
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../topics/HDF5/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    HDF5
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../topics/granules/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Granules
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../topics/search/" class="md-nav__link">
+      <a href="../search/" class="md-nav__link">
         
   
   
@@ -1176,7 +1176,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/ICESat/" class="md-nav__link">
+      <a href="../ICESat/" class="md-nav__link">
         
   
   
@@ -1204,7 +1204,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/icesat/GLAH06/" class="md-nav__link">
+      <a href="../icesat/GLAH06/" class="md-nav__link">
         
   
   
@@ -1232,7 +1232,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/icesat/GLAH14/" class="md-nav__link">
+      <a href="../icesat/GLAH14/" class="md-nav__link">
         
   
   
@@ -1321,7 +1321,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/ICESat-2/" class="md-nav__link">
+      <a href="../ICESat-2/" class="md-nav__link">
         
   
   
@@ -1349,7 +1349,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/icesat2/ATL03/" class="md-nav__link">
+      <a href="../icesat2/ATL03/" class="md-nav__link">
         
   
   
@@ -1377,7 +1377,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/icesat2/ATL06/" class="md-nav__link">
+      <a href="../icesat2/ATL06/" class="md-nav__link">
         
   
   
@@ -1405,7 +1405,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/icesat2/ATL08/" class="md-nav__link">
+      <a href="../icesat2/ATL08/" class="md-nav__link">
         
   
   
@@ -1433,7 +1433,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/icesat2/ATL12/" class="md-nav__link">
+      <a href="../icesat2/ATL12/" class="md-nav__link">
         
   
   
@@ -1522,7 +1522,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/GEDI/" class="md-nav__link">
+      <a href="../GEDI/" class="md-nav__link">
         
   
   
@@ -1550,7 +1550,7 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../topics/gedi/L2A/" class="md-nav__link">
+      <a href="../gedi/L2A/" class="md-nav__link">
         
   
   
@@ -1853,54 +1853,40 @@ package if you use it in production.
   
 
 
-<p><a id='Track-Filtering'></a></p>
-<p><a id='Track-Filtering-1'></a></p>
-<h1 id="track-filtering">Track Filtering<a class="headerlink" href="#track-filtering" title="Permanent link">&para;</a></h1>
-<p>ICESat-2 and GEDI emit multiple beams simultaneously. By default <code>table(g)</code> reads all beams, returning a <code>PartitionedH5Table</code> with one partition per beam. Use the <code>tracks</code> keyword to restrict which beams are loaded.</p>
-<p><a id='ICESat-2-beams'></a></p>
-<p><a id='ICESat-2-beams-1'></a></p>
-<h2 id="icesat-2-beams">ICESat-2 beams<a class="headerlink" href="#icesat-2-beams" title="Permanent link">&para;</a></h2>
-<p>ICESat-2 has 6 beam pairs: <code>gt1l</code>, <code>gt1r</code>, <code>gt2l</code>, <code>gt2r</code>, <code>gt3l</code>, <code>gt3r</code>. Strong and weak beams alternate based on spacecraft orientation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="n">SpaceLiDAR</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;ATL08_20201121151145_08920913_006_01.h5&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Only left beams</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gt1l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gt2l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gt3l&quot;</span><span class="p">])</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Single beam</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gt1l&quot;</span><span class="p">])</span>
+<p><a id='Granules'></a></p>
+<p><a id='Granules-1'></a></p>
+<h1 id="granules">Granules<a class="headerlink" href="#granules" title="Permanent link">&para;</a></h1>
+<p>A <strong>granule</strong> represents a single data file from a satellite mission. It is the fundamental unit of data in SpaceLiDAR — every operation starts with one or more granules.</p>
+<p><a id='What-is-a-Granule?'></a></p>
+<p><a id='What-is-a-Granule?-1'></a></p>
+<h2 id="what-is-a-granule">What is a Granule?<a class="headerlink" href="#what-is-a-granule" title="Permanent link">&para;</a></h2>
+<p>Each granule maps to one HDF5 file and carries metadata: a unique ID, a URL (local path or remote), product info, and an optional spatial footprint (polygon).</p>
+<p><a id='Granule-Types'></a></p>
+<p><a id='Granule-Types-1'></a></p>
+<h2 id="granule-types">Granule Types<a class="headerlink" href="#granule-types" title="Permanent link">&para;</a></h2>
+<p>SpaceLiDAR defines a granule type per mission:</p>
+<ul>
+<li><code>ICESat2_Granule{product}</code> — parameterized by product (<code>:ATL03</code>, <code>:ATL06</code>, <code>:ATL08</code>, <code>:ATL12</code>)</li>
+<li><code>GEDI_Granule{product}</code> — parameterized by product (<code>:GEDI02_A</code>)</li>
+<li><code>ICESat_Granule{product}</code> — parameterized by product (<code>:GLAH06</code>, <code>:GLAH14</code>)</li>
+</ul>
+<p><a id='Getting-Granules'></a></p>
+<p><a id='Getting-Granules-1'></a></p>
+<h2 id="getting-granules">Getting Granules<a class="headerlink" href="#getting-granules" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># From a local file:</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;ATL08_20201121151145_08920913_006_01.h5&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c"># From a folder (recursive):</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">gs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granules</span><span class="p">(</span><span class="s">&quot;/data/icesat2/&quot;</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="c"># From NASA Earthdata search:</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="n">extent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Extent</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="p">(</span><span class="mf">102.0</span><span class="p">,</span><span class="w"> </span><span class="mf">107.0</span><span class="p">),</span><span class="w"> </span><span class="n">Y</span><span class="o">=</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span><span class="w"> </span><span class="mf">12.0</span><span class="p">))</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">gs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">search</span><span class="p">(</span><span class="ss">:ICESat2</span><span class="p">,</span><span class="w"> </span><span class="ss">:ATL08</span><span class="p">;</span><span class="w"> </span><span class="n">extent</span><span class="o">=</span><span class="n">extent</span><span class="p">,</span><span class="w"> </span><span class="n">after</span><span class="o">=</span><span class="n">DateTime</span><span class="p">(</span><span class="mi">2020</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 </code></pre></div>
-<p><a id='GEDI-beams'></a></p>
-<p><a id='GEDI-beams-1'></a></p>
-<h2 id="gedi-beams">GEDI beams<a class="headerlink" href="#gedi-beams" title="Permanent link">&para;</a></h2>
-<p>GEDI has 8 beams: <code>BEAM0000</code>, <code>BEAM0001</code>, <code>BEAM0010</code>, <code>BEAM0011</code>, <code>BEAM0101</code>, <code>BEAM0110</code>, <code>BEAM1000</code>, <code>BEAM1011</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Full-power beams only</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;BEAM0101&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM0110&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM1000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM1011&quot;</span><span class="p">])</span>
-</code></pre></div>
-<p><a id='Default-tracks'></a></p>
-<p><a id='Default-tracks-1'></a></p>
-<h2 id="default-tracks">Default tracks<a class="headerlink" href="#default-tracks" title="Permanent link">&para;</a></h2>
-<p>To see what tracks are read by default for a granule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">default_tracks</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># (&quot;gt1l&quot;, &quot;gt1r&quot;, &quot;gt2l&quot;, &quot;gt2r&quot;, &quot;gt3l&quot;, &quot;gt3r&quot;)  for ICESat-2</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># (&quot;BEAM0000&quot;, ..., &quot;BEAM1011&quot;)                       for GEDI</span>
-</code></pre></div>
-<p>ICESat (GLAH) has no beam structure — <code>table(g)</code> always returns a single table.</p>
-<p><a id='Iterating-over-tracks'></a></p>
-<p><a id='Iterating-over-tracks-1'></a></p>
-<h2 id="iterating-over-tracks">Iterating over tracks<a class="headerlink" href="#iterating-over-tracks" title="Permanent link">&para;</a></h2>
-<p>Each partition in a <code>PartitionedH5Table</code> corresponds to one track:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="n">DataFrames</span><span class="p">,</span><span class="w"> </span><span class="n">Tables</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">for</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">Tables</span><span class="o">.</span><span class="n">partitions</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="c"># process one beam at a time</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">end</span>
-</code></pre></div>
+<p><a id='Dispatching-on-Granules'></a></p>
+<p><a id='Dispatching-on-Granules-1'></a></p>
+<h2 id="dispatching-on-granules">Dispatching on Granules<a class="headerlink" href="#dispatching-on-granules" title="Permanent link">&para;</a></h2>
+<p>The granule type determines which <code>default_variables</code>, <code>default_attributes</code>, and <code>default_tracks</code> are used by <code>table(g)</code> and <code>explore(g)</code>.</p>
 
 
 

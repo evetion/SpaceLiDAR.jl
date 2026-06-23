@@ -12,13 +12,13 @@
         <meta name="author" content="Maarten Pronk">
       
       
-        <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/guides/tracks/">
+        <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/guides/variables/">
       
       
-        <link rel="prev" href="../downloads/">
+        <link rel="prev" href="../tracks/">
       
       
-        <link rel="next" href="../variables/">
+        <link rel="next" href="../operations/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Track filtering - SpaceLiDAR.jl</title>
+        <title>Selecting variables - SpaceLiDAR.jl</title>
       
     
     
@@ -91,7 +91,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#track-filtering" class="md-skip">
+        <a href="#selecting-variables" class="md-skip">
           Skip to content
         </a>
       
@@ -150,7 +150,7 @@ package if you use it in production.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Track filtering
+              Selecting variables
             
           </span>
         </div>
@@ -736,6 +736,34 @@ package if you use it in production.
                 
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../tracks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Track filtering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
     
   
   
@@ -755,7 +783,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Track filtering
+    Selecting variables
   
 
     
@@ -773,7 +801,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Track filtering
+    Selecting variables
   
 
     
@@ -799,10 +827,10 @@ package if you use it in production.
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#icesat-2-beams" class="md-nav__link">
+  <a href="#viewing-defaults" class="md-nav__link">
     <span class="md-ellipsis">
       
-        ICESat-2 beams
+        Viewing defaults
       
     </span>
   </a>
@@ -810,10 +838,10 @@ package if you use it in production.
 </li>
       
         <li class="md-nav__item">
-  <a href="#gedi-beams" class="md-nav__link">
+  <a href="#adding-extra-columns" class="md-nav__link">
     <span class="md-ellipsis">
       
-        GEDI beams
+        Adding extra columns
       
     </span>
   </a>
@@ -821,10 +849,10 @@ package if you use it in production.
 </li>
       
         <li class="md-nav__item">
-  <a href="#default-tracks" class="md-nav__link">
+  <a href="#canopy-height-variants" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Default tracks
+        Canopy height variants
       
     </span>
   </a>
@@ -832,10 +860,32 @@ package if you use it in production.
 </li>
       
         <li class="md-nav__item">
-  <a href="#iterating-over-tracks" class="md-nav__link">
+  <a href="#custom-variable-from-scratch" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Iterating over tracks
+        Custom variable from scratch
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Attributes
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explore-interactively" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explore interactively
       
     </span>
   </a>
@@ -846,34 +896,6 @@ package if you use it in production.
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../variables/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Selecting variables
-  
-
-    
-  </span>
-  
-  
-
-      </a>
     </li>
   
 
@@ -1853,54 +1875,100 @@ package if you use it in production.
   
 
 
-<p><a id='Track-Filtering'></a></p>
-<p><a id='Track-Filtering-1'></a></p>
-<h1 id="track-filtering">Track Filtering<a class="headerlink" href="#track-filtering" title="Permanent link">&para;</a></h1>
-<p>ICESat-2 and GEDI emit multiple beams simultaneously. By default <code>table(g)</code> reads all beams, returning a <code>PartitionedH5Table</code> with one partition per beam. Use the <code>tracks</code> keyword to restrict which beams are loaded.</p>
-<p><a id='ICESat-2-beams'></a></p>
-<p><a id='ICESat-2-beams-1'></a></p>
-<h2 id="icesat-2-beams">ICESat-2 beams<a class="headerlink" href="#icesat-2-beams" title="Permanent link">&para;</a></h2>
-<p>ICESat-2 has 6 beam pairs: <code>gt1l</code>, <code>gt1r</code>, <code>gt2l</code>, <code>gt2r</code>, <code>gt3l</code>, <code>gt3r</code>. Strong and weak beams alternate based on spacecraft orientation.</p>
+<p><a id='Selecting-Variables'></a></p>
+<p><a id='Selecting-Variables-1'></a></p>
+<h1 id="selecting-variables">Selecting Variables<a class="headerlink" href="#selecting-variables" title="Permanent link">&para;</a></h1>
+<p>By default, <code>table(g)</code> reads a curated set of variables for each product. You can customize which columns you get.</p>
+<p><a id='Viewing-defaults'></a></p>
+<p><a id='Viewing-defaults-1'></a></p>
+<h2 id="viewing-defaults">Viewing defaults<a class="headerlink" href="#viewing-defaults" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="n">SpaceLiDAR</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;ATL08_20201121151145_08920913_006_01.h5&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Only left beams</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gt1l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gt2l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gt3l&quot;</span><span class="p">])</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Single beam</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gt1l&quot;</span><span class="p">])</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">default_variables</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
 </code></pre></div>
-<p><a id='GEDI-beams'></a></p>
-<p><a id='GEDI-beams-1'></a></p>
-<h2 id="gedi-beams">GEDI beams<a class="headerlink" href="#gedi-beams" title="Permanent link">&para;</a></h2>
-<p>GEDI has 8 beams: <code>BEAM0000</code>, <code>BEAM0001</code>, <code>BEAM0010</code>, <code>BEAM0011</code>, <code>BEAM0101</code>, <code>BEAM0110</code>, <code>BEAM1000</code>, <code>BEAM1011</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Full-power beams only</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;BEAM0101&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM0110&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM1000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM1011&quot;</span><span class="p">])</span>
+<p>Each <code>Variable</code> has a name, HDF5 path, element type, and optional transform.</p>
+<p><a id='Adding-extra-columns'></a></p>
+<p><a id='Adding-extra-columns-1'></a></p>
+<h2 id="adding-extra-columns">Adding extra columns<a class="headerlink" href="#adding-extra-columns" title="Permanent link">&para;</a></h2>
+<p>Append to the defaults:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">vars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">default_variables</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">push!</span><span class="p">(</span><span class="n">vars</span><span class="p">,</span><span class="w"> </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:slope</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;land_segments/terrain/h_te_slope&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">))</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="n">push!</span><span class="p">(</span><span class="n">vars</span><span class="p">,</span><span class="w"> </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:canopy_h</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;land_segments/canopy/h_mean_canopy&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">))</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">variables</span><span class="o">=</span><span class="n">vars</span><span class="p">)</span>
 </code></pre></div>
-<p><a id='Default-tracks'></a></p>
-<p><a id='Default-tracks-1'></a></p>
-<h2 id="default-tracks">Default tracks<a class="headerlink" href="#default-tracks" title="Permanent link">&para;</a></h2>
-<p>To see what tracks are read by default for a granule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">default_tracks</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># (&quot;gt1l&quot;, &quot;gt1r&quot;, &quot;gt2l&quot;, &quot;gt2r&quot;, &quot;gt3l&quot;, &quot;gt3r&quot;)  for ICESat-2</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># (&quot;BEAM0000&quot;, ..., &quot;BEAM1011&quot;)                       for GEDI</span>
+<p><a id='Canopy-height-variants'></a></p>
+<p><a id='Canopy-height-variants-1'></a></p>
+<h2 id="canopy-height-variants">Canopy height variants<a class="headerlink" href="#canopy-height-variants" title="Permanent link">&para;</a></h2>
+<p>ATL08 and GEDI have pre-defined canopy variable sets:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c"># ATL08 canopy (reads h_mean_canopy_abs instead of h_te_mean)</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">variables</span><span class="o">=</span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">atl08_canopy_variables</span><span class="p">())</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c"># GEDI canopy (reads elev_highestreturn instead of elev_lowestmode)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">variables</span><span class="o">=</span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">gedi_l2a_canopy_variables</span><span class="p">())</span>
 </code></pre></div>
-<p>ICESat (GLAH) has no beam structure — <code>table(g)</code> always returns a single table.</p>
-<p><a id='Iterating-over-tracks'></a></p>
-<p><a id='Iterating-over-tracks-1'></a></p>
-<h2 id="iterating-over-tracks">Iterating over tracks<a class="headerlink" href="#iterating-over-tracks" title="Permanent link">&para;</a></h2>
-<p>Each partition in a <code>PartitionedH5Table</code> corresponds to one track:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="n">DataFrames</span><span class="p">,</span><span class="w"> </span><span class="n">Tables</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">for</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">Tables</span><span class="o">.</span><span class="n">partitions</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="c"># process one beam at a time</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">end</span>
+<p><a id='Custom-variable-from-scratch'></a></p>
+<p><a id='Custom-variable-from-scratch-1'></a></p>
+<h2 id="custom-variable-from-scratch">Custom variable from scratch<a class="headerlink" href="#custom-variable-from-scratch" title="Permanent link">&para;</a></h2>
+<p>A <code>Variable</code> needs at minimum a name, path, and type:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">Variable</span><span class="p">(</span><span class="ss">:my_col</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;land_segments/some/dataset&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">)</span>
 </code></pre></div>
+<p>With a transform (applied at read time):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">Variable</span><span class="p">(</span><span class="ss">:is_land</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;land_segments/surf_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Int8</span><span class="p">,</span><span class="w"> </span><span class="n">ToBool</span><span class="p">())</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">Variable</span><span class="p">(</span><span class="ss">:time</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;land_segments/delta_time&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">,</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="n">ToDateTime</span><span class="p">(</span><span class="s">&quot;/ancillary_data/atlas_sdp_gps_epoch&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">gps_offset</span><span class="p">))</span>
+</code></pre></div>
+<p>Direct <code>H5Table</code> construction uses the same <code>Variable</code> form for transformed columns:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">H5Table</span><span class="p">(</span><span class="n">file</span><span class="p">;</span><span class="w"> </span><span class="n">vars</span><span class="o">=</span><span class="p">[</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:is_land</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;land_segments/surf_type&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Int8</span><span class="p">,</span><span class="w"> </span><span class="n">ToBool</span><span class="p">()),</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="p">])</span>
+</code></pre></div>
+<p>Available transforms:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Transform</th>
+<th style="text-align: left;">Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>ToBool()</code></td>
+<td style="text-align: left;">nonzero → <code>true</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>InvertBool()</code></td>
+<td style="text-align: left;">zero → <code>true</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ToDateTime(epoch_path, offset)</code></td>
+<td style="text-align: left;">delta_time → DateTime</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>ToDateTimeConst(offset)</code></td>
+<td style="text-align: left;">delta_time → DateTime (fixed epoch)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>SliceRow(n)</code></td>
+<td style="text-align: left;">take row <code>n</code> from 2D dataset</td>
+</tr>
+</tbody>
+</table>
+<p><a id='Attributes'></a></p>
+<p><a id='Attributes-1'></a></p>
+<h2 id="attributes">Attributes<a class="headerlink" href="#attributes" title="Permanent link">&para;</a></h2>
+<p>Attributes are scalar metadata attached to each track (partition):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">attrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">default_attributes</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+</code></pre></div>
+<p>They become constant columns in the resulting table (e.g., <code>:detector_id</code>, <code>:strong_beam</code>).</p>
+<p><a id='Explore-interactively'></a></p>
+<p><a id='Explore-interactively-1'></a></p>
+<h2 id="explore-interactively">Explore interactively<a class="headerlink" href="#explore-interactively" title="Permanent link">&para;</a></h2>
+<p>Don't know what's in the file? Use <code>explore</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">explore</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+</code></pre></div>
+<p>This opens an interactive browser showing all datasets, their dimensions, and lets you select variables visually. The result is an <code>H5Table</code> ready for <code>DataFrame(t)</code>.</p>
 
 
 

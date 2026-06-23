@@ -65,6 +65,13 @@
 
     
     
+<style>
+  /* Push the last nav tab (Changelog) to the right */
+  .md-tabs__list li:nth-last-child(2) {
+    margin-left: auto;
+  }
+</style>
+
   </head>
   
   
@@ -268,17 +275,18 @@ package if you use it in production.
   
   
   
-    <li class="md-tabs__item">
-      <a href="../../changelog/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="../../tutorial/installation/" class="md-tabs__link">
+          
   
-  Changelog
+  
+  Tutorials
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -310,11 +318,11 @@ package if you use it in production.
     
     
       <li class="md-tabs__item">
-        <a href="../../tutorial/installation/" class="md-tabs__link">
+        <a href="../../topics/HDF5/" class="md-tabs__link">
           
   
   
-  Tutorials
+  Topics
 
         </a>
       </li>
@@ -334,7 +342,47 @@ package if you use it in production.
           
   
   
-  Topics
+  ICESat
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../topics/ICESat-2/" class="md-tabs__link">
+          
+  
+  
+  ICESat-2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../topics/GEDI/" class="md-tabs__link">
+          
+  
+  
+  GEDI
 
         </a>
       </li>
@@ -361,6 +409,44 @@ package if you use it in production.
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
   
 
       
@@ -450,15 +536,69 @@ package if you use it in production.
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="../../changelog/" class="md-nav__link">
+      <a href="../../tutorial/installation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Changelog
+    Installation
   
 
     
@@ -467,6 +607,42 @@ package if you use it in production.
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorial/usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -581,6 +757,118 @@ package if you use it in production.
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selecting variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaining operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/new-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a product
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration (points → table)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -620,7 +908,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Tutorials
+    Topics
   
 
     
@@ -636,7 +924,7 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Tutorials
+    Topics
   
 
           </label>
@@ -649,14 +937,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/installation/" class="md-nav__link">
+      <a href="../../topics/HDF5/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Installation
+    HDF5
   
 
     
@@ -677,14 +965,42 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../../tutorial/usage/" class="md-nav__link">
+      <a href="../../topics/granules/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Usage
+    Granules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
   
 
     
@@ -737,7 +1053,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Topics
+    ICESat
   
 
     
@@ -753,7 +1069,7 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Topics
+    ICESat
   
 
           </label>
@@ -773,7 +1089,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    ICESat
+    Overview
   
 
     
@@ -786,6 +1102,123 @@ package if you use it in production.
   
 
               
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/icesat/GLAH06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLAH06
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/icesat/GLAH14/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GLAH14
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ICESat-2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ICESat-2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
             
               
                 
@@ -801,7 +1234,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    ICESat-2
+    Overview
   
 
     
@@ -822,6 +1255,179 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
+      <a href="../../topics/icesat2/ATL03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL03
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/icesat2/ATL06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL06
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/icesat2/ATL08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL08
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/icesat2/ATL12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL12
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEDI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GEDI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../../topics/GEDI/" class="md-nav__link">
         
   
@@ -829,7 +1435,35 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    GEDI
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../topics/gedi/L2A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2A
   
 
     
@@ -875,10 +1509,10 @@ package if you use it in production.
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" checked>
         
           
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="">
             
   
   
@@ -896,8 +1530,8 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_6">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -951,6 +1585,24 @@ package if you use it in production.
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Granules
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -967,6 +1619,36 @@ package if you use it in production.
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#track-angles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Track Angles
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1064,6 +1746,60 @@ package if you use it in production.
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1092,33 +1828,33 @@ package if you use it in production.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">rm</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Remove the file associated with <code>granule</code> from the local filesystem.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/granule.jl#LL115-L119' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL114-L118' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download' href='#SpaceLiDAR.download'>#</a>
 <strong><code>SpaceLiDAR.download</code></strong> &mdash; <em>Function</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">download</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>Like <a href="./#SpaceLiDAR.download"><code>download</code></a>, but for a vector of <code>granules</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/granule.jl#LL164-L168' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.download' href='#SpaceLiDAR.download'>#</a>
-<strong><code>SpaceLiDAR.download</code></strong> &mdash; <em>Function</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">download</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">download</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Download the file associated with <code>granule</code> to the <code>folder</code>, from an http(s) location if it doesn't already exists locally. Returns a new granule. See <a href="./#SpaceLiDAR.download!"><code>download!</code></a> for a mutating version.</p>
 <p>Will require credentials (netrc) which can be set with <a href="../utilities/#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>netrc!</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/granule.jl#LL101-L109' class='documenter-source'>source</a><br></p>
-<p><a id='SpaceLiDAR.download!' href='#SpaceLiDAR.download!'>#</a>
-<strong><code>SpaceLiDAR.download!</code></strong> &mdash; <em>Function</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">download!</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL100-L108' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.download' href='#SpaceLiDAR.download'>#</a>
+<strong><code>SpaceLiDAR.download</code></strong> &mdash; <em>Function</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">download</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p>Like <a href="./#SpaceLiDAR.download!"><code>download!</code></a>, but for a vector of <code>granules</code>. Will make use of aria2c (parallel).</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/granule.jl#LL128-L133' class='documenter-source'>source</a><br></p>
+<p>Like <a href="./#SpaceLiDAR.download"><code>download</code></a>, but for a vector of <code>granules</code>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL163-L167' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download!' href='#SpaceLiDAR.download!'>#</a>
 <strong><code>SpaceLiDAR.download!</code></strong> &mdash; <em>Function</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">download!</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">download!</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Download the file associated with <code>granule</code> to the <code>folder</code>, from an http(s) location if it doesn't already exists locally.</p>
 <p>Will require credentials (netrc) which can be set with <a href="../utilities/#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>netrc!</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/granule.jl#LL69-L76' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL68-L75' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.download!' href='#SpaceLiDAR.download!'>#</a>
+<strong><code>SpaceLiDAR.download!</code></strong> &mdash; <em>Function</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">download!</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Like <a href="./#SpaceLiDAR.download!"><code>download!</code></a>, but for a vector of <code>granules</code>. Will make use of aria2c (parallel).</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL127-L132' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.sync' href='#SpaceLiDAR.sync'>#</a>
 <strong><code>SpaceLiDAR.sync</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">sync</span><span class="p">(</span><span class="n">folder</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">,</span><span class="w"> </span><span class="n">all</span><span class="o">::</span><span class="kt">Bool</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="n">kwargs</span><span class="o">...</span><span class="p">)</span>
@@ -1131,66 +1867,109 @@ package if you use it in production.
 <p class="admonition-title">Warning</p>
 <p>Using sync could result in downloading significant (TB+) amounts of data.</p>
 </div>
-<p>Assumes all folders contain granules of the same product. If not, pass the product as Symbol: <a href="./#SpaceLiDAR.sync"><code>sync(::Symbol, folders, all)</code></a> instead.</p>
+<p>Assumes all folders contain granules of the same product. If not, pass the product as Symbol: <a href="./#SpaceLiDAR.sync"><code>sync</code></a> instead.</p>
 <p>When <code>all</code> is false (the default), sync will search only for granules past the date of the latest granule found in <code>folders</code>. If true, it will search for all granules. Note that ICESat granules are not timestamped, so sync will try to download <em>all</em> ICESat granules not yet present, regardless of this setting.</p>
 <p>Any <code>kwargs...</code> are passed to the <a href="../search/#SpaceLiDAR.search"><code>search</code></a> function. This enables sync to only download granules within a certain extent, for example.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/granule.jl#LL186-L210' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL185-L209' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.ICESatQuality' href='#SpaceLiDAR.ICESatQuality'>#</a>
+<strong><code>SpaceLiDAR.ICESatQuality</code></strong> &mdash; <em>Type</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ICESatQuality</span><span class="p">()</span>
+</code></pre></div>
+<p>Filter: keep only high-quality ICESat (GLAH06/GLAH14) returns following Smith et al. (2020). The product-specific attitude column is selected by dispatch (<code>:sigma_att_flg</code> for GLAH06, <code>:attitude</code> for GLAH14). See <a href="../utilities/#SpaceLiDAR.icesat_quality-Tuple{Any}"><code>icesat_quality</code></a>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL145-L151' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.ICESat_Granule' href='#SpaceLiDAR.ICESat_Granule'>#</a>
 <strong><code>SpaceLiDAR.ICESat_Granule</code></strong> &mdash; <em>Type</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
 </code></pre></div>
-<p>A granule of the ICESat product <code>product</code>. Normally created automatically from either <a href="@ref"><code>find</code></a>, <a href="@ref"><code>granule_from_file</code></a> or <a href="@ref"><code>granules_from_folder</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/ICESat/ICESat.jl#LL7-L12' class='documenter-source'>source</a><br></p>
+<p>A granule of the ICESat product <code>product</code>. Normally created automatically from either <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, <a href="../utilities/#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a> or <a href="../utilities/#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL5-L10' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.SaturationCorrect' href='#SpaceLiDAR.SaturationCorrect'>#</a>
+<strong><code>SpaceLiDAR.SaturationCorrect</code></strong> &mdash; <em>Type</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">SaturationCorrect</span><span class="p">()</span>
+</code></pre></div>
+<p>Transform: add <code>:saturation_correction</code> to <code>:height</code> (ICESat). Equivalent to <a href="../utilities/#SpaceLiDAR.icesat_saturation_correct"><code>icesat_saturation_correct</code></a>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL129-L134' class='documenter-source'>source</a><br></p>
+<p><a id='SpaceLiDAR.TopexToWGS84' href='#SpaceLiDAR.TopexToWGS84'>#</a>
+<strong><code>SpaceLiDAR.TopexToWGS84</code></strong> &mdash; <em>Type</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">TopexToWGS84</span><span class="p">()</span>
+</code></pre></div>
+<p>Transform: convert ICESat (GLAH06/GLAH14) TOPEX/Poseidon ellipsoid <code>:height</code> (and <code>:height_reference</code> if present) to WGS84. Equivalent to <a href="../utilities/#SpaceLiDAR.topex_to_wgs84"><code>topex_to_wgs84</code></a>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL105-L111' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{ICESat_Granule}' href='#SpaceLiDAR.info-Tuple{ICESat_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">)</span>
 </code></pre></div>
-<p>Derive info based on the filename. The name is built up as follows: ATL03<em>[yyyymmdd][hhmmss]</em>[ttttccss]<em>[vvv</em>rr].h5. See section 1.2.5 in the user guide.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/ICESat/ICESat.jl#LL41-L46' class='documenter-source'>source</a><br></p>
+<p>Derive info based on the filename. The name is built up as follows: <code>GLAH06_[release]_[orbit]_[cycle]_[track]_[segment]_[revision]_[filetype].H5</code>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL60-L65' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.ICESat2_Granule' href='#SpaceLiDAR.ICESat2_Granule'>#</a>
 <strong><code>SpaceLiDAR.ICESat2_Granule</code></strong> &mdash; <em>Type</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
 </code></pre></div>
-<p>A granule of the ICESat-2 product <code>product</code>. Normally created automatically from either <a href="@ref"><code>find</code></a>, <a href="@ref"><code>granule_from_file</code></a> or <a href="@ref"><code>granules_from_folder</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/ICESat-2/ICESat-2.jl#LL13-L18' class='documenter-source'>source</a><br></p>
+<p>A granule of the ICESat-2 product <code>product</code>. Normally created automatically from either <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, <a href="../utilities/#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a> or <a href="../utilities/#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL11-L16' class='documenter-source'>source</a><br></p>
 <p><a id='Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T' href='#Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T'>#</a>
 <strong><code>Base.convert</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">Base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">product</span><span class="o">::</span><span class="kt">Symbol</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="kt">T</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">Base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">product</span><span class="o">::</span><span class="kt">Symbol</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="kt">T</span><span class="p">})</span>
 </code></pre></div>
 <p>Converts the granule <code>g</code> to the product <code>product</code>, by guessing the correct name.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/ICESat-2/ICESat-2.jl#LL125-L129' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL119-L123' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.bounds-Tuple{ICESat2_Granule}' href='#SpaceLiDAR.bounds-Tuple{ICESat2_Granule}'>#</a>
 <strong><code>SpaceLiDAR.bounds</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">bounds</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">bounds</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">)</span>
 </code></pre></div>
-<p>Retrieves the bounding box of the granule.</p>
+<p>Return the bounding box of the granule as a <code>NamedTuple</code> with fields <code>(min_x, min_y, max_x, max_y)</code>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This opens the .h5 file, so it is slow.</p>
 </div>
-<p><strong>Example</strong></p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">julia</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bounds</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ICESat2_Granule</span><span class="p">()</span>
-</code></pre></div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/ICESat-2/ICESat-2.jl#LL33-L48' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL33-L42' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{ICESat2_Granule}' href='#SpaceLiDAR.info-Tuple{ICESat2_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Derive info based on the filename. The name is built up as follows: <code>ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5</code>. See section 1.2.5 in the user guide.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/ICESat-2/ICESat-2.jl#LL153-L158' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL147-L152' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.GEDI_Granule' href='#SpaceLiDAR.GEDI_Granule'>#</a>
 <strong><code>SpaceLiDAR.GEDI_Granule</code></strong> &mdash; <em>Type</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="kt">GEDI_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kt">GEDI_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
 </code></pre></div>
-<p>A granule of the GEDI product <code>product</code>. Normally created automatically from either <a href="@ref"><code>find</code></a>, <a href="@ref"><code>granule_from_file</code></a> or <a href="@ref"><code>granules_from_folder</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/GEDI/GEDI.jl#LL7-L12' class='documenter-source'>source</a><br></p>
+<p>A granule of the GEDI product <code>product</code>. Normally created automatically from either <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, <a href="../utilities/#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a> or <a href="../utilities/#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/GEDI/GEDI.jl#LL5-L10' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{GEDI_Granule}' href='#SpaceLiDAR.info-Tuple{GEDI_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">GEDI_Granule</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">GEDI_Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Derive info based on the filename. This is built up as follows: <code>GEDI02_A_2019110014613_O01991_T04905_02_001_01.h5</code> or in case of v"2": <code>GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5</code>. See section 2.4 in the user guide.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/e25b6db0da66da2ab220cb77736b4ad3876421b8/src/GEDI/GEDI.jl#LL28-L35' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/GEDI/GEDI.jl#LL28-L35' class='documenter-source'>source</a><br></p>
+<p><a id='Track-Angles'></a></p>
+<p><a id='Track-Angles-1'></a></p>
+<h2 id="track-angles">Track Angles<a class="headerlink" href="#track-angles" title="Permanent link">&para;</a></h2>
+<p><a id='SpaceLiDAR.track_angle' href='#SpaceLiDAR.track_angle'>#</a>
+<strong><code>SpaceLiDAR.track_angle</code></strong> &mdash; <em>Function</em>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="n">track_angle</span><span class="p">(</span><span class="n">longitude</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Real</span><span class="p">},</span><span class="w"> </span><span class="n">latitude</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Real</span><span class="p">})</span>
+</code></pre></div>
+<p>Calculate the angle of direction from previous points in [°] where North is 0°. Points are given as <code>longitude</code> and <code>latitude</code> pairs in their own vector. The angle for the first point is undefined and set to the second.</p>
+<p>Because of the inherent noise in the point locations, the angles will be noisy too, especially for ICESat-2 ATL03. Either smooth the results or use an approximation using <a href="./#SpaceLiDAR.track_angle"><code>SpaceLiDAR.track_angle</code></a>.</p>
+<p>Returns a <code>Vector{Real}</code> of angles.</p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geom.jl#LL89-L100' class='documenter-source'>source</a><br></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>track_angle(::GEDI_Granule, latitude = 0.0)
+</code></pre></div>
+<p>Rough approximation of the track angle (0° is North) of ICESat-2 at a given <code>latitude</code>.</p>
+<p><strong>Examples</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="gp">julia&gt;</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GEDI_Granule</span><span class="p">(</span><span class="ss">:GEDI02_A</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(;))</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="gp">julia&gt;</span><span class="w"> </span><span class="n">track_angle</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="go">38.24944944866377</span>
+</code></pre></div>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/GEDI/GEDI.jl#LL63-L75' class='documenter-source'>source</a><br></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>track_angle(::ICESat2_Granule, latitude = 0.0)
+</code></pre></div>
+<p>Rough approximation of the track angle (0° is North) of ICESat-2 at a given <code>latitude</code>.</p>
+<p><strong>Examples</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="gp">julia&gt;</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ICESat2_Granule</span><span class="p">(</span><span class="ss">:ATL08</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;ATL08_20181120173503_04550102_005_01.h5&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(;),</span><span class="w"> </span><span class="p">(;))</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="gp">julia&gt;</span><span class="w"> </span><span class="n">track_angle</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="go">-1.9923955416702257</span>
+</code></pre></div>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL56-L68' class='documenter-source'>source</a><br></p>
 
 
 
@@ -1226,7 +2005,7 @@ package if you use it in production.
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2022 Maarten Pronk, Deltares
+      Copyright &copy; 2026 Maarten Pronk, Deltares | Delft University of Technology
     </div>
   
   
@@ -1250,18 +2029,12 @@ package if you use it in production.
   
     
     
-    
-    
-    <a href="https://gitter.im/evetion/community" target="_blank" rel="noopener" title="Chat with me on Gitter" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4zM166.9 76.1h-50.4V512h50.4zm100.6 0h-50.4V512h50.4zM368 76h-50.4v247H368z"/></svg>
-    </a>
-  
+      
     
     
     
-    
-    <a href="https://twitter.com/3vetion" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    <a href="https://fosstodon.org/@evetion" target="_blank" rel="noopener me" title="Mastodon" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M433 179.1c0-97.2-63.7-125.7-63.7-125.7-62.5-28.7-228.6-28.4-290.5 0 0 0-63.7 28.5-63.7 125.7 0 115.7-6.6 259.4 105.6 289.1 40.5 10.7 75.3 13 103.3 11.4 50.8-2.8 79.3-18.1 79.3-18.1l-1.7-36.9s-36.3 11.4-77.1 10.1c-40.4-1.4-83-4.4-89.6-54-.6-4.6-.9-9.3-.9-13.9 85.6 20.9 158.7 9.1 178.7 6.7 56.1-6.7 105-41.3 111.2-72.9 9.8-49.8 9-121.5 9-121.5zm-75.1 125.2h-46.6V190.1c0-49.7-64-51.6-64 6.9v62.5H201V197c0-58.5-64-56.6-64-6.9v114.2H90.3c0-122.1-5.2-147.9 18.4-175 25.9-28.9 79.8-30.8 103.8 6.1l11.6 19.5 11.6-19.5c24.1-37.1 78.1-34.8 103.8-6.1 23.7 27.3 18.4 53 18.4 175"/></svg>
     </a>
   
 </div>

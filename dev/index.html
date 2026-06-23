@@ -16,7 +16,7 @@
       
       
       
-        <link rel="next" href="changelog/">
+        <link rel="next" href="tutorial/installation/">
       
       
         
@@ -63,6 +63,13 @@
 
     
     
+<style>
+  /* Push the last nav tab (Changelog) to the right */
+  .md-tabs__list li:nth-last-child(2) {
+    margin-left: auto;
+  }
+</style>
+
   </head>
   
   
@@ -268,17 +275,18 @@ package if you use it in production.
   
   
   
-    <li class="md-tabs__item">
-      <a href="changelog/" class="md-tabs__link">
-        
-  
-  
     
+    
+      <li class="md-tabs__item">
+        <a href="tutorial/installation/" class="md-tabs__link">
+          
   
-  Changelog
+  
+  Tutorials
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -310,11 +318,11 @@ package if you use it in production.
     
     
       <li class="md-tabs__item">
-        <a href="tutorial/installation/" class="md-tabs__link">
+        <a href="topics/HDF5/" class="md-tabs__link">
           
   
   
-  Tutorials
+  Topics
 
         </a>
       </li>
@@ -334,7 +342,47 @@ package if you use it in production.
           
   
   
-  Topics
+  ICESat
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="topics/ICESat-2/" class="md-tabs__link">
+          
+  
+  
+  ICESat-2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="topics/GEDI/" class="md-tabs__link">
+          
+  
+  
+  GEDI
 
         </a>
       </li>
@@ -359,6 +407,44 @@ package if you use it in production.
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="changelog/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
   
 
       
@@ -528,15 +614,69 @@ package if you use it in production.
   
   
   
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
     <li class="md-nav__item">
-      <a href="changelog/" class="md-nav__link">
+      <a href="tutorial/installation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Changelog
+    Installation
   
 
     
@@ -545,6 +685,42 @@ package if you use it in production.
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="tutorial/usage/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Usage
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -659,6 +835,118 @@ package if you use it in production.
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guides/variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selecting variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guides/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaining operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guides/new-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a product
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guides/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration (points → table)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -698,7 +986,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Tutorials
+    Topics
   
 
     
@@ -714,7 +1002,7 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Tutorials
+    Topics
   
 
           </label>
@@ -727,14 +1015,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="tutorial/installation/" class="md-nav__link">
+      <a href="topics/HDF5/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Installation
+    HDF5
   
 
     
@@ -755,14 +1043,42 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="tutorial/usage/" class="md-nav__link">
+      <a href="topics/granules/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Usage
+    Granules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
   
 
     
@@ -815,7 +1131,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Topics
+    ICESat
   
 
     
@@ -831,7 +1147,7 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Topics
+    ICESat
   
 
           </label>
@@ -851,7 +1167,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    ICESat
+    Overview
   
 
     
@@ -872,14 +1188,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="topics/ICESat-2/" class="md-nav__link">
+      <a href="topics/icesat/GLAH06/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    ICESat-2
+    GLAH06
   
 
     
@@ -900,14 +1216,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="topics/GEDI/" class="md-nav__link">
+      <a href="topics/icesat/GLAH14/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    GEDI
+    GLAH14
   
 
     
@@ -960,7 +1276,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Reference
+    ICESat-2
   
 
     
@@ -973,6 +1289,324 @@ package if you use it in production.
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ICESat-2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/ICESat-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/icesat2/ATL03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL03
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/icesat2/ATL06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL06
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/icesat2/ATL08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL08
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/icesat2/ATL12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL12
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEDI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GEDI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/GEDI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="topics/gedi/L2A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1129,6 +1763,60 @@ package if you use it in production.
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1153,70 +1841,46 @@ package if you use it in production.
 <p><a id='SpaceLiDAR'></a></p>
 <p><a id='SpaceLiDAR-1'></a></p>
 <h1 id="spacelidar">SpaceLiDAR<a class="headerlink" href="#spacelidar" title="Permanent link">&para;</a></h1>
-<p>A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly <a href="tutorial/usage/#search-for-data">search</a>, download and <a href="tutorial/usage/#derive-points">load</a> filtered point data with relevant attributes from the <code>.h5</code> granules of each data product. For an overview with code examples, see the FOSS4G Pluto notebook <a href="tutorial/foss4g_2021.jl.html">here</a>.</p>
-<p>If you use SpaceLiDAR in your research, please consider <a href="https://zenodo.org/badge/latestdoi/241095197">citing it</a>.</p>
+<p>SpaceLiDAR.jl searches, downloads, and reads spaceborne lidar data from the ICESat, ICESat-2, and GEDI NASA missions. Granules are exposed as lazy <a href="https://github.com/JuliaData/Tables.jl">Tables.jl</a>-compatible HDF5 tables, so you can inspect product data quickly and materialize only when you need a sink such as a <code>DataFrame</code>.</p>
+<p>If you use SpaceLiDAR in your research, please consider <a href="https://zenodo.org/badge/latestdoi/241095197">citing it</a>. Feel free to submit issues and PRs to support more products. Note that you can also use SpaceLiDAR.jl for unsupported products.</p>
 <p><a id='Supported-data-products'></a></p>
 <p><a id='Supported-data-products-1'></a></p>
 <h2 id="supported-data-products">Supported data products<a class="headerlink" href="#supported-data-products" title="Permanent link">&para;</a></h2>
-<p>Currently supports the following data products:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: right;">mission</th>
-<th style="text-align: right;">data product</th>
-<th style="text-align: right;">User Guide (UG)</th>
-<th style="text-align: right;">Algorithm Theoretical Basis Document (ATBD)</th>
+<th style="text-align: left;"><a href="topics/ICESat/">ICESat</a></th>
+<th style="text-align: left;"><a href="topics/ICESat-2/">ICESat-2</a></th>
+<th style="text-align: left;"><a href="topics/GEDI/">GEDI</a></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: right;">ICESat</td>
-<td style="text-align: right;">GLAH06 v34</td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf">ATBD</a></td>
+<td style="text-align: left;"><a href="topics/icesat/GLAH06/">GLAH06</a> — Land Ice</td>
+<td style="text-align: left;"><a href="topics/icesat2/ATL03/">ATL03</a> — Photons</td>
+<td style="text-align: left;"><a href="topics/gedi/L2A/">L2A</a> — Ground &amp; Canopy</td>
 </tr>
 <tr>
-<td style="text-align: right;">ICESat</td>
-<td style="text-align: right;">GLAH14 v34</td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf">ATBD</a></td>
+<td style="text-align: left;"><a href="topics/icesat/GLAH14/">GLAH14</a> — Land Surface</td>
+<td style="text-align: left;"><a href="topics/icesat2/ATL06/">ATL06</a> — Land Ice</td>
+<td style="text-align: left;"></td>
 </tr>
 <tr>
-<td style="text-align: right;">ICESat-2</td>
-<td style="text-align: right;">ATL03 v6</td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/default/files/documents/user-guide/atl03-v006-userguide.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL03_ATBD_r006.pdf">ATBD</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="topics/icesat2/ATL08/">ATL08</a> — Vegetation</td>
+<td style="text-align: left;"></td>
 </tr>
 <tr>
-<td style="text-align: right;">ICESat-2</td>
-<td style="text-align: right;">ATL06 v5</td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/default/files/documents/user-guide/atl06-v006-userguide.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL06_ATBD_r006.pdf">ATBD</a></td>
-</tr>
-<tr>
-<td style="text-align: right;">ICESat-2</td>
-<td style="text-align: right;">ATL08 v6</td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/default/files/documents/user-guide/atl08-v006-userguide.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/default/files/documents/technical-reference/icesat2_atl08_atbd_v006_0.pdf">ATBD</a></td>
-</tr>
-<tr>
-<td style="text-align: right;">ICESat-2</td>
-<td style="text-align: right;">ATL12 v5</td>
-<td style="text-align: right;"><a href="https://nsidc.org/sites/default/files/documents/user-guide/atl12-v006-userguide.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL12_ATBD_r006.pdf">ATBD</a></td>
-</tr>
-<tr>
-<td style="text-align: right;">GEDI</td>
-<td style="text-align: right;">L2A v2</td>
-<td style="text-align: right;"><a href="https://lpdaac.usgs.gov/documents/998/GEDI02_UserGuide_V21.pdf">UG</a></td>
-<td style="text-align: right;"><a href="https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf">ATBD</a></td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"><a href="topics/icesat2/ATL12/">ATL12</a> — Ocean</td>
+<td style="text-align: left;"></td>
 </tr>
 </tbody>
 </table>
 <p><a id='Documentation'></a></p>
 <p><a id='Documentation-1'></a></p>
 <h2 id="documentation">Documentation<a class="headerlink" href="#documentation" title="Permanent link">&para;</a></h2>
-<p>This documentation is set up using the <a href="https://documentation.divio.com/">Divio</a> documentation system and thus split into <a href="tutorial/usage/">Tutorials</a>, <a href="guides/downloads/">Guides</a>, <a href="topics/GEDI/">Topics</a> and <a href="reference/search/">References</a>.</p>
+<p>This documentation follows the <a href="https://diataxis.fr/">Diátaxis</a> framework: <a href="tutorial/usage/">Tutorials</a>, <a href="guides/downloads/">Guides</a>, <a href="topics/HDF5/">Topics</a>, and <a href="reference/api/">Reference</a>.</p>
 <p><a id='Publications'></a></p>
 <p><a id='Publications-1'></a></p>
 <h2 id="publications">Publications<a class="headerlink" href="#publications" title="Permanent link">&para;</a></h2>
@@ -1263,7 +1927,7 @@ package if you use it in production.
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2022 Maarten Pronk, Deltares
+      Copyright &copy; 2026 Maarten Pronk, Deltares | Delft University of Technology
     </div>
   
   
@@ -1287,18 +1951,12 @@ package if you use it in production.
   
     
     
-    
-    
-    <a href="https://gitter.im/evetion/community" target="_blank" rel="noopener" title="Chat with me on Gitter" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4zM166.9 76.1h-50.4V512h50.4zm100.6 0h-50.4V512h50.4zM368 76h-50.4v247H368z"/></svg>
-    </a>
-  
+      
     
     
     
-    
-    <a href="https://twitter.com/3vetion" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    <a href="https://fosstodon.org/@evetion" target="_blank" rel="noopener me" title="Mastodon" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M433 179.1c0-97.2-63.7-125.7-63.7-125.7-62.5-28.7-228.6-28.4-290.5 0 0 0-63.7 28.5-63.7 125.7 0 115.7-6.6 259.4 105.6 289.1 40.5 10.7 75.3 13 103.3 11.4 50.8-2.8 79.3-18.1 79.3-18.1l-1.7-36.9s-36.3 11.4-77.1 10.1c-40.4-1.4-83-4.4-89.6-54-.6-4.6-.9-9.3-.9-13.9 85.6 20.9 158.7 9.1 178.7 6.7 56.1-6.7 105-41.3 111.2-72.9 9.8-49.8 9-121.5 9-121.5zm-75.1 125.2h-46.6V190.1c0-49.7-64-51.6-64 6.9v62.5H201V197c0-58.5-64-56.6-64-6.9v114.2H90.3c0-122.1-5.2-147.9 18.4-175 25.9-28.9 79.8-30.8 103.8 6.1l11.6 19.5 11.6-19.5c24.1-37.1 78.1-34.8 103.8-6.1 23.7 27.3 18.4 53 18.4 175"/></svg>
     </a>
   
 </div>

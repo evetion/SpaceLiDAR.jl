@@ -15,10 +15,8 @@
         <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/changelog/">
       
       
-        <link rel="prev" href="..">
+        <link rel="prev" href="../CONTRIBUTING/">
       
-      
-        <link rel="next" href="../guides/downloads/">
       
       
         
@@ -65,6 +63,13 @@
 
     
     
+<style>
+  /* Push the last nav tab (Changelog) to the right */
+  .md-tabs__list li:nth-last-child(2) {
+    margin-left: auto;
+  }
+</style>
+
   </head>
   
   
@@ -267,20 +272,19 @@ package if you use it in production.
   
   
   
-    
-  
-  
-    <li class="md-tabs__item md-tabs__item--active">
-      <a href="./" class="md-tabs__link">
-        
-  
   
     
+    
+      <li class="md-tabs__item">
+        <a href="../tutorial/installation/" class="md-tabs__link">
+          
   
-  Changelog
+  
+  Tutorials
 
-      </a>
-    </li>
+        </a>
+      </li>
+    
   
 
       
@@ -312,11 +316,11 @@ package if you use it in production.
     
     
       <li class="md-tabs__item">
-        <a href="../tutorial/installation/" class="md-tabs__link">
+        <a href="../topics/HDF5/" class="md-tabs__link">
           
   
   
-  Tutorials
+  Topics
 
         </a>
       </li>
@@ -336,7 +340,47 @@ package if you use it in production.
           
   
   
-  Topics
+  ICESat
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../topics/ICESat-2/" class="md-tabs__link">
+          
+  
+  
+  ICESat-2
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../topics/GEDI/" class="md-tabs__link">
+          
+  
+  
+  GEDI
 
         </a>
       </li>
@@ -361,6 +405,46 @@ package if you use it in production.
         </a>
       </li>
     
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CONTRIBUTING/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Contributing
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
   
 
       
@@ -448,24 +532,35 @@ package if you use it in production.
       
   
   
+  
+  
     
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+    
+    
+    
       
       
+        
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
           
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
   
   
   <span class="md-ellipsis">
     
   
-    Changelog
+    Tutorials
   
 
     
@@ -473,17 +568,35 @@ package if you use it in production.
   
   
 
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/installation/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Changelog
+    Installation
   
 
     
@@ -492,183 +605,41 @@ package if you use it in production.
   
 
       </a>
-      
-        
+    </li>
+  
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+              
+            
+              
+                
   
   
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#unreleased" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Unreleased
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Unreleased">
-      <ul class="md-nav__list">
+    <li class="md-nav__item">
+      <a href="../tutorial/usage/" class="md-nav__link">
         
-          <li class="md-nav__item">
-  <a href="#new-features" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        New features
-      
-    </span>
-  </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#fixed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Fixed
-      
-    </span>
-  </a>
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#breaking" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Breaking
-      
-    </span>
-  </a>
+  <span class="md-ellipsis">
+    
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#deprecated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deprecated
-      
-    </span>
-  </a>
+    Usage
   
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#changed" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Changed
-      
-    </span>
-  </a>
+
+    
+  </span>
   
-</li>
-        
-      </ul>
-    </nav>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v030" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.3.0
-      
-    </span>
-  </a>
+
+      </a>
+    </li>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v022" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.2.2
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v021" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.2.1
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v020" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.2.0
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v016" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.1.6
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v015" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.1.5
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v014" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.1.4
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#v013" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        v0.1.3
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -784,6 +755,118 @@ package if you use it in production.
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/variables/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Selecting variables
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chaining operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/new-schema/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a product
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Migration (points → table)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -823,7 +906,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Tutorials
+    Topics
   
 
     
@@ -839,7 +922,7 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Tutorials
+    Topics
   
 
           </label>
@@ -852,14 +935,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/installation/" class="md-nav__link">
+      <a href="../topics/HDF5/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Installation
+    HDF5
   
 
     
@@ -880,14 +963,42 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../tutorial/usage/" class="md-nav__link">
+      <a href="../topics/granules/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Usage
+    Granules
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Search
   
 
     
@@ -940,7 +1051,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Topics
+    ICESat
   
 
     
@@ -956,7 +1067,7 @@ package if you use it in production.
             <span class="md-nav__icon md-icon"></span>
             
   
-    Topics
+    ICESat
   
 
           </label>
@@ -976,7 +1087,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    ICESat
+    Overview
   
 
     
@@ -997,14 +1108,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../topics/ICESat-2/" class="md-nav__link">
+      <a href="../topics/icesat/GLAH06/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    ICESat-2
+    GLAH06
   
 
     
@@ -1025,14 +1136,14 @@ package if you use it in production.
   
   
     <li class="md-nav__item">
-      <a href="../topics/GEDI/" class="md-nav__link">
+      <a href="../topics/icesat/GLAH14/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    GEDI
+    GLAH14
   
 
     
@@ -1085,7 +1196,7 @@ package if you use it in production.
   <span class="md-ellipsis">
     
   
-    Reference
+    ICESat-2
   
 
     
@@ -1098,6 +1209,324 @@ package if you use it in production.
         
         <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
           <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ICESat-2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/ICESat-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/icesat2/ATL03/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL03
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/icesat2/ATL06/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL06
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/icesat2/ATL08/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL08
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/icesat2/ATL12/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ATL12
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEDI
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    GEDI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/GEDI/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../topics/gedi/L2A/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2A
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -1254,6 +1683,369 @@ package if you use it in production.
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unreleased
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Unreleased">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v042" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.4.2
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.2">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v041" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.4.1
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.1">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v040" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.4.0
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="v0.4.0">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-features_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fixed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#breaking_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Breaking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deprecated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deprecated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v030" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.3.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v022" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.2
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v021" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.1
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v020" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.2.0
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v016" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.6
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v015" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.5
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v014" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#v013" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        v0.1.3
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -1279,26 +2071,80 @@ package if you use it in production.
 <p><a id='Unreleased'></a></p>
 <p><a id='Unreleased-1'></a></p>
 <h2 id="unreleased">Unreleased<a class="headerlink" href="#unreleased" title="Permanent link">&para;</a></h2>
-<ul>
-<li>Working on generic retrieval of parameters as a Table from a granule, instead of the hardcoded choices made now for each product. Would result in methods like <code>points(granule, [vara, varb])</code>.</li>
-</ul>
 <p><a id='New-features'></a></p>
 <p><a id='New-features-1'></a></p>
 <h3 id="new-features">New features<a class="headerlink" href="#new-features" title="Permanent link">&para;</a></h3>
 <ul>
-<li>New types <code>Table</code> and <code>PartitionedTable</code>, which support the Tables.jl interface. This prevents allocating code like <code>reduce(vcat, DataFrame.(points(granule)))</code> to get a DataFrame. You can now just call <code>DataFrame(table)</code>.</li>
-<li>Reduced allocations in retrieving point data.</li>
-<li>Introduced <code>before</code> and <code>after</code> keywords in <code>search</code>, to search by date(ranges).</li>
-</ul>
-<p><a id='Fixed'></a></p>
-<p><a id='Fixed-1'></a></p>
-<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
-<ul>
-<li>Empty (filtered) granules could result in <code>Vector{BitVector}</code> columns, which have been changed to <code>Vector{Bool}</code>.</li>
+<li>New <code>H5Table</code> system: generic, lazy HDF5-to-table reader that handles dimension flattening, nodata masking (<code>missing</code>), and transforms automatically.</li>
+<li><code>explore(granule)</code> opens an interactive terminal browser for inspecting HDF5 contents and selecting variables.</li>
+<li><code>table(g; variables=)</code> keyword allows reading custom variable sets instead of only the built-in defaults.</li>
+<li><code>table(g; tracks=)</code> keyword for filtering specific beams/tracks.</li>
+<li>Variables now support transforms: <code>ToDateTime</code>, <code>ToBool</code>, <code>InvertBool</code>, <code>SliceRow</code>.</li>
+<li>Attributes (track-level metadata like <code>strong_beam</code>, <code>detector_id</code>) are now included as constant columns.</li>
+<li>Pre-built alternative schemas: <code>atl08_canopy_variables()</code>, <code>gedi_l2a_canopy_variables()</code>.</li>
+<li>Documentation rewrite following the Diátaxis framework (tutorials, guides, topics, reference).</li>
 </ul>
 <p><a id='Breaking'></a></p>
 <p><a id='Breaking-1'></a></p>
 <h3 id="breaking">Breaking<a class="headerlink" href="#breaking" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>table(granule)</code> is now the recommended interface; <code>points()</code> remains available for compatibility (see migration guide).</li>
+<li>Fill values are now <code>missing</code> instead of <code>NaN</code>.</li>
+<li>Removed deprecated <code>granule_from_file</code> (use <code>granule</code>) and <code>granules_from_folder</code> (use <code>granules</code>).</li>
+<li>Removed deprecated <code>find</code> (use <code>search</code>).</li>
+<li>Removed deprecated <code>write_granule_urls!</code> (use <code>write_urls</code>).</li>
+<li>Removed the deprecated <code>bbox</code> keyword on <code>search</code>; use <code>extent</code> instead.</li>
+<li><code>points</code>/<code>lines</code> no longer accept a <code>NamedTuple</code> for <code>bbox</code>; pass an <code>Extents.Extent</code> (e.g. <code>convert(Extent, (min_x=..., min_y=..., max_x=..., max_y=...))</code>).</li>
+</ul>
+<p><a id='Changed'></a></p>
+<p><a id='Changed-1'></a></p>
+<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Column types resolved at read time via transforms (e.g., <code>delta_time</code> becomes <code>DateTime</code>).</li>
+<li>All products now use the shared <code>H5Table</code> infrastructure instead of per-product hardcoded readers.</li>
+</ul>
+<p><a id='v0.4.2'></a></p>
+<p><a id='v0.4.2-1'></a></p>
+<h2 id="v042">v0.4.2<a class="headerlink" href="#v042" title="Permanent link">&para;</a></h2>
+<p><a id='Fixed'></a></p>
+<p><a id='Fixed-1'></a></p>
+<h3 id="fixed">Fixed<a class="headerlink" href="#fixed" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fix <code>download!</code> to create directories and normalize paths (#95).</li>
+<li>Update Makie compat to 0.24 (#93).</li>
+<li>Bump CategoricalArrays compat to 1.</li>
+<li>CI dependency bumps (actions/checkout v6, stefanzweifel/git-auto-commit-action v7).</li>
+</ul>
+<p><a id='v0.4.1'></a></p>
+<p><a id='v0.4.1-1'></a></p>
+<h2 id="v041">v0.4.1<a class="headerlink" href="#v041" title="Permanent link">&para;</a></h2>
+<p><a id='Fixed-2'></a></p>
+<h3 id="fixed_1">Fixed<a class="headerlink" href="#fixed_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fix ICESat-2 search after data migration to EarthData Cloud.</li>
+</ul>
+<p><a id='v0.4.0'></a></p>
+<p><a id='v0.4.0-1'></a></p>
+<h2 id="v040">v0.4.0<a class="headerlink" href="#v040" title="Permanent link">&para;</a></h2>
+<p><a id='New-features-2'></a></p>
+<h3 id="new-features_1">New features<a class="headerlink" href="#new-features_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>New types <code>Table</code> and <code>PartitionedTable</code>, which support the Tables.jl interface. This prevents allocating code like <code>reduce(vcat, DataFrame.(points(granule)))</code> to get a DataFrame. You can now just call <code>DataFrame(table)</code>.</li>
+<li>Reduced allocations in retrieving point data.</li>
+<li>Introduced <code>before</code> and <code>after</code> keywords in <code>search</code>, to search by date(ranges).</li>
+<li><code>sync</code> utility with aria2c for incremental folder updates.</li>
+<li>Makie extension for plotting (<code>plot(granules)</code>).</li>
+<li><code>search(granule, :OtherProduct)</code> for cross-product granule lookup.</li>
+<li><code>id</code> keyword in <code>search</code> for fetching specific granules.</li>
+</ul>
+<p><a id='Fixed-3'></a></p>
+<h3 id="fixed_2">Fixed<a class="headerlink" href="#fixed_2" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Empty (filtered) granules could result in <code>Vector{BitVector}</code> columns, which have been changed to <code>Vector{Bool}</code>.</li>
+<li>GEDI search after migration to LPCLOUD.</li>
+</ul>
+<p><a id='Breaking-2'></a></p>
+<h3 id="breaking_1">Breaking<a class="headerlink" href="#breaking_1" title="Permanent link">&para;</a></h3>
 <ul>
 <li><code>points</code> now return either a <code>Table</code> or a <code>PartitionedTable</code> instead of <code>NamedTuple</code> or <code>Vector{NamedTuple}</code>. The old behaviour can be regained by calling <code>parent</code> on these tables.</li>
 <li>Removed <code>number_of_returns</code> and <code>return_number</code> from ICESat-2 ATL08 canopy output.</li>
@@ -1311,12 +2157,11 @@ package if you use it in production.
 <li>Renamed <code>granules_from_file</code> to <code>granules</code></li>
 <li>Renamed <code>write_granule_urls!</code> to <code>write_urls</code></li>
 </ul>
-<p><a id='Changed'></a></p>
-<p><a id='Changed-1'></a></p>
-<h3 id="changed">Changed<a class="headerlink" href="#changed" title="Permanent link">&para;</a></h3>
+<p><a id='Changed-2'></a></p>
+<h3 id="changed_1">Changed<a class="headerlink" href="#changed_1" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Most of the search functionality has been moved out to the more generic <a href="https://github.com/evetion/EarthData.jl">EarthData.jl</a></li>
-<li>Updated ICESat-2 from version 5 to version 6</li>
+<li>Most of the search functionality has been moved out to the more generic <a href="https://github.com/evetion/EarthData.jl">EarthData.jl</a>.</li>
+<li>Updated ICESat-2 from version 5 to version 6.</li>
 </ul>
 <p><a id='v0.3.0'></a></p>
 <p><a id='v0.3.0-1'></a></p>
@@ -1425,7 +2270,7 @@ package if you use it in production.
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Copyright &copy; 2022 Maarten Pronk, Deltares
+      Copyright &copy; 2026 Maarten Pronk, Deltares | Delft University of Technology
     </div>
   
   
@@ -1449,18 +2294,12 @@ package if you use it in production.
   
     
     
-    
-    
-    <a href="https://gitter.im/evetion/community" target="_blank" rel="noopener" title="Chat with me on Gitter" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M66.4 322.5H16V0h50.4zM166.9 76.1h-50.4V512h50.4zm100.6 0h-50.4V512h50.4zM368 76h-50.4v247H368z"/></svg>
-    </a>
-  
+      
     
     
     
-    
-    <a href="https://twitter.com/3vetion" target="_blank" rel="noopener" title="Twitter" class="md-social__link">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"/></svg>
+    <a href="https://fosstodon.org/@evetion" target="_blank" rel="noopener me" title="Mastodon" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M433 179.1c0-97.2-63.7-125.7-63.7-125.7-62.5-28.7-228.6-28.4-290.5 0 0 0-63.7 28.5-63.7 125.7 0 115.7-6.6 259.4 105.6 289.1 40.5 10.7 75.3 13 103.3 11.4 50.8-2.8 79.3-18.1 79.3-18.1l-1.7-36.9s-36.3 11.4-77.1 10.1c-40.4-1.4-83-4.4-89.6-54-.6-4.6-.9-9.3-.9-13.9 85.6 20.9 158.7 9.1 178.7 6.7 56.1-6.7 105-41.3 111.2-72.9 9.8-49.8 9-121.5 9-121.5zm-75.1 125.2h-46.6V190.1c0-49.7-64-51.6-64 6.9v62.5H201V197c0-58.5-64-56.6-64-6.9v114.2H90.3c0-122.1-5.2-147.9 18.4-175 25.9-28.9 79.8-30.8 103.8 6.1l11.6 19.5 11.6-19.5c24.1-37.1 78.1-34.8 103.8-6.1 23.7 27.3 18.4 53 18.4 175"/></svg>
     </a>
   
 </div>

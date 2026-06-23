@@ -12,13 +12,13 @@
         <meta name="author" content="Maarten Pronk">
       
       
-        <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/guides/tracks/">
+        <link rel="canonical" href="https://www.evetion.nl/SpaceLiDAR.jl/guides/new-schema/">
       
       
-        <link rel="prev" href="../downloads/">
+        <link rel="prev" href="../operations/">
       
       
-        <link rel="next" href="../variables/">
+        <link rel="next" href="../migration/">
       
       
         
@@ -29,7 +29,7 @@
     
     
       
-        <title>Track filtering - SpaceLiDAR.jl</title>
+        <title>Adding a product - SpaceLiDAR.jl</title>
       
     
     
@@ -91,7 +91,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#track-filtering" class="md-skip">
+        <a href="#adding-a-new-product-schema" class="md-skip">
           Skip to content
         </a>
       
@@ -150,7 +150,7 @@ package if you use it in production.
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Track filtering
+              Adding a product
             
           </span>
         </div>
@@ -736,37 +736,10 @@ package if you use it in production.
                 
   
   
-    
   
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-        
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Track filtering
-  
-
-    
-  </span>
-  
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../tracks/" class="md-nav__link">
         
   
   
@@ -782,70 +755,6 @@ package if you use it in production.
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#icesat-2-beams" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ICESat-2 beams
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gedi-beams" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        GEDI beams
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#default-tracks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Default tracks
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#iterating-over-tracks" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Iterating over tracks
-      
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -911,10 +820,37 @@ package if you use it in production.
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../new-schema/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Adding a product
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   
@@ -930,6 +866,103 @@ package if you use it in production.
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-create-the-product-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Create the product file
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-include-in-the-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Include in the module
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-verify-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Verify it works
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-add-transforms-if-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Add transforms if needed
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-add-canopyalternative-variable-sets-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Add canopy/alternative variable sets (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-add-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Add documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1853,54 +1886,102 @@ package if you use it in production.
   
 
 
-<p><a id='Track-Filtering'></a></p>
-<p><a id='Track-Filtering-1'></a></p>
-<h1 id="track-filtering">Track Filtering<a class="headerlink" href="#track-filtering" title="Permanent link">&para;</a></h1>
-<p>ICESat-2 and GEDI emit multiple beams simultaneously. By default <code>table(g)</code> reads all beams, returning a <code>PartitionedH5Table</code> with one partition per beam. Use the <code>tracks</code> keyword to restrict which beams are loaded.</p>
-<p><a id='ICESat-2-beams'></a></p>
-<p><a id='ICESat-2-beams-1'></a></p>
-<h2 id="icesat-2-beams">ICESat-2 beams<a class="headerlink" href="#icesat-2-beams" title="Permanent link">&para;</a></h2>
-<p>ICESat-2 has 6 beam pairs: <code>gt1l</code>, <code>gt1r</code>, <code>gt2l</code>, <code>gt2r</code>, <code>gt3l</code>, <code>gt3r</code>. Strong and weak beams alternate based on spacecraft orientation.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">using</span><span class="w"> </span><span class="n">SpaceLiDAR</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;ATL08_20201121151145_08920913_006_01.h5&quot;</span><span class="p">)</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="c"># Only left beams</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gt1l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gt2l&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;gt3l&quot;</span><span class="p">])</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
-<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="c"># Single beam</span>
-<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;gt1l&quot;</span><span class="p">])</span>
+<p><a id='Adding-a-New-Product-Schema'></a></p>
+<p><a id='Adding-a-New-Product-Schema-1'></a></p>
+<h1 id="adding-a-new-product-schema">Adding a New Product Schema<a class="headerlink" href="#adding-a-new-product-schema" title="Permanent link">&para;</a></h1>
+<p>This guide walks through adding support for a new data product — using a hypothetical ICESat-2 ATL24 (Bathymetry) as an example.</p>
+<p><a id='.-Create-the-product-file'></a></p>
+<p><a id='.-Create-the-product-file-1'></a></p>
+<h2 id="1-create-the-product-file">1. Create the product file<a class="headerlink" href="#1-create-the-product-file" title="Permanent link">&para;</a></h2>
+<p>Create <code>src/ICESat-2/ATL24.jl</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c"># Default variables for ATL24</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">function</span><span class="w"> </span><span class="n">default_variables</span><span class="p">(</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL24</span><span class="p">})</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:longitude</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/longitude&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">),</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:latitude</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/latitude&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:depth</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/depth&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:confidence</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/confidence&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Int8</span><span class="p">),</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:datetime</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/delta_time&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">,</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">            </span><span class="n">ToDateTime</span><span class="p">(</span><span class="s">&quot;/ancillary_data/atlas_sdp_gps_epoch&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">gps_offset</span><span class="p">)),</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:surface_h</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/sea_surface_h&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">),</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="k">end</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="c"># Default attributes (track-level metadata)</span>
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="k">function</span><span class="w"> </span><span class="n">default_attributes</span><span class="p">(</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="ss">:ATL24</span><span class="p">})</span>
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">        </span><span class="n">Attribute</span><span class="p">(</span><span class="ss">:detector_id</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;atlas_spot_number&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">            </span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="kt">Int8</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">)),</span>
+<a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">        </span><span class="n">Attribute</span><span class="p">(</span><span class="ss">:strong_beam</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;atlas_beam_type&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">            </span><span class="n">x</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;strong&quot;</span><span class="p">),</span>
+<a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="k">end</span>
 </code></pre></div>
-<p><a id='GEDI-beams'></a></p>
-<p><a id='GEDI-beams-1'></a></p>
-<h2 id="gedi-beams">GEDI beams<a class="headerlink" href="#gedi-beams" title="Permanent link">&para;</a></h2>
-<p>GEDI has 8 beams: <code>BEAM0000</code>, <code>BEAM0001</code>, <code>BEAM0010</code>, <code>BEAM0011</code>, <code>BEAM0101</code>, <code>BEAM0110</code>, <code>BEAM1000</code>, <code>BEAM1011</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5&quot;</span><span class="p">)</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="c"># Full-power beams only</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">;</span><span class="w"> </span><span class="n">tracks</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;BEAM0101&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM0110&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM1000&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;BEAM1011&quot;</span><span class="p">])</span>
+<p><a id='.-Include-in-the-module'></a></p>
+<p><a id='.-Include-in-the-module-1'></a></p>
+<h2 id="2-include-in-the-module">2. Include in the module<a class="headerlink" href="#2-include-in-the-module" title="Permanent link">&para;</a></h2>
+<p>Add to <code>src/ICESat-2/ICESat-2.jl</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">include</span><span class="p">(</span><span class="s">&quot;ATL24.jl&quot;</span><span class="p">)</span>
 </code></pre></div>
-<p><a id='Default-tracks'></a></p>
-<p><a id='Default-tracks-1'></a></p>
-<h2 id="default-tracks">Default tracks<a class="headerlink" href="#default-tracks" title="Permanent link">&para;</a></h2>
-<p>To see what tracks are read by default for a granule:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">default_tracks</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="c"># (&quot;gt1l&quot;, &quot;gt1r&quot;, &quot;gt2l&quot;, &quot;gt2r&quot;, &quot;gt3l&quot;, &quot;gt3r&quot;)  for ICESat-2</span>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c"># (&quot;BEAM0000&quot;, ..., &quot;BEAM1011&quot;)                       for GEDI</span>
+<p>The granule type <code>ICESat2_Granule{:ATL24}</code> already exists — it's parameterized on the product symbol, which is parsed from the filename automatically.</p>
+<p><a id='.-Verify-it-works'></a></p>
+<p><a id='.-Verify-it-works-1'></a></p>
+<h2 id="3-verify-it-works">3. Verify it works<a class="headerlink" href="#3-verify-it-works" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">using</span><span class="w"> </span><span class="n">SpaceLiDAR</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">granule</span><span class="p">(</span><span class="s">&quot;ATL24_20230101120000_01234567_006_01.h5&quot;</span><span class="p">)</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">typeof</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="w">  </span><span class="c"># ICESat2_Granule{:ATL24}</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 </code></pre></div>
-<p>ICESat (GLAH) has no beam structure — <code>table(g)</code> always returns a single table.</p>
-<p><a id='Iterating-over-tracks'></a></p>
-<p><a id='Iterating-over-tracks-1'></a></p>
-<h2 id="iterating-over-tracks">Iterating over tracks<a class="headerlink" href="#iterating-over-tracks" title="Permanent link">&para;</a></h2>
-<p>Each partition in a <code>PartitionedH5Table</code> corresponds to one track:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">using</span><span class="w"> </span><span class="n">DataFrames</span><span class="p">,</span><span class="w"> </span><span class="n">Tables</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">table</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">for</span><span class="w"> </span><span class="n">part</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">Tables</span><span class="o">.</span><span class="n">partitions</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DataFrame</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">    </span><span class="c"># process one beam at a time</span>
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="k">end</span>
+<p><a id='.-Add-transforms-if-needed'></a></p>
+<p><a id='.-Add-transforms-if-needed-1'></a></p>
+<h2 id="4-add-transforms-if-needed">4. Add transforms if needed<a class="headerlink" href="#4-add-transforms-if-needed" title="Permanent link">&para;</a></h2>
+<p>If your product has fields that need special handling:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c"># Boolean flag (nonzero → true)</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">Variable</span><span class="p">(</span><span class="ss">:ocean_flag</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/ocean&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Int8</span><span class="p">,</span><span class="w"> </span><span class="n">ToBool</span><span class="p">())</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c"># Inverted boolean (0 → true = good quality)</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="n">Variable</span><span class="p">(</span><span class="ss">:quality</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/qf&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Int8</span><span class="p">,</span><span class="w"> </span><span class="n">InvertBool</span><span class="p">())</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="c"># Row from a 2D dataset (e.g., first algorithm)</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="n">Variable</span><span class="p">(</span><span class="ss">:depth_a1</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/depth_algo&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">,</span><span class="w"> </span><span class="n">SliceRow</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </code></pre></div>
+<p><a id='.-Add-canopy/alternative-variable-sets-(optional)'></a></p>
+<p><a id='.-Add-canopy/alternative-variable-sets-(optional)-1'></a></p>
+<h2 id="5-add-canopyalternative-variable-sets-optional">5. Add canopy/alternative variable sets (optional)<a class="headerlink" href="#5-add-canopyalternative-variable-sets-optional" title="Permanent link">&para;</a></h2>
+<p>If the product has multiple reading modes (like ATL08 ground vs canopy):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">function</span><span class="w"> </span><span class="n">atl24_shallow_variables</span><span class="p">()</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="p">[</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:longitude</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/longitude&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">),</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:latitude</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/latitude&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">),</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:depth</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/shallow/depth&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float32</span><span class="p">),</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">        </span><span class="n">Variable</span><span class="p">(</span><span class="ss">:datetime</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;profile_segments/delta_time&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">Float64</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">            </span><span class="n">ToDateTime</span><span class="p">(</span><span class="s">&quot;/ancillary_data/atlas_sdp_gps_epoch&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">SpaceLiDAR</span><span class="o">.</span><span class="n">gps_offset</span><span class="p">)),</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="p">]</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="k">end</span>
+</code></pre></div>
+<p>Export from <code>src/SpaceLiDAR.jl</code> if users need it directly.</p>
+<p><a id='.-Add-documentation'></a></p>
+<p><a id='.-Add-documentation-1'></a></p>
+<h2 id="6-add-documentation">6. Add documentation<a class="headerlink" href="#6-add-documentation" title="Permanent link">&para;</a></h2>
+<p>Create <code>docs/src/topics/icesat2/ATL24.md</code> following the pattern of other product pages (use <code>@example</code> blocks to auto-generate the column table).</p>
+<p>Add to <code>docs/mkdocs.yml</code> under the ICESat-2 section:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">ICESat-2</span><span class="p">:</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;ATL24&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;topics/icesat2/ATL24.md&quot;</span>
+</code></pre></div>
+<p><a id='Summary'></a></p>
+<p><a id='Summary-1'></a></p>
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p>Adding a product requires only:</p>
+<ol>
+<li>A <code>default_variables</code> method (required)</li>
+<li>A <code>default_attributes</code> method (optional but recommended)</li>
+<li>An <code>include</code> in the parent module file</li>
+</ol>
+<p>Everything else — track replication, nodata handling, dimension flattening, the <code>explore()</code> interface — comes for free from H5Table.</p>
 
 
 
