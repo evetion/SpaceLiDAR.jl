@@ -1,6 +1,5 @@
-using HTTP
-using Dates
-using JSON3
+import HTTP
+import JSON3
 
 const world = convert(Extent, (min_x = -180.0, min_y = -90.0, max_x = 180.0, max_y = 90.0))
 struct Mission{x}
@@ -19,7 +18,7 @@ _fix_gedi_id(id::Vector{String}) = _fix_gedi_id.(id)
 const earthdata_url = "https://cmr.earthdata.nasa.gov/search/granules.umm_json_v1_6_4"
 
 """
-    search(mission::Mission, bbox::Extent)
+    search(mission::Mission, extent::Extent)
     search(:GEDI02_A, "002")  # searches *all* GEDI v2 granules
 
 Search granules for a given mission and bounding box.
@@ -27,7 +26,6 @@ Search granules for a given mission and bounding box.
 function search(
     m::Mission{:GEDI},
     product::Symbol = :GEDI02_A;
-    bbox::Extent = world,
     extent::Extent = world,
     version::Int = 2,
     before::Union{Nothing,DateTime} = nothing,
@@ -36,10 +34,6 @@ function search(
     provider::String = "LPCLOUD",
 )::Vector{GEDI_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
-    if bbox != world
-        Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
-        extent = bbox
-    end
 
     id = _fix_gedi_id(id)
 
@@ -68,7 +62,6 @@ end
 function search(
     m::Mission{:ICESat2},
     product::Symbol = :ATL03;
-    bbox::Extent = world,
     extent::Extent = world,
     version::Int = 7,
     before::Union{Nothing,DateTime} = nothing,
@@ -78,10 +71,6 @@ function search(
     provider::String = "NSIDC_CPRD",
 )::Vector{ICESat2_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
-    if bbox != world
-        Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
-        extent = bbox
-    end
 
     granules =
         earthdata_search(
@@ -108,7 +97,6 @@ end
 function search(
     m::Mission{:ICESat},
     product::Symbol = :GLAH14;
-    bbox::Extent = world,
     extent::Extent = world,
     version::Int = 34,
     before::Union{Nothing,DateTime} = nothing,
@@ -118,10 +106,6 @@ function search(
     provider::String = "NSIDC_CPRD",
 )::Vector{ICESat_Granule}
     startswith(string(product), prefix(m)) || throw(ArgumentError("Wrong product $product for $(mission(m)) mission."))
-    if bbox != world
-        Base.depwarn("Use of `bbox` is deprecated, please use `extent` instead.", :search)
-        extent = bbox
-    end
 
     granules =
         earthdata_search(
@@ -151,21 +135,6 @@ search(::Mission{X}, product, args...; kwargs...) where {X} =
 search(::Mission{X}, product; kwargs...) where {X} =
     throw(ArgumentError("Combination of Mission $X and Product $product not supported. Please make an issue."))
 
-@deprecate find(mission::Symbol, product::AbstractString, bbox, version) search(
-    mission,
-    Symbol(product);
-    bbox = convert(Extent, bbox),
-    version = parse(Int, version),
-)
-@deprecate find(mission::Symbol, product::AbstractString, bbox) search(
-    mission,
-    Symbol(product);
-    bbox = convert(Extent, bbox),
-)
-@deprecate find(mission::Symbol, product::AbstractString) search(
-    mission,
-    Symbol(product),
-)
 function search(mission::Symbol, product::Symbol, args...; kwargs...)
     search(Mission(mission), product, args...; kwargs...)
 end
@@ -182,12 +151,12 @@ function search(gg::Vector{<:Granule}; kwargs...)
 end
 
 function search(g::Granule, product::Symbol; kwargs...)
-    g = SpaceLiDAR.convert(product, g)
+    g = convert(product, g)
     search(g, kwargs...)
 end
 
 function search(gg::Vector{<:Granule}, product::Symbol; kwargs...)
-    gg = SpaceLiDAR.convert.(product, gg)
+    gg = convert.(product, gg)
     search(gg, kwargs...)
 end
 

@@ -1,5 +1,5 @@
 """
-    points(g::ICESat_Granule{:GLAH06}, step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
+    points(g::ICESat_Granule{:GLAH06}, step=1, bbox::Union{Nothing,Extent} = nothing)
 
 Retrieve the points for a given ICESat GLAH06 (Land Ice) granule as a list of namedtuples
 The names of the tuples are based on the following fields:
@@ -21,17 +21,9 @@ You can get the output in a `DataFrame` with `DataFrame(points(g))`.
 function points(
     granule::ICESat_Granule{:GLAH06};
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
 
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     HDF5.h5open(granule.url, "r") do file
         if !isnothing(bbox)
             x = read_dataset(file, "Data_40HZ/Geolocation/d_lon")::Vector{Float64}
@@ -114,3 +106,28 @@ function points(
         return Table(gt, granule)
     end
 end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat_Granule{:GLAH06})
+    [
+        Variable(:longitude, "Data_40HZ/Geolocation/d_lon", Float64),
+        Variable(:latitude, "Data_40HZ/Geolocation/d_lat", Float64),
+        Variable(:height, "Data_40HZ/Elevation_Surfaces/d_elev", Float64),
+        Variable(:datetime, "Data_40HZ/DS_UTCTime_40", Float64,
+            ToDateTimeConst(j2000_offset)),
+        Variable(:saturation_correction, "Data_40HZ/Elevation_Corrections/d_satElevCorr", Float64),
+        Variable(:elev_use_flg, "Data_40HZ/Quality/elev_use_flg", Int8),
+        Variable(:sigma_att_flg, "Data_40HZ/Quality/sigma_att_flg", Int8),
+        Variable(:i_numPk, "Data_40HZ/Waveform/i_numPk", Int32),
+        Variable(:height_reference, "Data_40HZ/Geophysical/d_DEM_elv", Float64),
+    ]
+end
+
+function default_attributes(::ICESat_Granule{:GLAH06})
+    Attribute[]
+end
+
+# Attitude quality column for `ICESatQuality` (GLAH06 names it `:sigma_att_flg`).
+_attitude_variable(::ICESat_Granule{:GLAH06}) =
+    Variable(:sigma_att_flg, "Data_40HZ/Quality/sigma_att_flg", Int8)

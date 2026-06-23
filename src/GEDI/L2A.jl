@@ -36,19 +36,11 @@ function points(
     granule::GEDI_Granule{:GEDI02_A};
     tracks = gedi_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
 
         # Determine number of loops over tracks and ground and/or canopy
@@ -223,19 +215,11 @@ function lines(
     granule::GEDI_Granule{:GEDI02_A};
     tracks = gedi_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
     ground = true,
     canopy = false,
     filtered = true,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
 
         ftracks = filter(track -> haskey(file, track), tracks)
@@ -289,4 +273,47 @@ function bounds(granule::GEDI_Granule)
             max_y = max_ys,
         )
     end
+end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::GEDI_Granule{:GEDI02_A})
+    [
+        Variable(:longitude, "lon_lowestmode", Float64),
+        Variable(:latitude, "lat_lowestmode", Float64),
+        Variable(:height, "elev_lowestmode", Float32),
+        Variable(:height_error, "elevation_bin0_error", Float32),
+        Variable(:datetime, "delta_time", Float64, ToDateTimeConst(t_offset)),
+        Variable(:intensity, "energy_total", Float32),
+        Variable(:sensitivity, "sensitivity", Float32),
+        Variable(:surface, "surface_flag", UInt8, ToBool()),
+        Variable(:quality, "quality_flag", UInt8, ToBool()),
+        Variable(:nmodes, "num_detectedmodes", UInt8),
+        Variable(:sun_angle, "solar_elevation", Float32),
+        Variable(:height_reference, "digital_elevation_model", Float32),
+    ]
+end
+
+"""GEDI L2A canopy variables — reads highest return instead of lowest mode."""
+function gedi_l2a_canopy_variables()
+    [
+        Variable(:longitude, "lon_highestreturn", Float64),
+        Variable(:latitude, "lat_highestreturn", Float64),
+        Variable(:height, "elev_highestreturn", Float32),
+        Variable(:height_error, "elevation_bin0_error", Float32),
+        Variable(:datetime, "delta_time", Float64, ToDateTimeConst(t_offset)),
+        Variable(:intensity, "energy_total", Float32),
+        Variable(:sensitivity, "sensitivity", Float32),
+        Variable(:surface, "surface_flag", UInt8, ToBool()),
+        Variable(:quality, "quality_flag", UInt8, ToBool()),
+        Variable(:nmodes, "num_detectedmodes", UInt8),
+        Variable(:sun_angle, "solar_elevation", Float32),
+        Variable(:height_reference, "digital_elevation_model", Float32),
+    ]
+end
+
+function default_attributes(::GEDI_Granule{:GEDI02_A})
+    [
+        Attribute(:strong_beam, "description", x -> occursin("Full power", x)),
+    ]
 end

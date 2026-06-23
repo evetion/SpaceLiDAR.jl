@@ -1,5 +1,3 @@
-using Dates
-
 const icesat2_tracks = ("gt1l", "gt1r", "gt2l", "gt2r", "gt3l", "gt3r")
 const classification =
     Dict(0x03 => "low_canopy", 0x02 => "ground", 0x04 => "high_canopy", 0x05 => "unclassified", 0x01 => "noise")
@@ -14,17 +12,19 @@ const icesat2_inclination = 88.0  # actually 92, so this is 180. - 92.
     ICESat2_Granule{product} <: Granule
 
 A granule of the ICESat-2 product `product`. Normally created automatically from
-either [`find`](@ref), [`granule_from_file`](@ref) or [`granules_from_folder`](@ref).
+either [`search`](@ref), [`granule`](@ref) or [`granules`](@ref).
 """
 Base.@kwdef mutable struct ICESat2_Granule{product} <: Granule
-    id::String
+    const id::String
     url::String
-    info::NamedTuple
-    polygons::MultiPolygonType = MultiPolygonType()
+    const info::NamedTuple
+    const polygons::MultiPolygonType = MultiPolygonType()
 end
 
 sproduct(::ICESat2_Granule{product}) where {product} = product
 mission(::ICESat2_Granule) = :ICESat2
+
+default_tracks(::ICESat2_Granule) = icesat2_tracks
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
     ICESat2_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
@@ -33,18 +33,12 @@ end
 """
     bounds(granule::ICESat2_Granule)
 
-Retrieves the bounding box of the granule.
+Return the bounding box of the granule as a `NamedTuple` with fields
+`(min_x, min_y, max_x, max_y)`.
 
 !!! warning
 
     This opens the .h5 file, so it is slow.
-
-# Example
-
-```julia
-julia> bounds(g)
-g = ICESat2_Granule()
-```
 """
 function bounds(granule::ICESat2_Granule)
     HDF5.h5open(granule.url, "r") do file
@@ -74,7 +68,7 @@ julia> track_angle(g, 0.0)
 """
 function track_angle(g::ICESat2_Granule, latitude::Real = 0.0, nparts = 100)
 
-    latitudes, _, angles = SpaceLiDAR.greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
+    latitudes, _, angles = greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
     clamp!(angles, -90, 0)
     v, i = findmin(f -> abs(f - min(abs(latitude), icesat2_inclination)), latitudes)
     a = angles[i]
@@ -87,7 +81,7 @@ function track_angle(g::ICESat2_Granule, latitude::Real = 0.0, nparts = 100)
     end
 end
 function track_angle(g::ICESat2_Granule, latitude::Vector{Real}, nparts = 100)
-    latitudes, _, angles = SpaceLiDAR.greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
+    latitudes, _, angles = greatcircle(0.0, 0.0, icesat2_inclination, -95.0, nparts)
     clamp!(angles, -90, 0)
 
     latitude2 = abs.(latitude)

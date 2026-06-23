@@ -1,21 +1,33 @@
 module SpaceLiDAR
 
-using Dates
-using CategoricalArrays
-using FillArrays
+using Dates: Dates, @dateformat_str, Day, datetime2unix, unix2datetime
+using CategoricalArrays: CategoricalArrays, CategoricalArray
+using FillArrays: FillArrays, Fill
 using GeoFormatTypes
-using GeoInterface
-using HDF5
-using Tables
+using GeoInterface: GeoInterface, LineStringTrait, MultiPointTrait, PointTrait
+using HDF5: HDF5, attributes, open_dataset, open_group, read_attribute, read_dataset
+using Tables: Tables
 using TableOperations: joinpartitions
-using DataFrames
-using TimeZones
-using Extents
+using DataFrames: DataFrames, DataFrame, subset, subset!
+using TimeZones: TimeZones, DateTime, UTC
+using Extents: Extents, Extent, extent
 import DataAPI
 
 include("granule.jl")
 include("utils.jl")
 include("geom.jl")
+include("H5Table/H5Table.jl")
+Variable = H5Tables.Variable
+Attribute = H5Tables.Attribute
+ToDateTime = H5Tables.ToDateTime
+ToDateTimeConst = H5Tables.ToDateTimeConst
+ToBool = H5Tables.ToBool
+InvertBool = H5Tables.InvertBool
+SliceRow = H5Tables.SliceRow
+ExpandDims = H5Tables.ExpandDims
+include("table.jl")
+include("operations.jl")
+include("geoid.jl")
 include("GEDI/GEDI.jl")
 include("GEDI/L2A.jl")
 include("ICESat-2/ICESat-2.jl")
@@ -26,35 +38,22 @@ include("ICESat-2/ATL12.jl")
 include("ICESat/ICESat.jl")
 include("ICESat/GLAH06.jl")
 include("ICESat/GLAH14.jl")
-include("geoid.jl")
-include("table.jl")
 include("search.jl")
 include("geointerface.jl")
 include("env.jl")
 
-export find, search, sync, download!, download, netrc!, instantiate, info, angle, angle!, shift
-export lines, points, in_bbox, bounds, classify, isvalid, rm, to_egm2008!
-export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
-export granule_from_file, granules_from_folder, write_granule_urls!
 
-precompile(find, (Symbol, String, NamedTuple, String))
-precompile(find, (Symbol, String))
-precompile(search, (Symbol, Symbol))
-precompile(instantiate, (Vector{GEDI_Granule}, String))
-precompile(instantiate, (Vector{ICESat_Granule}, String))
-precompile(instantiate, (Vector{ICESat2_Granule}, String))
-precompile(granules_from_folder, (String,))
-precompile(granule_from_file, (String,))
-precompile(download!, (GEDI_Granule,))
-precompile(download!, (ICESat_Granule,))
-precompile(download!, (ICESat2_Granule,))
-precompile(points, (GEDI_Granule,))
-precompile(points, (ICESat_Granule,))
-precompile(points, (ICESat2_Granule,))
-precompile(lines, (GEDI_Granule,))
-precompile(lines, (ICESat_Granule,))
-precompile(lines, (ICESat2_Granule,))
-precompile(angle, (Vector{Float32}, Vector{Float32}))
-precompile(shift, (Float32, Float32, Float64, Float64))
+export search, sync, download!, download, netrc!, instantiate, info, angle, angle!, shift
+export lines, points, table, explore, in_bbox, bounds, classify, isvalid, rm
+export to_egm2008, to_egm2008!
+export topex_to_wgs84, topex_to_wgs84!
+export icesat_saturation_correct, icesat_saturation_correct!
+export icesat_quality
+export Operation, Filter, Transform
+export ToEGM2008, TopexToWGS84, SaturationCorrect, ICESatQuality, InExtent
+export ICESat_Granule, ICESat2_Granule, GEDI_Granule, convert
+export granule, granules
+
+# include("precompile.jl")
 
 end # module

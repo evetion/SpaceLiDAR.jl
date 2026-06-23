@@ -1,25 +1,26 @@
 [![DOI](https://zenodo.org/badge/241095197.svg)](https://zenodo.org/badge/latestdoi/241095197)
 # SpaceLiDAR
-A Julia toolbox for ICESat, ICESat-2 and GEDI data. Quickly [search](tutorial/usage.md#search-for-data), download and [load](tutorial/usage.md#derive-points) filtered point data with relevant attributes from the `.h5` granules of each data product. For an overview with code examples, see the FOSS4G Pluto notebook [here](tutorial/foss4g_2021.jl.html).
 
-If you use SpaceLiDAR in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197).
+SpaceLiDAR.jl searches, downloads, and reads spaceborne lidar data
+from the ICESat, ICESat-2, and GEDI NASA missions. Granules are exposed as lazy
+[Tables.jl](https://github.com/JuliaData/Tables.jl)-compatible HDF5 tables, so
+you can inspect product data quickly and materialize only when you need a sink
+such as a `DataFrame`.
+
+If you use SpaceLiDAR in your research, please consider [citing it](https://zenodo.org/badge/latestdoi/241095197). Feel free to submit issues and PRs to support more products. Note that you can also use SpaceLiDAR.jl for unsupported products.
 
 ## Supported data products
-Currently supports the following data products:
 
-| mission | data product | User Guide (UG) | Algorithm Theoretical Basis Document (ATBD)|
-|--- |--- |--- |--- |
-|ICESat| GLAH06 v34 | [UG](https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf) | [ATBD](https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf) |
-|ICESat| GLAH14 v34 | [UG](https://nsidc.org/sites/nsidc.org/files/MULTI-GLAH01-V033-V034-UserGuide.pdf) | [ATBD](https://eospso.nasa.gov/sites/default/files/atbd/ATBD-GLAS-02.pdf) |
-|ICESat-2| ATL03 v6 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl03-v006-userguide.pdf)  | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL03_ATBD_r006.pdf) |
-|ICESat-2| ATL06 v5 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl06-v006-userguide.pdf)  | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL06_ATBD_r006.pdf) |
-|ICESat-2| ATL08 v6 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl08-v006-userguide.pdf) | [ATBD](https://nsidc.org/sites/default/files/documents/technical-reference/icesat2_atl08_atbd_v006_0.pdf) |
-|ICESat-2| ATL12 v5 | [UG](https://nsidc.org/sites/default/files/documents/user-guide/atl12-v006-userguide.pdf) | [ATBD](https://icesat-2.gsfc.nasa.gov/sites/default/files/page_files/ICESat2_ATL12_ATBD_r006.pdf) |
-|GEDI| L2A v2 | [UG](https://lpdaac.usgs.gov/documents/998/GEDI02_UserGuide_V21.pdf) | [ATBD](https://lpdaac.usgs.gov/documents/581/GEDI_WF_ATBD_v1.0.pdf) |
+| [ICESat](topics/ICESat.md) | [ICESat-2](topics/ICESat-2.md) | [GEDI](topics/GEDI.md) |
+|:---------------------------|:-------------------------------|:-----------------------|
+| [GLAH06](topics/icesat/GLAH06.md) — Land Ice | [ATL03](topics/icesat2/ATL03.md) — Photons | [L2A](topics/gedi/L2A.md) — Ground & Canopy |
+| [GLAH14](topics/icesat/GLAH14.md) — Land Surface | [ATL06](topics/icesat2/ATL06.md) — Land Ice | |
+| | [ATL08](topics/icesat2/ATL08.md) — Vegetation | |
+| | [ATL12](topics/icesat2/ATL12.md) — Ocean | |
 
 
 ## Documentation
-This documentation is set up using the [Divio](https://documentation.divio.com/) documentation system and thus split into [Tutorials](tutorial/usage.md), [Guides](guides/downloads.md), [Topics](topics/GEDI.md) and [References](reference/search.md).
+This documentation follows the [Diátaxis](https://diataxis.fr/) framework: [Tutorials](tutorial/usage.md), [Guides](guides/downloads.md), [Topics](topics/HDF5.md), and [Reference](reference/api.md).
 
 ## Publications
 The code produced for the following paper was the beginning of this package:

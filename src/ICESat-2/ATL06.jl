@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox::Union{Nothing,Extent,NamedTuple} = nothing)
+    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox::Union{Nothing,Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL06 (Land Ice) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -25,16 +25,8 @@ function points(
     granule::ICESat2_Granule{:ATL06};
     tracks = icesat2_tracks,
     step = 1,
-    bbox::Union{Nothing,Extent,NamedTuple} = nothing,
+    bbox::Union{Nothing,Extent} = nothing,
 )
-    if bbox isa NamedTuple
-        bbox = convert(Extent, bbox)
-        Base.depwarn(
-            "The `bbox` keyword argument as a NamedTuple will be deprecated in a future release " *
-            "Please use `Extents.Extent` directly or use convert(Extent, bbox::NamedTuple)`.",
-            :points,
-        )
-    end
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "land_ice_segments"), tracks)
@@ -126,4 +118,27 @@ function points(
         height_reference = dem,
     )
     return nt
+end
+
+# ─── table() defaults ─────────────────────────────────────────────────────────
+
+function default_variables(::ICESat2_Granule{:ATL06})
+    [
+        Variable(:longitude, "land_ice_segments/longitude", Float64),
+        Variable(:latitude, "land_ice_segments/latitude", Float64),
+        Variable(:height, "land_ice_segments/h_li", Float32),
+        Variable(:sigma_geo_h, "land_ice_segments/sigma_geo_h", Float32),
+        Variable(:h_li_sigma, "land_ice_segments/h_li_sigma", Float32),
+        Variable(:datetime, "land_ice_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(:quality, "land_ice_segments/atl06_quality_summary", Int8, InvertBool()),
+        Variable(:height_reference, "land_ice_segments/dem/dem_h", Float32),
+    ]
+end
+
+function default_attributes(::ICESat2_Granule{:ATL06})
+    [
+        Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
+        Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
+    ]
 end
