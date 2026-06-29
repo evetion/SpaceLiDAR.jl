@@ -1828,33 +1828,33 @@ package if you use it in production.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">rm</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Remove the file associated with <code>granule</code> from the local filesystem.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL114-L118' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/granule.jl#LL114-L118' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download' href='#SpaceLiDAR.download'>#</a>
 <strong><code>SpaceLiDAR.download</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">download</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Download the file associated with <code>granule</code> to the <code>folder</code>, from an http(s) location if it doesn't already exists locally. Returns a new granule. See <a href="./#SpaceLiDAR.download!"><code>download!</code></a> for a mutating version.</p>
 <p>Will require credentials (netrc) which can be set with <a href="../utilities/#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>netrc!</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL100-L108' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/granule.jl#LL100-L108' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download' href='#SpaceLiDAR.download'>#</a>
 <strong><code>SpaceLiDAR.download</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">download</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Like <a href="./#SpaceLiDAR.download"><code>download</code></a>, but for a vector of <code>granules</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL163-L167' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/granule.jl#LL163-L167' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download!' href='#SpaceLiDAR.download!'>#</a>
 <strong><code>SpaceLiDAR.download!</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">download!</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">Granule</span><span class="p">,</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Download the file associated with <code>granule</code> to the <code>folder</code>, from an http(s) location if it doesn't already exists locally.</p>
 <p>Will require credentials (netrc) which can be set with <a href="../utilities/#SpaceLiDAR.netrc!-Tuple{Any, Any}"><code>netrc!</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL68-L75' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/granule.jl#LL68-L75' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.download!' href='#SpaceLiDAR.download!'>#</a>
 <strong><code>SpaceLiDAR.download!</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">download!</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">=</span><span class="s">&quot;.&quot;</span><span class="p">)</span>
 </code></pre></div>
 <p>Like <a href="./#SpaceLiDAR.download!"><code>download!</code></a>, but for a vector of <code>granules</code>. Will make use of aria2c (parallel).</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL127-L132' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/granule.jl#LL127-L132' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.sync' href='#SpaceLiDAR.sync'>#</a>
 <strong><code>SpaceLiDAR.sync</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">sync</span><span class="p">(</span><span class="n">folder</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">,</span><span class="w"> </span><span class="n">all</span><span class="o">::</span><span class="kt">Bool</span><span class="o">=</span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="n">kwargs</span><span class="o">...</span><span class="p">)</span>
@@ -1870,49 +1870,49 @@ package if you use it in production.
 <p>Assumes all folders contain granules of the same product. If not, pass the product as Symbol: <a href="./#SpaceLiDAR.sync"><code>sync</code></a> instead.</p>
 <p>When <code>all</code> is false (the default), sync will search only for granules past the date of the latest granule found in <code>folders</code>. If true, it will search for all granules. Note that ICESat granules are not timestamped, so sync will try to download <em>all</em> ICESat granules not yet present, regardless of this setting.</p>
 <p>Any <code>kwargs...</code> are passed to the <a href="../search/#SpaceLiDAR.search"><code>search</code></a> function. This enables sync to only download granules within a certain extent, for example.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/granule.jl#LL185-L209' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/granule.jl#LL185-L209' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.ICESatQuality' href='#SpaceLiDAR.ICESatQuality'>#</a>
 <strong><code>SpaceLiDAR.ICESatQuality</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">ICESatQuality</span><span class="p">()</span>
 </code></pre></div>
 <p>Filter: keep only high-quality ICESat (GLAH06/GLAH14) returns following Smith et al. (2020). The product-specific attitude column is selected by dispatch (<code>:sigma_att_flg</code> for GLAH06, <code>:attitude</code> for GLAH14). See <a href="../utilities/#SpaceLiDAR.icesat_quality-Tuple{Any}"><code>icesat_quality</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL145-L151' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat/ICESat.jl#LL145-L151' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.ICESat_Granule' href='#SpaceLiDAR.ICESat_Granule'>#</a>
 <strong><code>SpaceLiDAR.ICESat_Granule</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kt">ICESat_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
 </code></pre></div>
 <p>A granule of the ICESat product <code>product</code>. Normally created automatically from either <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, <a href="../utilities/#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a> or <a href="../utilities/#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL5-L10' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat/ICESat.jl#LL5-L10' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.SaturationCorrect' href='#SpaceLiDAR.SaturationCorrect'>#</a>
 <strong><code>SpaceLiDAR.SaturationCorrect</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">SaturationCorrect</span><span class="p">()</span>
 </code></pre></div>
 <p>Transform: add <code>:saturation_correction</code> to <code>:height</code> (ICESat). Equivalent to <a href="../utilities/#SpaceLiDAR.icesat_saturation_correct"><code>icesat_saturation_correct</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL129-L134' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat/ICESat.jl#LL129-L134' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.TopexToWGS84' href='#SpaceLiDAR.TopexToWGS84'>#</a>
 <strong><code>SpaceLiDAR.TopexToWGS84</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">TopexToWGS84</span><span class="p">()</span>
 </code></pre></div>
 <p>Transform: convert ICESat (GLAH06/GLAH14) TOPEX/Poseidon ellipsoid <code>:height</code> (and <code>:height_reference</code> if present) to WGS84. Equivalent to <a href="../utilities/#SpaceLiDAR.topex_to_wgs84"><code>topex_to_wgs84</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL105-L111' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat/ICESat.jl#LL105-L111' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{ICESat_Granule}' href='#SpaceLiDAR.info-Tuple{ICESat_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat_Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Derive info based on the filename. The name is built up as follows: <code>GLAH06_[release]_[orbit]_[cycle]_[track]_[segment]_[revision]_[filetype].H5</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat/ICESat.jl#LL60-L65' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat/ICESat.jl#LL60-L65' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.ICESat2_Granule' href='#SpaceLiDAR.ICESat2_Granule'>#</a>
 <strong><code>SpaceLiDAR.ICESat2_Granule</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
 </code></pre></div>
 <p>A granule of the ICESat-2 product <code>product</code>. Normally created automatically from either <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, <a href="../utilities/#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a> or <a href="../utilities/#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL11-L16' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat-2/ICESat-2.jl#LL11-L16' class='documenter-source'>source</a><br></p>
 <p><a id='Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T' href='#Base.convert-Union{Tuple{T}, Tuple{Symbol, ICESat2_Granule{T}}} where T'>#</a>
 <strong><code>Base.convert</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">Base</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="n">product</span><span class="o">::</span><span class="kt">Symbol</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">{</span><span class="kt">T</span><span class="p">})</span>
 </code></pre></div>
 <p>Converts the granule <code>g</code> to the product <code>product</code>, by guessing the correct name.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL119-L123' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat-2/ICESat-2.jl#LL119-L123' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.bounds-Tuple{ICESat2_Granule}' href='#SpaceLiDAR.bounds-Tuple{ICESat2_Granule}'>#</a>
 <strong><code>SpaceLiDAR.bounds</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">bounds</span><span class="p">(</span><span class="n">granule</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">)</span>
@@ -1922,25 +1922,25 @@ package if you use it in production.
 <p class="admonition-title">Warning</p>
 <p>This opens the .h5 file, so it is slow.</p>
 </div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL33-L42' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat-2/ICESat-2.jl#LL33-L42' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{ICESat2_Granule}' href='#SpaceLiDAR.info-Tuple{ICESat2_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">ICESat2_Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Derive info based on the filename. The name is built up as follows: <code>ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5</code>. See section 1.2.5 in the user guide.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL147-L152' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat-2/ICESat-2.jl#LL147-L152' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.GEDI_Granule' href='#SpaceLiDAR.GEDI_Granule'>#</a>
 <strong><code>SpaceLiDAR.GEDI_Granule</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="kt">GEDI_Granule</span><span class="p">{</span><span class="kt">product</span><span class="p">}</span><span class="w"> </span><span class="o">&lt;:</span><span class="w"> </span><span class="kt">Granule</span>
 </code></pre></div>
 <p>A granule of the GEDI product <code>product</code>. Normally created automatically from either <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, <a href="../utilities/#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a> or <a href="../utilities/#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/GEDI/GEDI.jl#LL5-L10' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/GEDI/GEDI.jl#LL5-L10' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.info-Tuple{GEDI_Granule}' href='#SpaceLiDAR.info-Tuple{GEDI_Granule}'>#</a>
 <strong><code>SpaceLiDAR.info</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="n">info</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">GEDI_Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Derive info based on the filename. This is built up as follows: <code>GEDI02_A_2019110014613_O01991_T04905_02_001_01.h5</code> or in case of v"2": <code>GEDI02_A_2019242104318_O04046_01_T02343_02_003_02_V002.h5</code>. See section 2.4 in the user guide.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/GEDI/GEDI.jl#LL28-L35' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/GEDI/GEDI.jl#LL28-L35' class='documenter-source'>source</a><br></p>
 <p><a id='Track-Angles'></a></p>
 <p><a id='Track-Angles-1'></a></p>
 <h2 id="track-angles">Track Angles<a class="headerlink" href="#track-angles" title="Permanent link">&para;</a></h2>
@@ -1951,7 +1951,7 @@ package if you use it in production.
 <p>Calculate the angle of direction from previous points in [°] where North is 0°. Points are given as <code>longitude</code> and <code>latitude</code> pairs in their own vector. The angle for the first point is undefined and set to the second.</p>
 <p>Because of the inherent noise in the point locations, the angles will be noisy too, especially for ICESat-2 ATL03. Either smooth the results or use an approximation using <a href="./#SpaceLiDAR.track_angle"><code>SpaceLiDAR.track_angle</code></a>.</p>
 <p>Returns a <code>Vector{Real}</code> of angles.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geom.jl#LL89-L100' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geom.jl#LL89-L100' class='documenter-source'>source</a><br></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>track_angle(::GEDI_Granule, latitude = 0.0)
 </code></pre></div>
 <p>Rough approximation of the track angle (0° is North) of ICESat-2 at a given <code>latitude</code>.</p>
@@ -1960,7 +1960,7 @@ package if you use it in production.
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="gp">julia&gt;</span><span class="w"> </span><span class="n">track_angle</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
 <a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="go">38.24944944866377</span>
 </code></pre></div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/GEDI/GEDI.jl#LL63-L75' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/GEDI/GEDI.jl#LL63-L75' class='documenter-source'>source</a><br></p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>track_angle(::ICESat2_Granule, latitude = 0.0)
 </code></pre></div>
 <p>Rough approximation of the track angle (0° is North) of ICESat-2 at a given <code>latitude</code>.</p>
@@ -1969,7 +1969,7 @@ package if you use it in production.
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="gp">julia&gt;</span><span class="w"> </span><span class="n">track_angle</span><span class="p">(</span><span class="n">g</span><span class="p">,</span><span class="w"> </span><span class="mf">0.0</span><span class="p">)</span>
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="go">-1.9923955416702257</span>
 </code></pre></div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/ICESat-2/ICESat-2.jl#LL56-L68' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/ICESat-2/ICESat-2.jl#LL56-L68' class='documenter-source'>source</a><br></p>
 
 
 

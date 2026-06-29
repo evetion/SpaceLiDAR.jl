@@ -1780,19 +1780,19 @@ package if you use it in production.
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">angle!</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
 </code></pre></div>
 <p>Sets the <code>angle</code> column in <code>table</code> as returned from <a href="../data/#SpaceLiDAR.points-Tuple{ICESat_Granule{:GLAH06}}"><code>points</code></a>. See <a href="../granules/#SpaceLiDAR.track_angle"><code>track_angle</code></a> for details.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geom.jl#LL27-L31' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geom.jl#LL27-L31' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.shift-NTuple{4, Any}' href='#SpaceLiDAR.shift-NTuple{4, Any}'>#</a>
 <strong><code>SpaceLiDAR.shift</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">shift</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span><span class="w"> </span><span class="n">latitude</span><span class="p">,</span><span class="w"> </span><span class="n">angle</span><span class="p">,</span><span class="w"> </span><span class="n">distance</span><span class="p">)</span>
 </code></pre></div>
 <p>Shift <code>longitude</code> and <code>latitude</code> with <code>distance</code> in [m] in direction <code>angle</code>, where North is 0°. Returns a tuple of the shifted coordinates: <code>(longitude, latitude)</code>. Useful for offsetting SpaceLiDAR points to the left or right of the track, in combination with <a href="./#SpaceLiDAR.angle!-Tuple{Any}"><code>angle!</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geom.jl#LL114-L120' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geom.jl#LL114-L120' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.ToEGM2008' href='#SpaceLiDAR.ToEGM2008'>#</a>
 <strong><code>SpaceLiDAR.ToEGM2008</code></strong> &mdash; <em>Type</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">ToEGM2008</span><span class="p">()</span>
 </code></pre></div>
 <p>Transform: convert ellipsoidal <code>:height</code> to EGM2008 geoid height (using <code>:longitude</code>, <code>:latitude</code>). Generic — applies to any granule. Equivalent to <a href="./#SpaceLiDAR.to_egm2008"><code>to_egm2008</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL290-L296' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL290-L296' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.icesat_quality-Tuple{Any}' href='#SpaceLiDAR.icesat_quality-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.icesat_quality</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="n">icesat_quality</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">BitVector</span>
@@ -1806,7 +1806,7 @@ package if you use it in production.
 <li><code>saturation_correction &lt; 3</code></li>
 </ul>
 <p>Missing values map to <code>false</code>. Returns a fresh <code>BitVector</code> suitable for filtering (e.g. <code>t.height[icesat_quality(t)]</code>). Pass <code>nothing</code> for any optional column to skip that predicate.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL242-L259' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL242-L259' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.icesat_saturation_correct' href='#SpaceLiDAR.icesat_saturation_correct'>#</a>
 <strong><code>SpaceLiDAR.icesat_saturation_correct</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">icesat_saturation_correct!</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1814,7 +1814,7 @@ package if you use it in production.
 </code></pre></div>
 <p>Add <code>:saturation_correction</code> to <code>:height</code>. Missing corrections (the original ICESat fill sentinel, mapped to <code>missing</code> by <code>table()</code>) leave the height untouched. Missing heights stay missing because <code>missing + x === missing</code>.</p>
 <p>Only meaningful for ICESat granules (GLAH06/GLAH14). Call before <code>topex_to_wgs84!</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL237' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL237' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.icesat_saturation_correct!-Tuple{Any}' href='#SpaceLiDAR.icesat_saturation_correct!-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.icesat_saturation_correct!</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">icesat_saturation_correct!</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1822,7 +1822,7 @@ package if you use it in production.
 </code></pre></div>
 <p>Add <code>:saturation_correction</code> to <code>:height</code>. Missing corrections (the original ICESat fill sentinel, mapped to <code>missing</code> by <code>table()</code>) leave the height untouched. Missing heights stay missing because <code>missing + x === missing</code>.</p>
 <p>Only meaningful for ICESat granules (GLAH06/GLAH14). Call before <code>topex_to_wgs84!</code>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL204-L214' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL204-L214' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.to_egm2008' href='#SpaceLiDAR.to_egm2008'>#</a>
 <strong><code>SpaceLiDAR.to_egm2008</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">to_egm2008!</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1831,7 +1831,7 @@ package if you use it in production.
 <p>Convert ellipsoid heights to EGM2008 geoid heights. Mutates / returns a copy with <code>:height</code> overwritten. Rows where any of <code>:latitude</code>, <code>:longitude</code>, <code>:height</code> is <code>missing</code> are left untouched.</p>
 <p>If <code>t</code> carries <code>"GEOINTERFACE:crs"</code> metadata equal to <code>EPSG(4326, 3855)</code>, the projection is skipped (idempotent — calling twice will not double-subtract the geoid undulation). After a successful projection, the new CRS is written to <code>t</code>'s metadata if writable.</p>
 <p><code>t</code> is any Tables.jl-compatible table whose <code>:height</code> column is a mutable <code>AbstractVector</code> (e.g. <code>DataFrame</code>, <code>NamedTuple</code> of vectors, <code>SpaceLiDAR.Table</code>). For read-only <code>H5Table</code> / <code>PartitionedH5Table</code>, only the non-mutating <code>to_egm2008(t)</code> is defined.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL150' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL150' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.to_egm2008!-Tuple{Any}' href='#SpaceLiDAR.to_egm2008!-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.to_egm2008!</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">to_egm2008!</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1840,7 +1840,7 @@ package if you use it in production.
 <p>Convert ellipsoid heights to EGM2008 geoid heights. Mutates / returns a copy with <code>:height</code> overwritten. Rows where any of <code>:latitude</code>, <code>:longitude</code>, <code>:height</code> is <code>missing</code> are left untouched.</p>
 <p>If <code>t</code> carries <code>"GEOINTERFACE:crs"</code> metadata equal to <code>EPSG(4326, 3855)</code>, the projection is skipped (idempotent — calling twice will not double-subtract the geoid undulation). After a successful projection, the new CRS is written to <code>t</code>'s metadata if writable.</p>
 <p><code>t</code> is any Tables.jl-compatible table whose <code>:height</code> column is a mutable <code>AbstractVector</code> (e.g. <code>DataFrame</code>, <code>NamedTuple</code> of vectors, <code>SpaceLiDAR.Table</code>). For read-only <code>H5Table</code> / <code>PartitionedH5Table</code>, only the non-mutating <code>to_egm2008(t)</code> is defined.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL105-L122' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL105-L122' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.topex_to_wgs84' href='#SpaceLiDAR.topex_to_wgs84'>#</a>
 <strong><code>SpaceLiDAR.topex_to_wgs84</code></strong> &mdash; <em>Function</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">topex_to_wgs84!</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1849,7 +1849,7 @@ package if you use it in production.
 <p>Convert ICESat coordinates from the TOPEX/Poseidon ellipsoid to WGS84. Transforms <code>:height</code> (and <code>:height_reference</code> if present). Latitude/longitude differences are below instrument precision (~1e-6°) and are not modified.</p>
 <p>If <code>t</code> carries <code>"GEOINTERFACE:crs"</code> metadata equal to <code>EPSG(4979)</code> (or already in EGM2008), the projection is skipped — applying it twice would corrupt heights. After a successful projection, the new CRS is written to <code>t</code>'s metadata if writable.</p>
 <p>Only meaningful for ICESat granules (GLAH06/GLAH14). Rows with missing inputs are left untouched.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL199' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL199' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.topex_to_wgs84!-Tuple{Any}' href='#SpaceLiDAR.topex_to_wgs84!-Tuple{Any}'>#</a>
 <strong><code>SpaceLiDAR.topex_to_wgs84!</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">topex_to_wgs84!</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -1858,19 +1858,19 @@ package if you use it in production.
 <p>Convert ICESat coordinates from the TOPEX/Poseidon ellipsoid to WGS84. Transforms <code>:height</code> (and <code>:height_reference</code> if present). Latitude/longitude differences are below instrument precision (~1e-6°) and are not modified.</p>
 <p>If <code>t</code> carries <code>"GEOINTERFACE:crs"</code> metadata equal to <code>EPSG(4979)</code> (or already in EGM2008), the projection is skipped — applying it twice would corrupt heights. After a successful projection, the new CRS is written to <code>t</code>'s metadata if writable.</p>
 <p>Only meaningful for ICESat granules (GLAH06/GLAH14). Rows with missing inputs are left untouched.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/geoid.jl#LL155-L170' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/geoid.jl#LL155-L170' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.granule-Tuple{AbstractString}' href='#SpaceLiDAR.granule-Tuple{AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.granule</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">granule</span><span class="p">(</span><span class="n">filename</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
 </code></pre></div>
 <p>Create a mission specific granule from a local .h5 filepath. For folder usage see <a href="./#SpaceLiDAR.granules-Tuple{AbstractString}"><code>granules</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/utils.jl#LL3-L8' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/utils.jl#LL3-L8' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.granules-Tuple{AbstractString}' href='#SpaceLiDAR.granules-Tuple{AbstractString}'>#</a>
 <strong><code>SpaceLiDAR.granules</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="n">granules</span><span class="p">(</span><span class="n">foldername</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
 </code></pre></div>
 <p>Create mission specific granules from a folder with .h5 files, using <a href="./#SpaceLiDAR.granule-Tuple{AbstractString}"><code>granule</code></a>.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/utils.jl#LL28-L32' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/utils.jl#LL28-L32' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.in_bbox-Tuple{DataFrames.DataFrame, @NamedTuple{min_x::Float64, min_y::Float64, max_x::Float64, max_y::Float64}}' href='#SpaceLiDAR.in_bbox-Tuple{DataFrames.DataFrame, @NamedTuple{min_x::Float64, min_y::Float64, max_x::Float64, max_y::Float64}}'>#</a>
 <strong><code>SpaceLiDAR.in_bbox</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">in_bbox</span><span class="p">(</span><span class="n">xyz</span><span class="o">::</span><span class="kt">DataFrame</span><span class="p">,</span><span class="w"> </span><span class="n">bbox</span><span class="o">::</span><span class="kt">NamedTuple</span><span class="p">)</span>
@@ -1883,25 +1883,25 @@ package if you use it in production.
 <p class="admonition-title">Warning</p>
 <p>The granule methods open each <code>.h5</code> file to read its bounds, so they are slow. See <a href="../data/#SpaceLiDAR.bounds-Tuple{GEDI_Granule}"><code>bounds</code></a>.</p>
 </div>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/utils.jl#LL61-L78' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/utils.jl#LL61-L78' class='documenter-source'>source</a><br></p>
 <p>&lt;a id='SpaceLiDAR.instantiate-Union{Tuple{T}, Tuple{Vector{T}, AbstractString}} where T&lt;:SpaceLiDAR.Granule' href='#SpaceLiDAR.instantiate-Union{Tuple{T}, Tuple{Vector{T}, AbstractString}} where T&lt;:SpaceLiDAR.Granule'&gt;#</a>
 <strong><code>SpaceLiDAR.instantiate</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">instantiate</span><span class="p">(</span><span class="n">granules</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="o">&lt;:</span><span class="kt">Granule</span><span class="p">},</span><span class="w"> </span><span class="n">folder</span><span class="o">::</span><span class="kt">AbstractString</span><span class="p">)</span>
 </code></pre></div>
 <p>For a given list of <code>granules</code> from <a href="../search/#SpaceLiDAR.search"><code>search</code></a>, match the granules to the local files and return a new list of granules with the local filepaths if they exist.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/utils.jl#LL40-L45' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/utils.jl#LL40-L45' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.isvalid-Tuple{SpaceLiDAR.Granule}' href='#SpaceLiDAR.isvalid-Tuple{SpaceLiDAR.Granule}'>#</a>
 <strong><code>SpaceLiDAR.isvalid</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="n">isvalid</span><span class="p">(</span><span class="n">g</span><span class="o">::</span><span class="kt">Granule</span><span class="p">)</span>
 </code></pre></div>
 <p>Checks if a granule is has a valid, local and non-corrupt .h5 file. Can be combined with <a href="../granules/#Base.Filesystem.rm-Tuple{SpaceLiDAR.Granule}"><code>rm(::Granule)</code></a> to remove invalid granules.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/utils.jl#LL139-L144' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/utils.jl#LL139-L144' class='documenter-source'>source</a><br></p>
 <p><a id='SpaceLiDAR.netrc!-Tuple{Any, Any}' href='#SpaceLiDAR.netrc!-Tuple{Any, Any}'>#</a>
 <strong><code>SpaceLiDAR.netrc!</code></strong> &mdash; <em>Method</em>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="n">netrc!</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">)</span>
 </code></pre></div>
 <p>Writes/updates a .netrc file for ICESat-2 and GEDI downloads. A .netrc is a plaintext file containing your username and password for NASA EarthData and DAACs, and can be automatically used by Julia using <code>Downloads</code> and tools like <code>wget</code>, <code>curl</code> among others.</p>
-<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/40575d26626f88a9d3ab70b8ca5c555e0c266075/src/utils.jl#LL157-L163' class='documenter-source'>source</a><br></p>
+<p><a target='_blank' href='https://github.com/evetion/SpaceLiDAR.jl/blob/59c14d680ad20056c039d7f22e2f09435eb6dfca/src/utils.jl#LL157-L163' class='documenter-source'>source</a><br></p>
 <div class="footnote">
 <hr />
 <ol>
