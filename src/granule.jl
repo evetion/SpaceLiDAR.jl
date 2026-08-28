@@ -8,21 +8,21 @@ function custom_downloader()
     downloader = Downloads.Downloader()
     easy_hook =
         (easy, _) -> begin
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_NETRC, Downloads.Curl.CURL_NETRC_OPTIONAL)
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_COOKIEFILE, "")
-        end
+        Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_NETRC, Downloads.Curl.CURL_NETRC_OPTIONAL)
+        Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_COOKIEFILE, "")
+    end
     downloader.easy_hook = easy_hook
     return downloader
 end
 
 function _download(kwargs...)
     downloader = custom_downloader()
-    Downloads.download(kwargs...; downloader = downloader)
+    return Downloads.download(kwargs...; downloader = downloader)
 end
 
 function _request(args...; kwargs...)
     downloader = custom_downloader()
-    Downloads.request(args...; kwargs..., downloader = downloader)
+    return Downloads.request(args...; kwargs..., downloader = downloader)
 end
 
 function create_aws_config(daac = "nsidc", region = "us-west-2")
@@ -41,12 +41,12 @@ function create_aws_config(daac = "nsidc", region = "us-west-2")
         )
     end
 
-    AWSS3.global_aws_config(; creds, region)
+    return AWSS3.global_aws_config(; creds, region)
 end
 
 function _s3_download(url, fn, config = create_aws_config())
     bucket, path = split(last(split(url, "//")), "/"; limit = 2)
-    AWSS3.s3_get_file(config, bucket, path, fn)
+    return AWSS3.s3_get_file(config, bucket, path, fn)
 end
 
 abstract type Granule end
@@ -55,18 +55,18 @@ id(g::Granule) = g.id
 
 Base.show(io::IO, g::Granule) = _show(io, g)
 Base.show(io::IO, ::MIME"text/plain", g::Granule) = _show(io, g)
-function _show(io, g::T) where {T<:Granule}
-    print(io, "$T with id $(id(g))")
+function _show(io, g::T) where {T <: Granule}
+    return print(io, "$T with id $(id(g))")
 end
 
 MultiPolygonType = Vector{Vector{Vector{Vector{Float64}}}}
 
 function HDF5.h5open(granule::Granule)
-    HDF5.h5open(granule.url, "r")
+    return HDF5.h5open(granule.url, "r")
 end
 
 """
-    download!(granule::Granule, folder=".")
+    download!(granule::Granule, folder = ".")
 
 Download the file associated with `granule` to the `folder`, from an http(s) location
 if it doesn't already exists locally.
@@ -94,11 +94,11 @@ function download!(granule::Granule, folder = ".")
     end
     mv(tmp, fn)
     granule.url = fn
-    granule
+    return granule
 end
 
 """
-    download(granule::Granule, folder=".")
+    download(granule::Granule, folder = ".")
 
 Download the file associated with `granule` to the `folder`, from an http(s) location
 if it doesn't already exists locally. Returns a new granule. See [`download!`](@ref) for
@@ -108,7 +108,7 @@ Will require credentials (netrc) which can be set with [`netrc!`](@ref).
 """
 function download(granule::Granule, folder = ".")
     g = copy(granule)
-    download!(g, folder)
+    return download!(g, folder)
 end
 
 """
@@ -117,7 +117,7 @@ end
 Remove the file associated with `granule` from the local filesystem.
 """
 function Base.rm(granule::Granule)
-    if isfile(granule.url)
+    return if isfile(granule.url)
         Base.rm(granule.url)
     else
         @warn("Can't delete $(granule.url)..")
@@ -125,7 +125,7 @@ function Base.rm(granule::Granule)
 end
 
 """
-    download!(granules::Vector{<:Granule}, folder=".")
+    download!(granules::Vector{<:Granule}, folder = ".")
 
 Like [`download!`](@ref), but for a vector of `granules`.
 Will make use of aria2c (parallel).
@@ -157,11 +157,11 @@ function download!(granules::Vector{<:Granule}, folder::AbstractString = ".")
     for granule in granules
         granule.url = joinpath(folder, id(granule))
     end
-    granules
+    return granules
 end
 
 """
-    download(granules::Vector{<:Granule}, folder=".")
+    download(granules::Vector{<:Granule}, folder = ".")
 
 Like [`download`](@ref), but for a vector of `granules`.
 """
@@ -175,18 +175,18 @@ function download(granules::Vector{<:Granule}, folder::AbstractString = ".")
     end
 end
 
-function Base.filesize(granule::T) where {T<:Granule}
-    filesize(granule.url)
+function Base.filesize(granule::T) where {T <: Granule}
+    return filesize(granule.url)
 end
 
 Base.isequal(a::Granule, b::Granule) = id(a) == id(b)
 Base.hash(g::Granule, h::UInt) = hash(id(g), h)
 
 """
-    sync(folder::AbstractString, all::Bool=false; kwargs...)
-    sync(folders::AbstractVector{<:AbstractString}, all::Bool=false; kwargs...)
-    sync(product::Symbol, folder::AbstractString, all::Bool=false; kwargs...)
-    sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool=false; kwargs...)
+    sync(folder::AbstractString, all::Bool = false; kwargs...)
+    sync(folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
+    sync(product::Symbol, folder::AbstractString, all::Bool = false; kwargs...)
+    sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
 
 Syncronize an existing archive of local granules in `folder(s)` with the latest granules available.
 Specifically, this will run [`search`](@ref) and [`download`](@ref) for any granules not yet
@@ -209,14 +209,14 @@ sync to only download granules within a certain extent, for example.
 """
 function sync(folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
     grans = reduce(vcat, granules.(folders))
-    _sync!(grans, first(folders), all; kwargs...)
+    return _sync!(grans, first(folders), all; kwargs...)
 end
 sync(folder::AbstractString, all::Bool = false; kwargs...) = sync([folder], all; kwargs...)
 
 function sync(product::Symbol, folders::AbstractVector{<:AbstractString}, all::Bool = false; kwargs...)
     grans = reduce(vcat, granules.(folders))
     filter!(g -> sproduct(g) == product, grans)
-    _sync!(grans, first(folders), all; kwargs...)
+    return _sync!(grans, first(folders), all; kwargs...)
 end
 sync(product::Symbol, folder::AbstractString, all::Bool = false; kwargs...) = sync(product, [folder], all; kwargs...)
 
@@ -230,5 +230,5 @@ function _sync!(granules, folder, all; kwargs...)
         Set(search(mission(g), sproduct(g); after = info(granules[end]).date, kwargs...))
     end
     setdiff!(ngranules, Set(granules))
-    download!(collect(ngranules), folder)
+    return download!(collect(ngranules), folder)
 end

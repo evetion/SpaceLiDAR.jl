@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL08}; tracks=icesat2_tracks, step=1, canopy=false, ground=true, bbox::Union{Nothing,Extent} = nothing)
+    points(g::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step = 1, canopy = false, ground = true, bbox::Union{Nothing, Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL08 (Land and Vegetation Height) granule as a list of namedtuples, one for each beam.
 With the `tracks` keyword, you can specify which tracks to include. The default is to include all tracks.
@@ -34,16 +34,16 @@ You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points
 want to change the default arguments or just `DataFrame(g)` with the default options.
 """
 function points(
-    granule::ICESat2_Granule{:ATL08};
-    tracks = icesat2_tracks,
-    step = 1,
-    canopy = false,
-    canopy_field = "h_mean_canopy_abs",
-    ground = true,
-    ground_field = "h_te_mean",
-    bbox::Union{Nothing,Extent} = nothing,
-    highres::Bool = false,
-)
+        granule::ICESat2_Granule{:ATL08};
+        tracks = icesat2_tracks,
+        step = 1,
+        canopy = false,
+        canopy_field = "h_mean_canopy_abs",
+        ground = true,
+        ground_field = "h_te_mean",
+        bbox::Union{Nothing, Extent} = nothing,
+        highres::Bool = false,
+    )
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         f = highres ? _extrapoints : points
@@ -51,7 +51,7 @@ function points(
         # Determine number of loops over tracks and ground and/or canopy
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "land_segments"), tracks)
         if ground && canopy
-            grounds = (Bool(i % 2) for i = 1:length(ftracks)*2)
+            grounds = (Bool(i % 2) for i in 1:(length(ftracks) * 2))
             ftracks = repeat(collect(ftracks), inner = 2)
         elseif ground || canopy
             grounds = Base.Iterators.repeated(ground, length(ftracks))
@@ -70,17 +70,17 @@ end
 
 
 function points(
-    ::ICESat2_Granule{:ATL08},
-    file::HDF5.H5DataStore,
-    track::AbstractString,
-    t_offset::Float64,
-    step = 1,
-    canopy = false,
-    canopy_field = "h_mean_canopy_abs",
-    ground = true,
-    ground_field = "h_te_mean",
-    bbox::Union{Nothing,Extent} = nothing,
-)
+        ::ICESat2_Granule{:ATL08},
+        file::HDF5.H5DataStore,
+        track::AbstractString,
+        t_offset::Float64,
+        step = 1,
+        canopy = false,
+        canopy_field = "h_mean_canopy_abs",
+        ground = true,
+        ground_field = "h_te_mean",
+        bbox::Union{Nothing, Extent} = nothing,
+    )
     group = open_group(file, track)
     # subset by bbox
     if !isnothing(bbox)
@@ -174,19 +174,21 @@ function points(
         reflectance = asr,
         nphotons = nph,
     )
-    nt
+    return nt
 end
 
 # ─── table() defaults ─────────────────────────────────────────────────────────
 
 function default_variables(::ICESat2_Granule{:ATL08})
-    [
+    return [
         Variable(:longitude, "land_segments/longitude", Float32),
         Variable(:latitude, "land_segments/latitude", Float32),
         Variable(:height, "land_segments/terrain/h_te_mean", Float32),
         Variable(:height_error, "land_segments/terrain/h_te_uncertainty", Float32),
-        Variable(:datetime, "land_segments/delta_time", Float64,
-            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(
+            :datetime, "land_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)
+        ),
         Variable(:quality, "land_segments/terrain_flg", Int32, InvertBool()),
         Variable(:phr, "land_segments/ph_removal_flag", Int8, ToBool()),
         Variable(:sensitivity, "land_segments/snr", Float32),
@@ -201,13 +203,15 @@ end
 
 """ATL08 canopy variables — reads canopy height instead of terrain height."""
 function atl08_canopy_variables()
-    [
+    return [
         Variable(:longitude, "land_segments/longitude", Float32),
         Variable(:latitude, "land_segments/latitude", Float32),
         Variable(:height, "land_segments/canopy/h_mean_canopy_abs", Float32),
         Variable(:height_error, "land_segments/canopy/h_canopy_uncertainty", Float32),
-        Variable(:datetime, "land_segments/delta_time", Float64,
-            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(
+            :datetime, "land_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)
+        ),
         Variable(:quality, "land_segments/terrain_flg", Int32, InvertBool()),
         Variable(:phr, "land_segments/ph_removal_flag", Int8, ToBool()),
         Variable(:sensitivity, "land_segments/snr", Float32),
@@ -221,7 +225,7 @@ function atl08_canopy_variables()
 end
 
 function default_attributes(::ICESat2_Granule{:ATL08})
-    [
+    return [
         Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
         Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
     ]
@@ -235,14 +239,14 @@ function lines(granule::ICESat2_Granule{:ATL08}; tracks = icesat2_tracks, step =
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "land_segments"), tracks)
         map(ftracks) do track
             group = open_group(file, track)
-            height = open_dataset(group, "land_segments/terrain/h_te_mean")[1:step:end]::Array{Float32,1}
-            longitude = open_dataset(group, "land_segments/longitude")[1:step:end]::Array{Float32,1}
-            latitude = open_dataset(group, "land_segments/latitude")[1:step:end]::Array{Float32,1}
+            height = open_dataset(group, "land_segments/terrain/h_te_mean")[1:step:end]::Array{Float32, 1}
+            longitude = open_dataset(group, "land_segments/longitude")[1:step:end]::Array{Float32, 1}
+            latitude = open_dataset(group, "land_segments/latitude")[1:step:end]::Array{Float32, 1}
             # t = open_dataset(group, "land_segments/delta_time")[1:step:end]::Array{Float64,1}
             # times = unix2datetime.(t .+ t_offset)
             atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
 
-            height[height.==fill_value] .= NaN
+            height[height .== fill_value] .= NaN
             line = Line(longitude, latitude, height)
             # i = div(length(t), 2) + 1
             (geom = line, track = track, strong_beam = atlas_beam_type == "strong", granule = id(granule))
@@ -254,18 +258,18 @@ end
 function atl03_mapping(granule::ICESat2_Granule{:ATL08})
     nts = Vector{NamedTuple}()
     HDF5.h5open(granule.url, "r") do file
-        for track ∈ icesat2_tracks
+        for track in icesat2_tracks
             if in(track, keys(file)) && in("signal_photons", keys(file[track]))
                 nt = atl03_mapping(file, track)
                 push!(nts, nt)
             end
         end
     end
-    nts
+    return nts
 end
 
 function atl03_mapping(granule::ICESat2_Granule{:ATL08}, track::AbstractString)
-    HDF5.h5open(granule.url, "r") do file
+    return HDF5.h5open(granule.url, "r") do file
         if in(track, keys(file)) && in("signal_photons", keys(file[track]))
             atl03_mapping(file, track)
         end
@@ -273,25 +277,25 @@ function atl03_mapping(granule::ICESat2_Granule{:ATL08}, track::AbstractString)
 end
 
 function atl03_mapping(file::HDF5.H5DataStore, track::AbstractString)
-    c = read(file, "$track/signal_photons/classed_pc_flag")::Array{Int8,1}
-    i = read(file, "$track/signal_photons/classed_pc_indx")::Array{Int32,1}
-    s = read(file, "$track/signal_photons/ph_segment_id")::Array{Int32,1}
-    (segment = s, index = i, classification = c, track = track)
+    c = read(file, "$track/signal_photons/classed_pc_flag")::Array{Int8, 1}
+    i = read(file, "$track/signal_photons/classed_pc_indx")::Array{Int32, 1}
+    s = read(file, "$track/signal_photons/ph_segment_id")::Array{Int32, 1}
+    return (segment = s, index = i, classification = c, track = track)
 end
 
 
 function _extrapoints(
-    ::ICESat2_Granule{:ATL08},
-    file::HDF5.H5DataStore,
-    track::AbstractString,
-    t_offset::Float64,
-    step = 1,
-    canopy = false,
-    canopy_field = "h_canopy_20",
-    ground = true,
-    ground_field = "h_te_best_fit_20m",
-    bbox = nothing,
-)
+        ::ICESat2_Granule{:ATL08},
+        file::HDF5.H5DataStore,
+        track::AbstractString,
+        t_offset::Float64,
+        step = 1,
+        canopy = false,
+        canopy_field = "h_canopy_20",
+        ground = true,
+        ground_field = "h_te_best_fit_20m",
+        bbox = nothing,
+    )
     group = open_group(file, track)
     if ground
         h = vec(open_dataset(group, "land_segments/terrain/h_te_best_fit_20m")[1:step:end, :])::Array{Float32}
@@ -338,5 +342,5 @@ function _extrapoints(
         reflectance = asr,
         nphotons = nph,
     )
-    nt
+    return nt
 end

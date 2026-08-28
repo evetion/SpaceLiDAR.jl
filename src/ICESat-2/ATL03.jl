@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL03}, tracks=icesat2_tracks; step=1, bbox::Union{Nothing,Extent} = nothing)
+    points(g::ICESat2_Granule{:ATL03}, tracks = icesat2_tracks; step = 1, bbox::Union{Nothing, Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL03 (Global Geolocated Photon Data) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -24,18 +24,18 @@ You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points
 want to change the default arguments or `DataFrame(g)` with the default options.
 """
 function points(
-    granule::ICESat2_Granule{:ATL03};
-    tracks = icesat2_tracks,
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-)
+        granule::ICESat2_Granule{:ATL03};
+        tracks = icesat2_tracks,
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+    )
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "heights"), tracks)
         map(ftracks) do track
             track_nt = points(granule, file, track, t_offset, step, bbox)
             if !isempty(track_nt.height)
-                track_nt.height[track_nt.height.==fill_value] .= NaN
+                track_nt.height[track_nt.height .== fill_value] .= NaN
             end
             track_nt
         end
@@ -44,8 +44,8 @@ function points(
 end
 
 """
-    lines(g::ICESat2_Granule; tracks=icesat2_tracks, step=100, kwargs...)
-    lines(g::GEDI_Granule; tracks=gedi_tracks, step=1, kwargs...)
+    lines(g::ICESat2_Granule; tracks = icesat2_tracks, step = 100, kwargs...)
+    lines(g::GEDI_Granule; tracks = gedi_tracks, step = 1, kwargs...)
 
 Retrieve the data of a granule as a line geometry per track, instead of
 the per-point representation returned by [`points`](@ref). Returns a
@@ -61,11 +61,11 @@ The resulting table integrates with `GeoInterface` and can be written to
 any geospatial format via the geometry column.
 """
 function lines(
-    granule::ICESat2_Granule{:ATL03},
-    tracks = icesat2_tracks;
-    step = 100,
-    bbox::Union{Nothing,Extent} = nothing,
-)
+        granule::ICESat2_Granule{:ATL03},
+        tracks = icesat2_tracks;
+        step = 100,
+        bbox::Union{Nothing, Extent} = nothing,
+    )
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
 
@@ -84,17 +84,17 @@ function lines(
             )
         end
     end
-    PartitionedTable(nts, granule)
+    return PartitionedTable(nts, granule)
 end
 
 function points(
-    ::ICESat2_Granule{:ATL03},
-    file::HDF5.H5DataStore,
-    track::AbstractString,
-    t_offset::Float64,
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-)
+        ::ICESat2_Granule{:ATL03},
+        file::HDF5.H5DataStore,
+        track::AbstractString,
+        t_offset::Float64,
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+    )
 
     group = open_group(file, track)
     if !isnothing(bbox)
@@ -191,16 +191,16 @@ end
 
 
 """
-    classify(granule::ICESat2_Granule{:ATL03}, atl08::Union{ICESat2_Granule{:ATL08},Nothing} = nothing, tracks = icesat2_tracks)
+    classify(granule::ICESat2_Granule{:ATL03}, atl08::Union{ICESat2_Granule{:ATL08}, Nothing} = nothing, tracks = icesat2_tracks)
 
 Like [`points(::ICESat2_Granule{:ATL03})`](@ref) but with the classification from the ATL08 dataset.
 If an ATL08 granule is not provided, we try to find it based on the ATL03 name using [`convert`](@ref SpaceAltimetry.Base.convert).
 """
 function classify(
-    granule::ICESat2_Granule{:ATL03},
-    atl08::Union{ICESat2_Granule{:ATL08},Nothing} = nothing;
-    tracks = icesat2_tracks,
-)
+        granule::ICESat2_Granule{:ATL03},
+        atl08::Union{ICESat2_Granule{:ATL08}, Nothing} = nothing;
+        tracks = icesat2_tracks,
+    )
     if isnothing(atl08)
         atl08 = convert(:ATL08, granule)
     end
@@ -218,29 +218,29 @@ function classify(
             unique_segments = unique(mapping.segment)
             index_map = create_mapping(track_df.segment, unique_segments)
 
-            class = CategoricalArray{String,1,Int8}(fill("unclassified", length(track_df.longitude)))
-            for i = 1:length(mapping.segment)
+            class = CategoricalArray{String, 1, Int8}(fill("unclassified", length(track_df.longitude)))
+            for i in 1:length(mapping.segment)
                 index = get(index_map, mapping.segment[i], nothing)
                 isnothing(index) && continue
                 offset = mapping.index[i] - 1
-                class[index+offset] = classification[mapping.classification[i]+1]
+                class[index + offset] = classification[mapping.classification[i] + 1]
             end
             merge(track_df, (classification = class,))
         end
     end
-    PartitionedTable(nts, granule)
+    return PartitionedTable(nts, granule)
 end
 
 
 function create_mapping(dfsegment, unique_segments)
-    index_map = Dict{Int64,Int64}()
+    index_map = Dict{Int64, Int64}()
     for unique_segment in unique_segments
         pos = searchsortedfirst(dfsegment, unique_segment)
         if (pos <= length(dfsegment)) && (dfsegment[pos] == unique_segment)
             index_map[unique_segment] = pos
         end
     end
-    index_map
+    return index_map
 end
 
 """
@@ -269,10 +269,10 @@ function count2index(counts)
     ref = 1
     for i in eachindex(counts)
         count = counts[i]
-        c[ref:ref+count-1] .= i
+        c[ref:(ref + count - 1)] .= i
         ref += count
     end
-    c
+    return c
 end
 
 # ─── table() defaults ─────────────────────────────────────────────────────────
@@ -281,13 +281,15 @@ expand_dims(::ICESat2_Granule{:ATL03}) = "geolocation/segment_ph_cnt"
 
 function default_variables(::ICESat2_Granule{:ATL03})
     expand = ExpandDims("geolocation/segment_ph_cnt")
-    [
+    return [
         Variable(:longitude, "heights/lon_ph", Float64),
         Variable(:latitude, "heights/lat_ph", Float64),
         Variable(:height, "heights/h_ph", Float32),
         Variable(:quality, "heights/quality_ph", Int8),
-        Variable(:datetime, "heights/delta_time", Float64,
-            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(
+            :datetime, "heights/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)
+        ),
         Variable(:confidence, "heights/signal_conf_ph", Int8, SliceRow(1)),
         Variable(:uncertainty, "geolocation/sigma_h", Float32, expand),
         Variable(:segment, "geolocation/segment_id", Int32, expand),
@@ -297,7 +299,7 @@ function default_variables(::ICESat2_Granule{:ATL03})
 end
 
 function default_attributes(::ICESat2_Granule{:ATL03})
-    [
+    return [
         Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
         Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
     ]

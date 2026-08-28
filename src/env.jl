@@ -7,4 +7,5 @@ function load_dotenv(override = true)
         (override && haskey(ENV, k)) || continue
         ENV[k] = v
     end
+    return
 end

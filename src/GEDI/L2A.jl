@@ -33,20 +33,20 @@ Data is `filtered` by default based on[^l3], except for the sensitivity field, w
 const t_offset = 1514764800  # Time delta since Jan 1 00:00 2018.
 
 function points(
-    granule::GEDI_Granule{:GEDI02_A};
-    tracks = gedi_tracks,
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-    ground = true,
-    canopy = false,
-    filtered = true,
-)
+        granule::GEDI_Granule{:GEDI02_A};
+        tracks = gedi_tracks,
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+        ground = true,
+        canopy = false,
+        filtered = true,
+    )
     nts = HDF5.h5open(granule.url, "r") do file
 
         # Determine number of loops over tracks and ground and/or canopy
         ftracks = filter(track -> haskey(file, track), tracks)
         if ground && canopy
-            grounds = (Bool(i % 2) for i = 1:length(ftracks)*2)
+            grounds = (Bool(i % 2) for i in 1:(length(ftracks) * 2))
             ftracks = repeat(collect(ftracks), inner = 2)
         elseif ground || canopy
             grounds = Base.Iterators.repeated(ground, length(ftracks))
@@ -56,24 +56,24 @@ function points(
         map(Tuple(zip(ftracks, grounds))) do (track, ground)
             track_nt = points(granule, file, track, step, bbox, ground, canopy, filtered)
             if !isempty(track_nt.height)
-                track_nt.height[track_nt.height.==fill_value] .= NaN
+                track_nt.height[track_nt.height .== fill_value] .= NaN
             end
             track_nt
         end
     end
-    PartitionedTable(nts, granule)
+    return PartitionedTable(nts, granule)
 end
 
 function points(
-    ::GEDI_Granule{:GEDI02_A},
-    file::HDF5.H5DataStore,
-    track::AbstractString,
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-    ground = true,
-    canopy = false,
-    filtered = true,
-)
+        ::GEDI_Granule{:GEDI02_A},
+        file::HDF5.H5DataStore,
+        track::AbstractString,
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+        ground = true,
+        canopy = false,
+        filtered = true,
+    )
     group = open_group(file, track)
 
     if !isnothing(bbox)
@@ -133,7 +133,7 @@ function points(
     # now that we have the start and stop extents
     height_error = open_dataset(group, "elevation_bin0_error")[start:step:stop]::Vector{Float32}
     height_reference = open_dataset(group, "digital_elevation_model")[start:step:stop]::Vector{Float32}
-    height_reference[height_reference.==-999999.0] .= NaN
+    height_reference[height_reference .== -999999.0] .= NaN
     intensity = open_dataset(group, "energy_total")[start:step:stop]::Vector{Float32}
     aid = open_dataset(group, "selected_algorithm")[start:step:stop]::Vector{UInt8}
 
@@ -142,7 +142,7 @@ function points(
     else
         height = open_dataset(group, "elev_lowestmode")[start:step:stop]::Vector{Float32}
     end
-    height[(height.<-1000.0).&(height.>25000.0)] .= NaN
+    height[(height .< -1000.0) .& (height .> 25000.0)] .= NaN
     datetime = open_dataset(group, "delta_time")[start:step:stop]::Vector{Float64}
 
     # Quality
@@ -161,7 +161,7 @@ function points(
     zcross = similar(aid, Float32)
     toploc = similar(aid, Float32)
     algrun = similar(aid, Bool)
-    for algorithm = 1:6
+    for algorithm in 1:6
         am = aid .== algorithm
         zcross[am] = open_dataset(group, "rx_processing_a$algorithm/zcross")[start:step:stop][am]
         toploc[am] = open_dataset(group, "rx_processing_a$algorithm/toploc")[start:step:stop][am]
@@ -207,24 +207,24 @@ function points(
         height_reference = height_reference[m],
         # range = zarange[m]
     )
-    nt
+    return nt
 end
 
 
 function lines(
-    granule::GEDI_Granule{:GEDI02_A};
-    tracks = gedi_tracks,
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-    ground = true,
-    canopy = false,
-    filtered = true,
-)
+        granule::GEDI_Granule{:GEDI02_A};
+        tracks = gedi_tracks,
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+        ground = true,
+        canopy = false,
+        filtered = true,
+    )
     nts = HDF5.h5open(granule.url, "r") do file
 
         ftracks = filter(track -> haskey(file, track), tracks)
         if ground && canopy
-            grounds = (Bool(i % 2) for i = 1:length(ftracks)*2)
+            grounds = (Bool(i % 2) for i in 1:(length(ftracks) * 2))
             ftracks = repeat(collect(ftracks), inner = 2)
         elseif ground || canopy
             grounds = Base.Iterators.repeated(ground, length(ftracks))
@@ -237,7 +237,7 @@ function lines(
             (; geom = line, track = track, strong_beam = track_df.strong_beam[1], granule = id(granule))
         end
     end
-    PartitionedTable(nts, granule)
+    return PartitionedTable(nts, granule)
 end
 
 """
@@ -254,8 +254,8 @@ function bounds(granule::GEDI_Granule)
     min_ys = Inf
     max_xs = -Inf
     max_ys = -Inf
-    HDF5.h5open(granule.url, "r") do file
-        for track ∈ gedi_tracks
+    return HDF5.h5open(granule.url, "r") do file
+        for track in gedi_tracks
             if haskey(file, track)
                 group = open_group(file, track)
                 min_x, max_x = extrema(read_dataset(group, "lon_lowestmode"))
@@ -278,7 +278,7 @@ end
 # ─── table() defaults ─────────────────────────────────────────────────────────
 
 function default_variables(::GEDI_Granule{:GEDI02_A})
-    [
+    return [
         Variable(:longitude, "lon_lowestmode", Float64),
         Variable(:latitude, "lat_lowestmode", Float64),
         Variable(:height, "elev_lowestmode", Float32),
@@ -296,7 +296,7 @@ end
 
 """GEDI L2A canopy variables — reads highest return instead of lowest mode."""
 function gedi_l2a_canopy_variables()
-    [
+    return [
         Variable(:longitude, "lon_highestreturn", Float64),
         Variable(:latitude, "lat_highestreturn", Float64),
         Variable(:height, "elev_highestreturn", Float32),
@@ -313,7 +313,7 @@ function gedi_l2a_canopy_variables()
 end
 
 function default_attributes(::GEDI_Granule{:GEDI02_A})
-    [
+    return [
         Attribute(:strong_beam, "description", x -> occursin("Full power", x)),
     ]
 end

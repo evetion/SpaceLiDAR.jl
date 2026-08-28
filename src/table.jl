@@ -1,9 +1,9 @@
 abstract type AbstractTable end
-struct Table{K,V,G} <: AbstractTable
-    table::NamedTuple{K,V}
+struct Table{K, V, G} <: AbstractTable
+    table::NamedTuple{K, V}
     granule::G
-    function Table(table::NamedTuple{K,V}, g::G) where {K,V,G}
-        new{K,typeof(values(table)),G}(table, g)
+    function Table(table::NamedTuple{K, V}, g::G) where {K, V, G}
+        return new{K, typeof(values(table)), G}(table, g)
     end
 end
 _table(t::Table) = getfield(t, :table)
@@ -21,16 +21,16 @@ Base.merge(table::Table, others...) = Table(merge(_table(table), others...), _gr
 Base.parent(table::Table) = _table(table)
 
 function Base.getproperty(table::Table, key::Symbol)
-    getproperty(_table(table), key)
+    return getproperty(_table(table), key)
 end
 Base.propertynames(table::Table) = propertynames(_table(table))
 
 function _show(io, t::Table)
     g = _granule(t)
-    isnothing(g) ? print(io, "Table") : print(io, "Table of $g")
+    return isnothing(g) ? print(io, "Table") : print(io, "Table of $g")
 end
 
-struct PartitionedTable{T<:Tuple{Vararg{NamedTuple}},G} <: AbstractTable
+struct PartitionedTable{T <: Tuple{Vararg{NamedTuple}}, G} <: AbstractTable
     tables::T
     granule::G
 end
@@ -47,13 +47,13 @@ Base.parent(table::PartitionedTable) = collect(getfield(table, :tables))
 
 function Base.getproperty(table::PartitionedTable, key::Symbol)
     key in (:tables, :granule) && return getfield(table, key)
-    reduce(vcat, [getproperty(t, key) for t in getfield(table, :tables)])
+    return reduce(vcat, [getproperty(t, key) for t in getfield(table, :tables)])
 end
 Base.propertynames(table::PartitionedTable) = propertynames(first(getfield(table, :tables)))
 
 function _show(io, t::PartitionedTable)
     g = _granule(t)
-    isnothing(g) ? print(io, "Table with $(length(t.tables)) partitions") :
+    return isnothing(g) ? print(io, "Table with $(length(t.tables)) partitions") :
         print(io, "Table with $(length(t.tables)) partitions of $g")
 end
 
@@ -96,12 +96,12 @@ _info(g::Granule) = merge((; id = id(g)), info(g))
 DataAPI.metadatasupport(::Type{<:AbstractTable}) = (read = true, write = false)
 function DataAPI.metadatakeys(t::AbstractTable)
     g = _granule(t)
-    isnothing(g) ? String[] : map(String, keys(pairs(_info(g))))
+    return isnothing(g) ? String[] : map(String, keys(pairs(_info(g))))
 end
 function DataAPI.metadata(t::AbstractTable, k; style::Bool = false)
     g = _granule(t)
     isnothing(g) && throw(ArgumentError("Table has no granule metadata"))
-    if style
+    return if style
         getfield(_info(g), Symbol(k)), :default
     else
         getfield(_info(g), Symbol(k))
@@ -128,7 +128,7 @@ Tables.columns(g::Table) = getfield(g, :table)
 # read-only `H5Table` keep its provenance: granule id/info become table
 # metadata, and `resolve_variable` can pull a known column on demand using the
 # granule's `default_variables` template (see operations.jl auto-pull).
-struct GranuleSource{G<:Granule}
+struct GranuleSource{G <: Granule}
     granule::G
     file::HDF5.File
     track::String
@@ -137,7 +137,7 @@ GranuleSource(g::Granule, file::HDF5.File) = GranuleSource(g, file, "")
 
 H5Tables.h5handle(s::GranuleSource) = s.file
 H5Tables.source_metadata(s::GranuleSource) =
-    Dict{String,Any}(string(k) => v for (k, v) in pairs(_info(s.granule)))
+    Dict{String, Any}(string(k) => v for (k, v) in pairs(_info(s.granule)))
 
 """Resolve `name` to a fully-built [`Variable`](@ref) using the granule's
 `default_variables` template, prefixed with this source's track. Returns
@@ -164,7 +164,7 @@ end
 """The granule backing a table, or `nothing` for a sourceless/generic table."""
 granuleof(t::H5Tables.H5Table) = _granuleof(getfield(t, :f))
 function granuleof(t::H5Tables.PartitionedH5Table)
-    isempty(t.tables) ? nothing : granuleof(t.tables[1])
+    return isempty(t.tables) ? nothing : granuleof(t.tables[1])
 end
 _granuleof(s::GranuleSource) = s.granule
 _granuleof(::Any) = nothing
@@ -174,7 +174,7 @@ _granuleof(::Any) = nothing
 Base.collect(t::H5Tables.H5Table) = Table(Tables.columntable(t), granuleof(t))
 function Base.collect(t::H5Tables.PartitionedH5Table)
     nts = Tuple(Tables.columntable(p) for p in Tables.partitions(t))
-    PartitionedTable(nts, granuleof(t))
+    return PartitionedTable(nts, granuleof(t))
 end
 
 
@@ -186,7 +186,7 @@ function materialize!(df::DataFrame)
             df[!, name] = Vector(col)
         end
     end
-    df
+    return df
 end
 
 # ─── table(::Granule) → H5Table dispatch ─────────────────────────────────────
@@ -195,7 +195,7 @@ end
 # iterate; single-track ICESat overrides `table`/`explore` directly.
 
 """
-    table(g::Granule; tracks=default_tracks(g), variables=default_variables(g))
+    table(g::Granule; tracks = default_tracks(g), variables = default_variables(g))
 
 Open the granule file and return an H5Table (or PartitionedH5Table) using
 the specified variables and `default_attributes` for the granule type.
@@ -208,26 +208,26 @@ when finished with the table in long-running sessions.
 """
 function table end
 
-function _h5table_for_track(file::HDF5.File, g::Granule, track::AbstractString, dvars; nrow::Union{Int,Nothing}=nothing)
+function _h5table_for_track(file::HDF5.File, g::Granule, track::AbstractString, dvars; nrow::Union{Int, Nothing} = nothing)
     vars = [
         H5Tables.Variable(name = v.name, path = "$track/$(v.path)", f = v.f, eltype = v.eltype)
-        for v in dvars
+            for v in dvars
     ]
     attrs = [a.name => "$track/$(a.attribute)" for a in default_attributes(g)]
     source = GranuleSource(g, file, String(track))
-    H5Tables.H5Table(source; vars, attrs, include_dimensions=false, nrow)
+    return H5Tables.H5Table(source; vars, attrs, include_dimensions = false, nrow)
 end
 
 """Rebuild `t` carrying a `GranuleSource` for `track` (used after the cheap
 template-reuse path, which copies the template's source)."""
 function _retrack(t::H5Tables.H5Table, g::Granule, file::HDF5.File, track::AbstractString)
     source = GranuleSource(g, file, String(track))
-    H5Tables.H5Table(f=source, vars=t.vars, attrs=t.attrs, nrow=t.nrow)
+    return H5Tables.H5Table(f = source, vars = t.vars, attrs = t.attrs, nrow = t.nrow)
 end
 
 """Check if an H5Table can be used as a template (trivial flattening, no track-dependent transforms)."""
 function _is_flat(t::H5Tables.H5Table)
-    all(t.vars) do v
+    return all(t.vars) do v
         v.inner == 1 && v.outer == 1
     end
 end
@@ -259,7 +259,7 @@ function _quick_nrow(file::HDF5.File, track::AbstractString, dvars)
     return nrow
 end
 
-function table(g::Granule; tracks=default_tracks(g), variables=default_variables(g))
+function table(g::Granule; tracks = default_tracks(g), variables = default_variables(g))
     file = HDF5.h5open(g.url, "r")
     tables = H5Tables.H5Table[]
     template = nothing
@@ -287,7 +287,7 @@ function table(g::Granule; tracks=default_tracks(g), variables=default_variables
         close(file)
         error("No tracks found in $(g.id) for tracks=$(collect(tracks))")
     end
-    H5Tables.PartitionedH5Table(tables)
+    return H5Tables.PartitionedH5Table(tables)
 end
 
 # ─── explore(::Granule) → interactive selection with track replication ─────────
@@ -320,7 +320,7 @@ function _split_track_paths(selected_paths::Vector{String}, tracks)
     return (track_paths, shared_paths)
 end
 
-function explore(g::Granule; tracks=default_tracks(g))
+function explore(g::Granule; tracks = default_tracks(g))
     file = HDF5.h5open(g.url, "r")
     selected_paths, selected_attrs = H5Tables.select(file)
     suffix_paths, shared_paths = _split_track_paths(selected_paths, tracks)
@@ -330,11 +330,11 @@ function explore(g::Granule; tracks=default_tracks(g))
         haskey(file, track) || continue
         all(haskey(file[track], sp) for sp in suffix_paths) || continue
         vars = vcat([Symbol(split(sp, "/")[end]) => "$track/$sp" for sp in suffix_paths], shared_vars)
-        push!(tables, H5Tables.H5Table(GranuleSource(g, file, String(track)); vars, attrs=selected_attrs, include_dimensions=false))
+        push!(tables, H5Tables.H5Table(GranuleSource(g, file, String(track)); vars, attrs = selected_attrs, include_dimensions = false))
     end
     if isempty(tables)
         close(file)
         error("No tracks found in $(g.id) with selected variables")
     end
-    H5Tables.PartitionedH5Table(tables)
+    return H5Tables.PartitionedH5Table(tables)
 end

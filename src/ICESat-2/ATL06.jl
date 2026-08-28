@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL06}, tracks=icesat2_tracks, step=1, bbox::Union{Nothing,Extent} = nothing)
+    points(g::ICESat2_Granule{:ATL06}, tracks = icesat2_tracks, step = 1, bbox::Union{Nothing, Extent} = nothing)
 
 Retrieve the points for a given ICESat-2 ATL06 (Land Ice) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -22,18 +22,18 @@ You can combine the output in a `DataFrame` with `reduce(vcat, DataFrame.(points
 want to change the default arguments or `DataFrame(g)` with the default options.
 """
 function points(
-    granule::ICESat2_Granule{:ATL06};
-    tracks = icesat2_tracks,
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-)
+        granule::ICESat2_Granule{:ATL06};
+        tracks = icesat2_tracks,
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+    )
     nts = HDF5.h5open(granule.url, "r") do file
         t_offset = open_dataset(file, "ancillary_data/atlas_sdp_gps_epoch")[1]::Float64 + gps_offset
         ftracks = filter(track -> haskey(file, track) && haskey(open_group(file, track), "land_ice_segments"), tracks)
         map(ftracks) do track
             track_nt = points(granule, file, track, t_offset, step, bbox)
             if !isempty(track_nt.height)
-                track_nt.height[track_nt.height.==fill_value] .= NaN
+                track_nt.height[track_nt.height .== fill_value] .= NaN
             end
             track_nt
         end
@@ -42,13 +42,13 @@ function points(
 end
 
 function points(
-    ::ICESat2_Granule{:ATL06},
-    file::HDF5.H5DataStore,
-    track::AbstractString,
-    t_offset::Float64,
-    step = 1,
-    bbox = bbox::Union{Nothing,Extent} = nothing,
-)
+        ::ICESat2_Granule{:ATL06},
+        file::HDF5.H5DataStore,
+        track::AbstractString,
+        t_offset::Float64,
+        step = 1,
+        bbox = bbox::Union{Nothing, Extent} = nothing,
+    )
     group = open_group(file, track)
 
     # subset by bbox ?
@@ -102,8 +102,8 @@ function points(
     atlas_beam_type = read_attribute(group, "atlas_beam_type")::String
     times = unix2datetime.(t .+ t_offset)
 
-    sigma_geo_h[sigma_geo_h.==fill_value] .= NaN
-    h_li_sigma[h_li_sigma.==fill_value] .= NaN
+    sigma_geo_h[sigma_geo_h .== fill_value] .= NaN
+    h_li_sigma[h_li_sigma .== fill_value] .= NaN
 
     nt = (
         longitude = x,
@@ -123,21 +123,23 @@ end
 # ─── table() defaults ─────────────────────────────────────────────────────────
 
 function default_variables(::ICESat2_Granule{:ATL06})
-    [
+    return [
         Variable(:longitude, "land_ice_segments/longitude", Float64),
         Variable(:latitude, "land_ice_segments/latitude", Float64),
         Variable(:height, "land_ice_segments/h_li", Float32),
         Variable(:sigma_geo_h, "land_ice_segments/sigma_geo_h", Float32),
         Variable(:h_li_sigma, "land_ice_segments/h_li_sigma", Float32),
-        Variable(:datetime, "land_ice_segments/delta_time", Float64,
-            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(
+            :datetime, "land_ice_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)
+        ),
         Variable(:quality, "land_ice_segments/atl06_quality_summary", Int8, InvertBool()),
         Variable(:height_reference, "land_ice_segments/dem/dem_h", Float32),
     ]
 end
 
 function default_attributes(::ICESat2_Granule{:ATL06})
-    [
+    return [
         Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
         Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
     ]

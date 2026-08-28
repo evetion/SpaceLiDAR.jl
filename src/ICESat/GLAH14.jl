@@ -1,5 +1,5 @@
 """
-    points(g::ICESat_Granule{:GLAH14}, step=1, bbox::Union{Nothing,Extent} = nothing)
+    points(g::ICESat_Granule{:GLAH14}, step = 1, bbox::Union{Nothing, Extent} = nothing)
 
 Retrieve the points for a given ICESat GLAH14 (Land Surface) granule as a list of namedtuples
 The names of the tuples are based on the following fields:
@@ -24,14 +24,14 @@ You can get the output in a `DataFrame` with `DataFrame(points(g))`.
 [^smith2020]: Smith, B., Fricker, H. A., Gardner, A. S., Medley, B., Nilsson, J., Paolo, F. S., ... & Zwally, H. J. (2020). Pervasive ice sheet mass loss reflects competing ocean and atmosphere processes. Science, 368(6496), 1239-1242.
 """
 function points(
-    granule::ICESat_Granule{:GLAH14};
-    step = 1,
-    bbox::Union{Nothing,Extent} = nothing,
-)
-    HDF5.h5open(granule.url, "r") do file
+        granule::ICESat_Granule{:GLAH14};
+        step = 1,
+        bbox::Union{Nothing, Extent} = nothing,
+    )
+    return HDF5.h5open(granule.url, "r") do file
         if !isnothing(bbox)
             x = read_dataset(file, "Data_40HZ/Geolocation/d_lon")::Vector{Float64}
-            x[x.>180] .= x[x.>180] .- 360.0  # translate from 0 - 360
+            x[x .> 180] .= x[x .> 180] .- 360.0  # translate from 0 - 360
             y = read_dataset(file, "Data_40HZ/Geolocation/d_lat")::Vector{Float64}
 
             # find index of points inside of bbox
@@ -91,7 +91,7 @@ function points(
         height_ref = read_dataset(file, "Data_40HZ/Geophysical/d_DEM_elv")[start:step:stop][valid]::Vector{Float64}
 
         # SHOULD WE FILL WITH NAN OR MISSINGS ?
-        height_ref[height_ref.==icesat_fill] .= NaN
+        height_ref[height_ref .== icesat_fill] .= NaN
 
         datetime = unix2datetime.(datetime .+ j2000_offset)
 
@@ -111,9 +111,9 @@ function points(
             # NOT SURE THAT THIS FILTERS IS APPLICABLE NON-ICESHEET ELEVATION
             # quality defined according [^smith2020]
             quality = (quality .== 0) .&
-                      (sigma_att_flg .== 0) .&
-                      (i_numPk .== 1) .&
-                      (height_correction .< 3),
+                (sigma_att_flg .== 0) .&
+                (i_numPk .== 1) .&
+                (height_correction .< 3),
             clouds = Bool.(clouds), height_reference = height_ref,
             gain = gain_value,
             reflectivity = ref_flag,
@@ -127,12 +127,14 @@ end
 # ─── table() defaults ─────────────────────────────────────────────────────────
 
 function default_variables(::ICESat_Granule{:GLAH14})
-    [
+    return [
         Variable(:longitude, "Data_40HZ/Geolocation/d_lon", Float64),
         Variable(:latitude, "Data_40HZ/Geolocation/d_lat", Float64),
         Variable(:height, "Data_40HZ/Elevation_Surfaces/d_elev", Float64),
-        Variable(:datetime, "Data_40HZ/DS_UTCTime_40", Float64,
-            ToDateTimeConst(j2000_offset)),
+        Variable(
+            :datetime, "Data_40HZ/DS_UTCTime_40", Float64,
+            ToDateTimeConst(j2000_offset)
+        ),
         Variable(:saturation_correction, "Data_40HZ/Elevation_Corrections/d_satElevCorr", Float64),
         Variable(:clouds, "Data_40HZ/Elevation_Flags/elv_cloud_flg", Int8, ToBool()),
         Variable(:gain, "Data_40HZ/Waveform/i_gval_rcv", Int32),
@@ -146,5 +148,5 @@ function default_variables(::ICESat_Granule{:GLAH14})
 end
 
 function default_attributes(::ICESat_Granule{:GLAH14})
-    Attribute[]
+    return Attribute[]
 end

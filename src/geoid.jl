@@ -57,7 +57,7 @@ function _get_crs(t)
         return nothing
     end
     _CRS_KEY in keys || return nothing
-    try
+    return try
         DataAPI.metadata(t, _CRS_KEY)
     catch
         nothing
@@ -127,10 +127,12 @@ function to_egm2008!(t)
     end
     Proj.enable_network!()
     trans = Proj.Transformation("EPSG:4979", "EPSG:3855")
-    to_egm2008!(trans,
+    to_egm2008!(
+        trans,
         Tables.getcolumn(t, :latitude),
         Tables.getcolumn(t, :longitude),
-        Tables.getcolumn(t, :height))
+        Tables.getcolumn(t, :height)
+    )
     _try_set_crs!(t, _CRS_EGM2008)
     return t
 end
@@ -261,8 +263,8 @@ function icesat_quality(t)
     hasproperty(t, :elev_use_flg) || error("Table needs :elev_use_flg column")
     elev = Tables.getcolumn(t, :elev_use_flg)
     att = hasproperty(t, :sigma_att_flg) ? Tables.getcolumn(t, :sigma_att_flg) :
-          hasproperty(t, :attitude) ? Tables.getcolumn(t, :attitude) :
-          nothing
+        hasproperty(t, :attitude) ? Tables.getcolumn(t, :attitude) :
+        nothing
     npk = hasproperty(t, :i_numPk) ? Tables.getcolumn(t, :i_numPk) : nothing
     sc = hasproperty(t, :saturation_correction) ? Tables.getcolumn(t, :saturation_correction) : nothing
     return icesat_quality(elev, att, npk, sc)
@@ -271,7 +273,7 @@ end
 function icesat_quality(elev, att, npk, sc)
     n = length(elev)
     q = BitVector(undef, n)
-    @inbounds for i = 1:n
+    @inbounds for i in 1:n
         q[i] =
             _is_valid(elev[i]) &
             (att === nothing || _is_good(att[i])) &
@@ -299,8 +301,10 @@ _inputs(::ToEGM2008, granule) = _point_variables(granule)
 function _run!(::ToEGM2008, cols)
     Proj.enable_network!()
     trans = Proj.Transformation("EPSG:4979", "EPSG:3855")
-    to_egm2008!(trans,
+    return to_egm2008!(
+        trans,
         Tables.getcolumn(cols, :latitude),
         Tables.getcolumn(cols, :longitude),
-        Tables.getcolumn(cols, :height))
+        Tables.getcolumn(cols, :height)
+    )
 end

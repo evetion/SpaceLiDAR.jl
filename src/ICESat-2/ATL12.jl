@@ -1,5 +1,5 @@
 """
-    points(g::ICESat2_Granule{:ATL12}, tracks=icesat2_tracks)
+    points(g::ICESat2_Granule{:ATL12}, tracks = icesat2_tracks)
 
 Retrieve the points for a given ICESat-2 ATL12 (Ocean Surface Height) granule as a list of namedtuples, one for each beam.
 The names of the tuples are based on the following fields:
@@ -23,22 +23,22 @@ function points(granule::ICESat2_Granule{:ATL12}, tracks = icesat2_tracks)
 
         ftracks = filter(
             track ->
-                haskey(file, track) && haskey(open_group(file, track), "ssh_segments") && haskey(open_group(file, "$track/ssh_segments"), "heights"),
+            haskey(file, track) && haskey(open_group(file, track), "ssh_segments") && haskey(open_group(file, "$track/ssh_segments"), "heights"),
             tracks,
         )
         map(ftracks) do track
             points(granule, file, track, t_offset)
         end
     end
-    PartitionedTable(nts, granule)
+    return PartitionedTable(nts, granule)
 end
 
 function points(
-    ::ICESat2_Granule{:ATL12},
-    file::HDF5.H5DataStore,
-    track::AbstractString,
-    t_offset::Real,
-)
+        ::ICESat2_Granule{:ATL12},
+        file::HDF5.H5DataStore,
+        track::AbstractString,
+        t_offset::Real,
+    )
     group = open_group(file, track)
 
     height = read_dataset(group, "ssh_segments/heights/h")
@@ -51,7 +51,7 @@ function points(
 
     datetime = unix2datetime.(t .+ t_offset)
 
-    (
+    return (
         longitude = longitude,
         latitude = latitude,
         height = height,
@@ -65,17 +65,19 @@ end
 # ─── table() defaults ─────────────────────────────────────────────────────────
 
 function default_variables(::ICESat2_Granule{:ATL12})
-    [
+    return [
         Variable(:longitude, "ssh_segments/longitude", Float64),
         Variable(:latitude, "ssh_segments/latitude", Float64),
         Variable(:height, "ssh_segments/heights/h", Float32),
-        Variable(:datetime, "ssh_segments/delta_time", Float64,
-            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)),
+        Variable(
+            :datetime, "ssh_segments/delta_time", Float64,
+            ToDateTime("/ancillary_data/atlas_sdp_gps_epoch", gps_offset)
+        ),
     ]
 end
 
 function default_attributes(::ICESat2_Granule{:ATL12})
-    [
+    return [
         Attribute(:detector_id, "atlas_spot_number", x -> parse(Int8, x)),
         Attribute(:strong_beam, "atlas_beam_type", x -> x == "strong"),
     ]

@@ -27,7 +27,7 @@ mission(::ICESat2_Granule) = :ICESat2
 default_tracks(::ICESat2_Granule) = icesat2_tracks
 
 function Base.copy(g::ICESat2_Granule{product}) where {product}
-    ICESat2_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
+    return ICESat2_Granule{product}(g.id, g.url, g.info, copy(g.polygons))
 end
 
 """
@@ -41,7 +41,7 @@ Return the bounding box of the granule as a `NamedTuple` with fields
     This opens the .h5 file, so it is slow.
 """
 function bounds(granule::ICESat2_Granule)
-    HDF5.h5open(granule.url, "r") do file
+    return HDF5.h5open(granule.url, "r") do file
         extent = attributes(file["METADATA/Extent"])
         nt = (; collect(Symbol(x) => read(extent[x]) for x in keys(extent))...)
         ntb = (
@@ -103,7 +103,7 @@ end
 # See Section 7.5 The Spacecraft Orientation Parameter of the ATL03 ATDB.
 function track_power(orientation::Integer, track::String)
     # Backward orientation, left beam is strong
-    if orientation == 0
+    return if orientation == 0
         ifelse(occursin("r", track), "weak", "strong")
         # Forward orientation, right beam is strong
     elseif orientation == 1
@@ -137,11 +137,11 @@ function Base.convert(product::Symbol, g::ICESat2_Granule{T}) where {T}
             g = ICESat2_Granule(product, g.id, url, g.bbox, g.info)
         end
     end
-    g
+    return g
 end
 
 function _convert(s::AbstractString, old::Symbol, new::Symbol)
-    replace(replace(s, String(old) => String(new)), lowercase(String(old)) => lowercase(String(new)))
+    return replace(replace(s, String(old) => String(new)), lowercase(String(old)) => lowercase(String(new)))
 end
 
 """
@@ -151,7 +151,7 @@ Derive info based on the filename. The name is built up as follows:
 `ATL03_[yyyymmdd][hhmmss]_[ttttccss]_[vvv_rr].h5`. See section 1.2.5 in the user guide.
 """
 function info(g::ICESat2_Granule)
-    icesat2_info(id(g))
+    return icesat2_info(id(g))
 end
 
 # Granule regions 1-14. Region 4 (North Pole) and region 11 (South Pole) are both ascending descending
@@ -162,7 +162,7 @@ function icesat2_info(filename)
     id, _ = splitext(basename(filename))
     type, datetime, track, version, revision = split(id, "_")
     segment = parse(Int, track[7:end])
-    (
+    return (
         type = Symbol(type),
         date = DateTime(datetime, icesat_date_format),
         rgt = parse(Int, track[1:4]),
@@ -176,47 +176,47 @@ function icesat2_info(filename)
 end
 
 function is_blacklisted(g::Granule)
-    id(g) in blacklist
+    return id(g) in blacklist
 end
 
 module ICESat2
 
-using Tables: Tables
-using ..SpaceAltimetry: Filter, ICESat2_Granule, _namevar, _var
-import ..SpaceAltimetry: _inputs, _mask
+    using Tables: Tables
+    using ..SpaceAltimetry: Filter, ICESat2_Granule, _namevar, _var
+    import ..SpaceAltimetry: _inputs, _mask
 
-export Quality
+    export Quality
 
-"""
-    Quality()
+    """
+        Quality()
 
-Filter ICESat-2 rows using the quality field exposed by the point methods.
-ATL03 keeps nominal photons (`quality_ph == 0`); ATL06 and ATL08 keep rows
-whose product quality summary is true.
-"""
-struct Quality <: Filter end
+    Filter ICESat-2 rows using the quality field exposed by the point methods.
+    ATL03 keeps nominal photons (`quality_ph == 0`); ATL06 and ATL08 keep rows
+    whose product quality summary is true.
+    """
+    struct Quality <: Filter end
 
-const QualityGranule = Union{
-    ICESat2_Granule{:ATL03},
-    ICESat2_Granule{:ATL06},
-    ICESat2_Granule{:ATL08},
-}
+    const QualityGranule = Union{
+        ICESat2_Granule{:ATL03},
+        ICESat2_Granule{:ATL06},
+        ICESat2_Granule{:ATL08},
+    }
 
-_inputs(::Quality, g::QualityGranule) = [_var(g, :quality)]
-_inputs(::Quality, ::Nothing) = [_namevar(:quality)]
+    _inputs(::Quality, g::QualityGranule) = [_var(g, :quality)]
+    _inputs(::Quality, ::Nothing) = [_namevar(:quality)]
 
-_is_good_quality(::Missing) = false
-_is_good_quality(value::Bool) = value
-_is_good_quality(value::Number) = iszero(value)
-_is_good_quality(value) = value == "nominal"
+    _is_good_quality(::Missing) = false
+    _is_good_quality(value::Bool) = value
+    _is_good_quality(value::Number) = iszero(value)
+    _is_good_quality(value) = value == "nominal"
 
-function _mask(::Quality, cols)
-    quality = Tables.getcolumn(cols, :quality)
-    mask = BitVector(undef, length(quality))
-    @inbounds for i in eachindex(quality)
-        mask[i] = _is_good_quality(quality[i])
+    function _mask(::Quality, cols)
+        quality = Tables.getcolumn(cols, :quality)
+        mask = BitVector(undef, length(quality))
+        @inbounds for i in eachindex(quality)
+            mask[i] = _is_good_quality(quality[i])
+        end
+        return mask
     end
-    return mask
-end
 
 end # module ICESat2

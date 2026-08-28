@@ -33,7 +33,7 @@ Create mission specific granules from a folder with .h5 files, using [`granule`]
 function granules(foldername::AbstractString)
     return [
         granule(joinpath(foldername, file)) for
-        file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5" && !isfile("$(file).aria2")
+            file in readdir(foldername) if lowercase(splitext(file)[end]) == ".h5" && !isfile("$(file).aria2")
     ]
 end
 
@@ -43,7 +43,7 @@ end
 For a given list of `granules` from [`search`](@ref), match the granules to the local files
 and return a new list of granules with the local filepaths if they exist.
 """
-function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Granule}
+function instantiate(granules::Vector{T}, folder::AbstractString) where {T <: Granule}
     local_granules = Vector{eltype(granules)}()
     for granule in granules
         file = joinpath(folder, id(granule))
@@ -53,8 +53,8 @@ function instantiate(granules::Vector{T}, folder::AbstractString) where {T<:Gran
             push!(local_granules, g)
         end
     end
-    @info "Found $(@sprintf("%.0f",(length(local_granules) / length(granules) * 100)))% of $(length(granules)) provided granules."
-    local_granules
+    @info "Found $(@sprintf("%.0f", (length(local_granules) / length(granules) * 100)))% of $(length(granules)) provided granules."
+    return local_granules
 end
 
 
@@ -76,15 +76,15 @@ granules, return the granules whose bounds overlap `bbox`.
     The granule methods open each `.h5` file to read its bounds, so they
     are slow. See [`bounds`](@ref).
 """
-function in_bbox(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
-    subset(
+function in_bbox(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}})
+    return subset(
         xyz,
         :longitude => x -> (bbox.min_x .<= x .<= bbox.max_x),
         :latitude => y -> (bbox.min_y .<= y .<= bbox.max_y),
     )
 end
-function in_bbox!(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}})
-    subset!(
+function in_bbox!(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}})
+    return subset!(
         xyz,
         :longitude => x -> (bbox.min_x .<= x .<= bbox.max_x),
         :latitude => y -> (bbox.min_y .<= y .<= bbox.max_y),
@@ -92,20 +92,20 @@ function in_bbox!(xyz::DataFrame, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max
 end
 
 function intersect(
-    a::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}},
-    b::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}},
-)
-    !(b.min_x > a.max_x || b.max_x < a.min_x || b.min_y > a.max_y || b.max_y < a.min_y)
+        a::NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}},
+        b::NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}},
+    )
+    return !(b.min_x > a.max_x || b.max_x < a.min_x || b.min_y > a.max_y || b.max_y < a.min_y)
 end
 
-function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where {G<:Granule}
+function in_bbox(g::G, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}) where {G <: Granule}
     box = bounds(g)
-    intersect((; box.min_x, box.min_y, box.max_x, box.max_y), bbox)
+    return intersect((; box.min_x, box.min_y, box.max_x, box.max_y), bbox)
 end
 
-function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y),NTuple{4,Float64}}) where {G<:Granule}
+function in_bbox(g::Vector{G}, bbox::NamedTuple{(:min_x, :min_y, :max_x, :max_y), NTuple{4, Float64}}) where {G <: Granule}
     m = in_bbox.(g, Ref(bbox))
-    g[m]
+    return g[m]
 end
 
 url(g::Granule) = g.url
@@ -120,20 +120,21 @@ function write_urls(fn::String, granules::AbstractVector{<:Granule})
     open(fn, "w") do f
         write_urls(f, granules)
     end
-    abspath(fn)
+    return abspath(fn)
 end
 
 function write_urls(granules::AbstractVector{<:Granule})
     fn, io = mktemp()
     write_urls(io, granules)
     close(io)
-    fn
+    return fn
 end
 
 function write_urls(f::IOStream, granules::AbstractVector{<:Granule})
     for granule in granules
         println(f, url(granule))
     end
+    return
 end
 
 """
@@ -172,7 +173,7 @@ function netrc!(username, password)
         write(f, "\n")
         write(f, "machine urs.earthdata.nasa.gov login $username password $(password)\n")
     end
-    fn
+    return fn
 end
 
 function filter_rgt(granules::Vector{<:Granule}, rgt::Int, cycle::Int)
@@ -183,16 +184,16 @@ function filter_rgt(granules::Vector{<:Granule}, rgt::Int, cycle::Int)
             push!(results, granule)
         end
     end
-    results
+    return results
 end
 
 function Base.convert(::Type{Extent}, nt::NamedTuple{(:min_x, :min_y, :max_x, :max_y)})
-    Extent(X = (nt.min_x, nt.max_x), Y = (nt.min_y, nt.max_y))
+    return Extent(X = (nt.min_x, nt.max_x), Y = (nt.min_y, nt.max_y))
 end
 
 function Base.convert(
-    ::Type{NamedTuple},
-    nt::Extent{(:X, :Y)},
-)
-    (; min_x = nt.X[1], min_y = nt.Y[1], max_x = nt.X[2], max_y = nt.Y[2])
+        ::Type{NamedTuple},
+        nt::Extent{(:X, :Y)},
+    )
+    return (; min_x = nt.X[1], min_y = nt.Y[1], max_x = nt.X[2], max_y = nt.Y[2])
 end

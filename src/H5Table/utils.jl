@@ -18,7 +18,7 @@ function get_references(variable, dimension = 0)
     isnothing(refs) && return nothing
     gen = (variable.file[d.dataset] for d in refs if d.dimension == dimension)
     isempty(gen) && return nothing
-    gen
+    return gen
 end
 
 """
@@ -29,7 +29,7 @@ function get_reference_paths(variable, dimension = 0)
     isnothing(refs) && return nothing
     paths = String[HDF5.name(variable.file[d.dataset]) for d in refs if d.dimension == dimension]
     isempty(paths) && return nothing
-    paths
+    return paths
 end
 
 
@@ -42,44 +42,44 @@ The returned function operates on data that may contain `missing` values.
 """
 resolve_transform(::typeof(identity), ::HDF5.File, ::AbstractString) = identity
 resolve_transform(t::ToDateTime, file::HDF5.File, ::AbstractString) =
-    let
-        epoch = HDF5.read(file[t.epoch_path])[1]::Float64 + t.offset
-        function (data)
-            if eltype(data) >: Missing
-                [v === missing ? missing : unix2datetime(v + epoch) for v in data]
-            else
-                unix2datetime.(data .+ epoch)
-            end
+let
+    epoch = HDF5.read(file[t.epoch_path])[1]::Float64 + t.offset
+    function (data)
+        return if eltype(data) >: Missing
+            [v === missing ? missing : unix2datetime(v + epoch) for v in data]
+        else
+            unix2datetime.(data .+ epoch)
         end
     end
+end
 resolve_transform(t::ToDateTimeConst, ::HDF5.File, ::AbstractString) =
-    let offset = t.offset
-        function (data)
-            if eltype(data) >: Missing
-                [v === missing ? missing : unix2datetime(v + offset) for v in data]
-            else
-                unix2datetime.(data .+ offset)
-            end
+let offset = t.offset
+    function (data)
+        return if eltype(data) >: Missing
+            [v === missing ? missing : unix2datetime(v + offset) for v in data]
+        else
+            unix2datetime.(data .+ offset)
         end
     end
+end
 resolve_transform(::ToBool, ::HDF5.File, ::AbstractString) = function (data)
-    if eltype(data) >: Missing
+    return if eltype(data) >: Missing
         [v === missing ? missing : !iszero(v) for v in data]
     else
         Bool[!iszero(v) for v in data]
     end
 end
 resolve_transform(::InvertBool, ::HDF5.File, ::AbstractString) = function (data)
-    if eltype(data) >: Missing
+    return if eltype(data) >: Missing
         [v === missing ? missing : iszero(v) for v in data]
     else
         Bool[iszero(v) for v in data]
     end
 end
 resolve_transform(s::SliceRow, ::HDF5.File, ::AbstractString) =
-    let row = s.row
-        data -> data[row, :]
-    end
+let row = s.row
+    data -> data[row, :]
+end
 
 """
     apply_transform_dims(transform, vdims) -> Vector{String}
@@ -113,21 +113,21 @@ function count2index(counts)
     ref = 1
     for i in eachindex(counts)
         count = counts[i]
-        c[ref:(ref+count-1)] .= i
+        c[ref:(ref + count - 1)] .= i
         ref += count
     end
-    c
+    return c
 end
 
 resolve_transform(e::ExpandDims, file::HDF5.File, path::AbstractString) =
-    let
-        # Resolve counts_path relative to the same track prefix as the variable
-        track = first(split(path, "/"))
-        counts_path = "$track/$(e.counts_path)"
-        counts = HDF5.read(file[counts_path])::Vector{Int32}
-        idx = count2index(counts)
-        data -> data[idx]
-    end
+let
+    # Resolve counts_path relative to the same track prefix as the variable
+    track = first(split(path, "/"))
+    counts_path = "$track/$(e.counts_path)"
+    counts = HDF5.read(file[counts_path])::Vector{Int32}
+    idx = count2index(counts)
+    data -> data[idx]
+end
 
 # ─── Source interface ──────────────────────────────────────────────────────────
 # An `H5Table` reads from a *source*. The trivial source is an `HDF5.File`, but a
@@ -150,7 +150,7 @@ h5handle(f::HDF5.File) = f
 Extra table-level metadata (`String` keys) contributed by a source, merged
 with the HDF5 file attributes. Defaults to empty.
 """
-source_metadata(::Any) = Dict{String,Any}()
+source_metadata(::Any) = Dict{String, Any}()
 
 """
 Resolve a column `name` to a [`Variable`](@ref) spec using source context
@@ -228,6 +228,7 @@ function include_related!(pairs, included_paths, related)
         name = Symbol(split(path, "/")[end])
         push!(pairs, Variable(name = name, path = path))
     end
+    return
 end
 
 """
@@ -243,6 +244,7 @@ function include_related_paths!(pairs, included_paths, paths)
         name = Symbol(split(path, "/")[end])
         push!(pairs, Variable(name = name, path = path))
     end
+    return
 end
 
 
@@ -257,10 +259,10 @@ Returns `nothing` if the coordinate cannot be found in the file.
 # Examples
 
 ```julia
-julia> resolve_coord_path(file, "BEAM0000/geolocation/elevs", "../delta_time")
+julia > resolve_coord_path(file, "BEAM0000/geolocation/elevs", "../delta_time")
 "BEAM0000/delta_time"
 
-julia> resolve_coord_path(file, "BEAM0000/rh", "lat_lowestmode")
+julia > resolve_coord_path(file, "BEAM0000/rh", "lat_lowestmode")
 "BEAM0000/lat_lowestmode"
 ```
 """
@@ -276,7 +278,7 @@ function resolve_coord_path(file, var_path, coord_name)
         segments = split(parent, "/")
         while startswith(cstr, "../")
             cstr = cstr[4:end]           # strip leading ../
-            segments = segments[1:(end-1)]  # go up one level
+            segments = segments[1:(end - 1)]  # go up one level
         end
         cpath = isempty(segments) ? cstr : join(segments, "/") * "/" * cstr
     elseif contains(cstr, "/")
@@ -294,7 +296,7 @@ function resolve_coord_path(file, var_path, coord_name)
 end
 
 """
-    resolve_var_dims(file, path) -> (dim_ids::Vector{String}, dim_sizes::Dict{String,Int})
+    resolve_var_dims(file, path) -> (dim_ids::Vector{String}, dim_sizes::Dict{String, Int})
 
 Determine the dimension identifiers for a variable, returned in Julia axis order
 (index 1 = fastest varying in memory).
@@ -334,7 +336,7 @@ julia> resolve_var_dims(file, "gt1l/land_segments/latitude_20m")  # (5, 998) arr
 """
 function resolve_var_dims(file, path)
     ds = file[path]
-    dim_sizes = Dict{String,Int}()
+    dim_sizes = Dict{String, Int}()
 
     # Case 1: HDF5 dimension scales — explicit, authoritative
     dims = get_dimensions(ds)
@@ -353,7 +355,7 @@ function resolve_var_dims(file, path)
 
     # Case 2: This IS a dimension scale (e.g. delta_time with REFERENCE_LIST)
     if get(HDF5.attrs(ds), "CLASS", nothing) == "DIMENSION_SCALE" ||
-       !isnothing(get(HDF5.attrs(ds), "REFERENCE_LIST", nothing))
+            !isnothing(get(HDF5.attrs(ds), "REFERENCE_LIST", nothing))
         dp = HDF5.name(ds)
         dim_sizes[dp] = length(ds)
         close(ds)
@@ -366,7 +368,7 @@ function resolve_var_dims(file, path)
     if !isnothing(coords_str)
         coord_names = split(coords_str)
         axis_dims = fill("", ndims(ds))
-        seen_sizes = Dict{Int,String}()  # size → canonical dim path (first coord wins)
+        seen_sizes = Dict{Int, String}()  # size → canonical dim path (first coord wins)
         for cname in coord_names
             cpath = resolve_coord_path(file, path, cname)
             isnothing(cpath) && continue
@@ -412,12 +414,13 @@ function resolve_var_dims(file, path)
     throw(
         ArgumentError(
             "Cannot determine dimensions of '$(path)' ($(ndims(ds))D, size $sz): " *
-            "no DIMENSION_LIST, DIMENSION_SCALE class, or coordinates attribute found."),
+                "no DIMENSION_LIST, DIMENSION_SCALE class, or coordinates attribute found."
+        ),
     )
 end
 
 """
-    resolve_global_dims(file, paths) -> (global_dims::Vector{String}, dim_sizes::Dict{String,Int})
+    resolve_global_dims(file, paths) -> (global_dims::Vector{String}, dim_sizes::Dict{String, Int})
 
 Determine the global dimension order from a set of variable paths.
 
@@ -432,10 +435,10 @@ julia> resolve_global_dims(file, ["gt1l/.../latitude_20m", "gt1l/.../latitude"])
 ```
 """
 function resolve_global_dims(file, paths)
-    all_dims = Dict{String,Vector{String}}()
-    dim_sizes = Dict{String,Int}()
+    all_dims = Dict{String, Vector{String}}()
+    dim_sizes = Dict{String, Int}()
     dim_lists = Vector{Vector{String}}()
-    dims_cache = Dict{String,Vector{String}}()
+    dims_cache = Dict{String, Vector{String}}()
     for path in paths
         vdims = _resolve_var_dims_cached!(dims_cache, dim_sizes, file, path)
         all_dims[path] = vdims
@@ -447,9 +450,9 @@ function resolve_global_dims(file, paths)
     return global_dims, dim_sizes, all_dims
 end
 
-function _resolve_var_dims_cached!(cache::Dict{String,Vector{String}}, dim_sizes::Dict{String,Int}, file, path::AbstractString)
+function _resolve_var_dims_cached!(cache::Dict{String, Vector{String}}, dim_sizes::Dict{String, Int}, file, path::AbstractString)
     path = String(path)
-    get!(cache, path) do
+    return get!(cache, path) do
         vdims, vsizes = resolve_var_dims(file, path)
         for (dim, size) in vsizes
             dim_sizes[dim] = size
@@ -492,7 +495,8 @@ function _pick_global_dims(dim_lists::AbstractVector{<:AbstractVector{String}})
                 throw(
                     ArgumentError(
                         "Variable dimensions $dpaths are inconsistent with " *
-                        "the global dimension order. Cannot flatten (a,b) with (b,a)."),
+                            "the global dimension order. Cannot flatten (a,b) with (b,a)."
+                    ),
                 )
             end
         end
@@ -501,7 +505,7 @@ function _pick_global_dims(dim_lists::AbstractVector{<:AbstractVector{String}})
     return global_dims
 end
 
-_pick_global_dims(all_dims::AbstractDict{<:AbstractString,<:AbstractVector{String}}) =
+_pick_global_dims(all_dims::AbstractDict{<:AbstractString, <:AbstractVector{String}}) =
     _pick_global_dims(collect(values(all_dims)))
 
 """
@@ -547,8 +551,9 @@ function compute_repeat(global_dims, dim_sizes, var_dims)
             throw(
                 ArgumentError(
                     "Variable has non-contiguous dimensions in the global " *
-                    "order (dims at positions $positions, gap at $i). " *
-                    "Cannot flatten with inner/outer repeat."),
+                        "order (dims at positions $positions, gap at $i). " *
+                        "Cannot flatten with inner/outer repeat."
+                ),
             )
         end
     end
@@ -601,7 +606,7 @@ function is_dim_compatible(file, global_dims, dim_sizes, candidate_path)
     if length(positions) >= 2
         min_pos = minimum(positions)
         max_pos = maximum(positions)
-        for i = min_pos:max_pos
+        for i in min_pos:max_pos
             gd = global_dims[i]
             if !(gd in var_dims_set)
                 return false
@@ -621,7 +626,7 @@ function compute_flattening(file, paths)
     global_dims, dim_sizes, all_var_dims = resolve_global_dims(file, paths)
     nrow = isempty(global_dims) ? 1 : prod(dim_sizes[d] for d in global_dims)
 
-    mapping = Dict{String,@NamedTuple{inner::Int,outer::Int}}()
+    mapping = Dict{String, @NamedTuple{inner::Int, outer::Int}}()
     for path in paths
         vdims = get(all_var_dims, path, String[])
         mapping[path] = compute_repeat(global_dims, dim_sizes, vdims)
@@ -643,7 +648,7 @@ function make_variable(file, name::Symbol, path::AbstractString, flat = (inner =
         meanings = string.(split(flag_meanings))
         pool = CategoricalArrays.CategoricalPool(meanings)
         value_to_ref = Dict(fv => UInt32(i) for (i, fv) in enumerate(flag_values))
-        f = x -> CategoricalArray{String,1}(UInt32[get(value_to_ref, v, UInt32(0)) for v in x], pool)
+        f = x -> CategoricalArray{String, 1}(UInt32[get(value_to_ref, v, UInt32(0)) for v in x], pool)
     else
         mask = build_mask(ds)
         resolved = resolve_transform(transform, file, path)
@@ -657,5 +662,5 @@ function make_variable(file, name::Symbol, path::AbstractString, flat = (inner =
         end
     end
     close(ds)
-    Variable(name = name, path = path, f = f, eltype = T, inner = flat.inner, outer = flat.outer)
+    return Variable(name = name, path = path, f = f, eltype = T, inner = flat.inner, outer = flat.outer)
 end

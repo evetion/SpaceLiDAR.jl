@@ -1,4 +1,3 @@
-
 """
 Node data for the HDF5 explorer tree.
 """
@@ -11,8 +10,8 @@ mutable struct H5NodeData
     compatible::Bool
     const size_str::String
     description::String
-    dims::Union{Nothing,Vector{String}}
-    dim_sizes::Union{Nothing,Dict{String,Int}}
+    dims::Union{Nothing, Vector{String}}
+    dim_sizes::Union{Nothing, Dict{String, Int}}
 end
 H5NodeData(label, path, is_dataset, selected, compatible, size_str, desc, dims) =
     H5NodeData(label, path, is_dataset, false, selected, compatible, size_str, desc, dims, nothing)
@@ -24,7 +23,7 @@ mutable struct ExplorerState
     auto_dims::Bool
     auto_refs::Bool
     global_dims::Vector{String}
-    dim_sizes::Dict{String,Int}
+    dim_sizes::Dict{String, Int}
 end
 
 """
@@ -96,17 +95,17 @@ function TerminalMenus.printmenu(out::IO, menu::TreeMenu{Node{H5NodeData}}, curs
     elseif cursoridx > menu.pageoffset + menu.pagesize
         menu.pageoffset = cursoridx - menu.pagesize
     end
-    invoke(TerminalMenus.printmenu, Tuple{IO,TerminalMenus.AbstractMenu,Int}, out, menu, cursoridx; kwargs...)
+    return invoke(TerminalMenus.printmenu, Tuple{IO, TerminalMenus.AbstractMenu, Int}, out, menu, cursoridx; kwargs...)
 end
 
 # Clamp cursor to valid range before standard navigation (fixes stuck cursor after fold)
 function TerminalMenus.move_up!(menu::TreeMenu{Node{H5NodeData}}, cursor::Int, lastoption::Int = TerminalMenus.numoptions(menu))
     cursor = min(cursor, lastoption)
-    invoke(TerminalMenus.move_up!, Tuple{TerminalMenus.AbstractMenu,Int,Int}, menu, cursor, lastoption)
+    return invoke(TerminalMenus.move_up!, Tuple{TerminalMenus.AbstractMenu, Int, Int}, menu, cursor, lastoption)
 end
 function TerminalMenus.move_down!(menu::TreeMenu{Node{H5NodeData}}, cursor::Int, lastoption::Int = TerminalMenus.numoptions(menu))
     cursor = min(cursor, lastoption)
-    invoke(TerminalMenus.move_down!, Tuple{TerminalMenus.AbstractMenu,Int,Int}, menu, cursor, lastoption)
+    return invoke(TerminalMenus.move_down!, Tuple{TerminalMenus.AbstractMenu, Int, Int}, menu, cursor, lastoption)
 end
 
 """
@@ -135,6 +134,7 @@ function _build_tree!(parent_node, group)
             _build_tree!(child, obj)
         end
     end
+    return
 end
 
 """
@@ -150,12 +150,13 @@ function resolve_children!(node, file)
         d.dims, d.dim_sizes = try
             resolve_var_dims(file, d.path)
         catch
-            String[], Dict{String,Int}()
+            String[], Dict{String, Int}()
         end
         # Load description (prefer long_name, fall back to description)
         a = HDF5.attrs(ds)
         d.description = get(a, "long_name", get(a, "description", ""))
     end
+    return
 end
 
 """
@@ -172,13 +173,14 @@ function _collect_selected!(paths, node)
     for child in node.children
         _collect_selected!(paths, child)
     end
+    return
 end
 
 """
 Collect all selected attribute paths from the tree as name => path pairs.
 """
 function collect_selected_attrs(root)
-    attrs = Pair{Symbol,String}[]
+    attrs = Pair{Symbol, String}[]
     _collect_selected_attrs!(attrs, root)
     return attrs
 end
@@ -192,6 +194,7 @@ function _collect_selected_attrs!(attrs, node)
     for child in node.children
         _collect_selected_attrs!(attrs, child)
     end
+    return
 end
 
 """
@@ -200,7 +203,7 @@ Recompute global dims from cached node data for selected vars.
 function recompute_global!(state, root, file)
     state.global_dims = String[]
     empty!(state.dim_sizes)
-    _recompute_from_tree!(state, root, file)
+    return _recompute_from_tree!(state, root, file)
 end
 
 function _recompute_from_tree!(state, node, file)
@@ -211,7 +214,7 @@ function _recompute_from_tree!(state, node, file)
             d.dims, d.dim_sizes = try
                 resolve_var_dims(file, d.path)
             catch
-                String[], Dict{String,Int}()
+                String[], Dict{String, Int}()
             end
         end
         vdims = d.dims
@@ -224,6 +227,7 @@ function _recompute_from_tree!(state, node, file)
     for child in node.children
         _recompute_from_tree!(state, child, file)
     end
+    return
 end
 
 """
@@ -233,7 +237,7 @@ Handles subset (candidate ⊆ global), equal, and superset (global ⊆ candidate
 Dimensions with the same size are treated as equivalent (for files without shared dim scales).
 Returns false for partial overlap or reversed ordering.
 """
-function check_compatible(global_dims, candidate_dims, global_sizes = Dict{String,Int}(), candidate_sizes = Dict{String,Int}())
+function check_compatible(global_dims, candidate_dims, global_sizes = Dict{String, Int}(), candidate_sizes = Dict{String, Int}())
     isempty(global_dims) && return true
     isempty(candidate_dims) && return false
 
@@ -263,7 +267,7 @@ function check_compatible(global_dims, candidate_dims, global_sizes = Dict{Strin
         issorted(positions) || return false
         length(positions) <= 1 && return true
         min_p, max_p = extrema(positions)
-        return all(global_dims[i] ∈ cset for i = min_p:max_p)
+        return all(global_dims[i] ∈ cset for i in min_p:max_p)
     end
 
     if gset ⊆ cset
@@ -272,7 +276,7 @@ function check_compatible(global_dims, candidate_dims, global_sizes = Dict{Strin
         issorted(positions) || return false
         length(positions) <= 1 && return true
         min_p, max_p = extrema(positions)
-        return all(matched_candidate[i] ∈ gset for i = min_p:max_p)
+        return all(matched_candidate[i] ∈ gset for i in min_p:max_p)
     end
 
     return false
@@ -282,18 +286,19 @@ end
 Update compatibility for all resolved nodes (uses cached dims only — no I/O).
 """
 function update_compatibility!(root, state)
-    _update_compat!(root, state.global_dims, state.dim_sizes)
+    return _update_compat!(root, state.global_dims, state.dim_sizes)
 end
 
-function _update_compat!(node, global_dims, global_sizes = Dict{String,Int}())
+function _update_compat!(node, global_dims, global_sizes = Dict{String, Int}())
     d = node.data
     if d.is_dataset && !d.selected && !isnothing(d.dims)
-        candidate_sizes = something(d.dim_sizes, Dict{String,Int}())
+        candidate_sizes = something(d.dim_sizes, Dict{String, Int}())
         d.compatible = check_compatible(global_dims, d.dims, global_sizes, candidate_sizes)
     end
     for child in node.children
         _update_compat!(child, global_dims, global_sizes)
     end
+    return
 end
 
 """
@@ -303,7 +308,7 @@ function reset_selection!(root, state)
     _clear_selected!(root)
     state.global_dims = String[]
     empty!(state.dim_sizes)
-    _update_compat!(root, state.global_dims)  # everything becomes compatible
+    return _update_compat!(root, state.global_dims)  # everything becomes compatible
 end
 
 function _clear_selected!(node)
@@ -312,6 +317,7 @@ function _clear_selected!(node)
     for child in node.children
         _clear_selected!(child)
     end
+    return
 end
 
 """
@@ -324,6 +330,7 @@ function auto_select_dims!(root, file, path)
     for dp in dim_paths
         _set_selected!(root, lstrip(dp, '/'), true)
     end
+    return
 end
 
 """
@@ -336,6 +343,7 @@ function auto_select_refs!(root, file, path)
     for rp in ref_paths
         _set_selected!(root, lstrip(rp, '/'), true)
     end
+    return
 end
 
 function _set_selected!(node, path, val)
@@ -370,6 +378,7 @@ function _mark_groups!(node)
     for child in node.children
         _mark_groups!(child)
     end
+    return
 end
 
 # HDF5 internal attributes that are not useful for display
@@ -409,13 +418,14 @@ function expand_attrs!(node, file)
             node.children[idx].parent = node
         end
     end
+    return
 end
 
 """
 Custom display for H5NodeData in the tree menu using StyledStrings.
 """
-function FoldingTrees.writeoption(buf::IO, data::H5NodeData, charsused::Int; width::Int = (displaysize(stdout)::Tuple{Int,Int})[2])
-    if data.is_attr
+function FoldingTrees.writeoption(buf::IO, data::H5NodeData, charsused::Int; width::Int = (displaysize(stdout)::Tuple{Int, Int})[2])
+    return if data.is_attr
         # Show selection state for attrs; internal attrs (compatible=false): shadow
         str = if data.selected
             styled_ansi(styled"{green:[✓] $(data.label)}")
@@ -447,8 +457,8 @@ function FoldingTrees.writeoption(buf::IO, data::H5NodeData, charsused::Int; wid
 end
 
 """
-    explore(file::HDF5.File; pagesize=20) -> H5Table
-    explore(filename::AbstractString; pagesize=20) -> H5Table
+    explore(file::HDF5.File; pagesize = 20) -> H5Table
+    explore(filename::AbstractString; pagesize = 20) -> H5Table
 
 Interactively explore an HDF5 file with a tree menu. Select variables to build an H5Table.
 
@@ -479,14 +489,14 @@ function explore(filename::AbstractString; kwargs...)
 end
 
 """
-    select(file::HDF5.File; pagesize) → (Vector{String}, Vector{Pair{Symbol,String}})
+    select(file::HDF5.File; pagesize) → (Vector{String}, Vector{Pair{Symbol, String}})
 
 Run the interactive explorer and return the selected dataset paths and attribute paths.
 This is the building block for `explore(file)` and `explore(::Granule)`.
 """
 function select(file::HDF5.File; pagesize::Int = min(displaysize(stdout)[1] - 3, 40))
     root = build_tree(file)
-    state = ExplorerState(false, false, String[], Dict{String,Int}())
+    state = ExplorerState(false, false, String[], Dict{String, Int}())
 
     # Resolve dims/descriptions for initially visible datasets
     resolve_children!(root, file)
@@ -502,7 +512,7 @@ function select(file::HDF5.File; pagesize::Int = min(displaysize(stdout)[1] - 3,
 
     function on_unfold!(node)
         resolve_children!(node, file)
-        _update_compat!(node, state.global_dims, state.dim_sizes)
+        return _update_compat!(node, state.global_dims, state.dim_sizes)
     end
 
     function keypress(menu, i)

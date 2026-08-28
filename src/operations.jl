@@ -67,7 +67,7 @@ record the requested filters/transforms and defer reading until a materializing
 sink such as `collect` or `DataFrame`. All required columns are auto-pulled
 before materialization, so later operations can still use granule context.
 """
-struct OperationPipeline{S,O<:Tuple}
+struct OperationPipeline{S, O <: Tuple}
     source::S
     ops::O
 end
@@ -81,10 +81,12 @@ for. Generic operations specialise on `Granule`, product-bound ones on their
 concrete granule type. Pass `nothing` for a sourceless table (the op then
 returns name-only specs used purely for validation).
 """
-_inputs(op::Operation, granule) = throw(ArgumentError(
-    "$(typeof(op)) is not applicable to " *
-    (granule === nothing ? "a sourceless table" : string(typeof(granule))),
-))
+_inputs(op::Operation, granule) = throw(
+    ArgumentError(
+        "$(typeof(op)) is not applicable to " *
+            (granule === nothing ? "a sourceless table" : string(typeof(granule))),
+    )
+)
 
 # ─── input-spec helpers (shared by generic operations) ────────────────────────
 
@@ -125,8 +127,8 @@ const OpTable = Union{
     AbstractTable,
     DataFrame,
 }
-const LazyOpTable = Union{H5Tables.H5Table,H5Tables.PartitionedH5Table}
-const MaterializedOpTable = Union{AbstractTable,DataFrame}
+const LazyOpTable = Union{H5Tables.H5Table, H5Tables.PartitionedH5Table}
+const MaterializedOpTable = Union{AbstractTable, DataFrame}
 
 # Mutable column containers an operation works over. A `PartitionedTable`
 # exposes one container per partition (so in-place column mutation persists and
@@ -142,14 +144,14 @@ _colnames(t) = Tables.columnnames(Tables.columns(t))
 _input_names(op::Operation, granule) = Symbol[v.name for v in _inputs(op, granule)]
 
 function _missing_col_msg(name::Symbol, granule)
-    if granule === nothing
+    return if granule === nothing
         "Operation needs column :$name, which is not present and cannot be " *
-        "auto-resolved (the table carries no granule). Re-create the table " *
-        "including :$name (e.g. select it in `explore`)."
+            "auto-resolved (the table carries no granule). Re-create the table " *
+            "including :$name (e.g. select it in `explore`)."
     else
         "Operation needs column :$name, which is not present and is unknown to " *
-        "$(typeof(granule)). Include it via `table(g)`/`explore(g)` " *
-        "(e.g. `table(g; variables=[…, Variable(:$name, …)])`)."
+            "$(typeof(granule)). Include it via `table(g)`/`explore(g)` " *
+            "(e.g. `table(g; variables=[…, Variable(:$name, …)])`)."
     end
 end
 
@@ -174,11 +176,11 @@ function _augment(t::H5Tables.H5Table, need::Vector{Variable})
         rv === nothing && throw(ArgumentError(_missing_col_msg(v.name, _opgranule(t))))
         push!(newvars, rv)
     end
-    H5Tables.H5Table(f = src, vars = newvars, attrs = t.attrs, nrow = t.nrow)
+    return H5Tables.H5Table(f = src, vars = newvars, attrs = t.attrs, nrow = t.nrow)
 end
 
 function _augment(t::H5Tables.PartitionedH5Table, need::Vector{Variable})
-    H5Tables.PartitionedH5Table([_augment(p, need) for p in t.tables])
+    return H5Tables.PartitionedH5Table([_augment(p, need) for p in t.tables])
 end
 
 # Materialize `t` with the columns `need` available.
@@ -301,18 +303,18 @@ end
 function _filter_rows(op::Filter, t::Table)
     nt = _table(t)
     m = _mask(op, nt)
-    Table(map(c -> c[m], nt), _granule(t))
+    return Table(map(c -> c[m], nt), _granule(t))
 end
 function _filter_rows(op::Filter, t::PartitionedTable)
     parts = map(t.tables) do nt
         m = _mask(op, nt)
         map(c -> c[m], nt)
     end
-    PartitionedTable(parts, _granule(t))
+    return PartitionedTable(parts, _granule(t))
 end
 function _filter_rows(op::Filter, t::DataFrame)
     m = _mask(op, t)
-    t[m, :]
+    return t[m, :]
 end
 
 # Apply a transform to every mutable container of `t`.
@@ -324,7 +326,7 @@ _transform!(op::Transform, t) = (foreach(c -> _run!(op, c), _containers(t)); t)
 
 """
     InExtent(extent::Extent)
-    InExtent(; X=(min,max), Y=(min,max))
+    InExtent(; X = (min, max), Y = (min, max))
 
 Filter: keep rows whose `:longitude`/`:latitude` fall within `extent` (an
 `Extents.Extent` with `X` and `Y` bounds). Generic — applies to any granule.
@@ -345,7 +347,7 @@ function _mask(op::InExtent, cols)
     @inbounds for i in 1:n
         xi, yi = x[i], y[i]
         m[i] = !ismissing(xi) && !ismissing(yi) &&
-               xmin <= xi <= xmax && ymin <= yi <= ymax
+            xmin <= xi <= xmax && ymin <= yi <= ymax
     end
     return m
 end

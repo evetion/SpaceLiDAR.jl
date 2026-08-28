@@ -1,10 +1,10 @@
 Base.@kwdef struct Variable
     name::Symbol
     path::String
-    f::Any=identity
-    eltype::Type=Any
-    inner::Int=1
-    outer::Int=1
+    f::Any = identity
+    eltype::Type = Any
+    inner::Int = 1
+    outer::Int = 1
 end
 Variable(name::Symbol, path::String, T::Type, f = identity) =
     Variable(name = name, path = path, eltype = T, f = f)
@@ -13,8 +13,8 @@ Base.@kwdef struct Attribute
     name::Symbol
     group::String
     attribute::String
-    f::Function=identity
-    eltype::DataType=Any
+    f::Function = identity
+    eltype::DataType = Any
 end
 Attribute(name::Symbol, attribute::String, f::Function = identity) =
     Attribute(name = name, group = "", attribute = attribute, f = f)
@@ -23,7 +23,7 @@ Base.@kwdef struct H5Table{S}
     f::S
     vars::Vector{Variable}
     attrs::Vector{Attribute}
-    nrow::Int=0
+    nrow::Int = 0
 end
 
 function Base.close(t::H5Table)
@@ -32,7 +32,7 @@ function Base.close(t::H5Table)
 end
 
 function Base.show(io::IO, t::H5Table)
-    print(io, "H5Table($(basename(HDF5.filename(h5handle(t.f)))), $(length(t.vars)) columns, $(t.nrow) rows)")
+    return print(io, "H5Table($(basename(HDF5.filename(h5handle(t.f)))), $(length(t.vars)) columns, $(t.nrow) rows)")
 end
 
 _show_transform(f) = f === identity ? "" : "  → $f"
@@ -59,6 +59,7 @@ function Base.show(io::IO, ::MIME"text/plain", t::H5Table)
         ty = rpad(string(a.eltype), type_w)
         println(io, "  $n ::$ty  (attr)")
     end
+    return
 end
 
 # ─── Transform types (specs resolved at build time into 1-arg closures) ────────
@@ -104,7 +105,7 @@ struct Nodata{T}
     sentinel::T
 end
 function (nd::Nodata)(data::AbstractArray)
-    T = Union{eltype(data),Missing}
+    T = Union{eltype(data), Missing}
     return T[v == nd.sentinel ? missing : v for v in data]
 end
 
@@ -116,22 +117,22 @@ struct NodataRange{T}
     hi::T
 end
 function (nd::NodataRange)(data::AbstractArray)
-    T = Union{eltype(data),Missing}
+    T = Union{eltype(data), Missing}
     return T[nd.lo <= v <= nd.hi ? v : missing for v in data]
 end
 
 _as_variable(v::Variable) = v
-_as_variable(p::Pair{Symbol,<:AbstractString}) =
+_as_variable(p::Pair{Symbol, <:AbstractString}) =
     Variable(name = first(p), path = String(last(p)))
 
 function H5Table(
-    source;
-    vars::AbstractVector,
-    attrs::Vector{Pair{Symbol,String}} = Pair{Symbol,String}[],
-    include_dimensions::Bool = false,
-    include_references::Bool = false,
-    nrow::Union{Int,Nothing} = nothing,
-)
+        source;
+        vars::AbstractVector,
+        attrs::Vector{Pair{Symbol, String}} = Pair{Symbol, String}[],
+        include_dimensions::Bool = false,
+        include_references::Bool = false,
+        nrow::Union{Int, Nothing} = nothing,
+    )
     file = h5handle(source)
     # 1. Collect all variable specs. Pair syntax is a convenience for
     # untransformed columns; transformed columns are represented by Variable.f.
@@ -173,9 +174,9 @@ function H5Table(
     # `apply_transform_dims` for the per-transform rules.
     if isnothing(nrow)
         # Dimension scale path/name -> size; shared by all variables.
-        dim_sizes = Dict{String,Int}()
+        dim_sizes = Dict{String, Int}()
         # Raw HDF5 dims by path; duplicate selected columns can share metadata.
-        dims_cache = Dict{String,Vector{String}}()
+        dims_cache = Dict{String, Vector{String}}()
         # Post-transform dims by variable index, reused when computing repeats.
         effective_dims = Vector{Vector{String}}(undef, length(variable_specs))
         for (i, v) in pairs(variable_specs)
@@ -191,7 +192,7 @@ function H5Table(
         # Explicit nrow is the schema fast path: callers promise all variables
         # are already flat/aligned, so skip dimension resolution entirely.
         global_dims = String[]
-        dim_sizes = Dict{String,Int}()
+        dim_sizes = Dict{String, Int}()
         effective_dims = fill(String[], length(variable_specs))
     end
 
@@ -253,7 +254,7 @@ function Tables.columnnames(x::H5Table)
     for a in x.attrs
         a.name in names || push!(names, a.name)
     end
-    names
+    return names
 end
 function Tables.getcolumn(table::H5Table, name::Symbol)
     vari = findfirst(v -> v.name == name, table.vars)
@@ -318,7 +319,7 @@ Falls back to `read(::Attribute)` for strings and other types.
 function _h5read_attr(file::HDF5.File, parent_path::String, attr_name::String, ::Type{T}) where {T}
     obj_id = HDF5.API.h5o_open(file, parent_path, HDF5.API.H5P_DEFAULT)
     attr_id = HDF5.API.h5a_open(obj_id, attr_name, HDF5.API.H5P_DEFAULT)
-    if T <: Union{Integer,AbstractFloat}
+    if T <: Union{Integer, AbstractFloat}
         memtype = HDF5.datatype(T)
         buf = Ref{T}()
         HDF5.API.h5a_read(attr_id, memtype, buf)
@@ -354,15 +355,15 @@ Tables.columnaccess(::Type{PartitionedH5Table}) = true
 Tables.columns(x::PartitionedH5Table) = x
 Tables.partitions(x::PartitionedH5Table) = x.tables
 function Tables.columnnames(x::PartitionedH5Table)
-    isempty(x.tables) ? Symbol[] : Tables.columnnames(x.tables[1])
+    return isempty(x.tables) ? Symbol[] : Tables.columnnames(x.tables[1])
 end
 function Tables.getcolumn(x::PartitionedH5Table, name::Symbol)
-    reduce(vcat, [Tables.getcolumn(t, name) for t in x.tables])
+    return reduce(vcat, [Tables.getcolumn(t, name) for t in x.tables])
 end
 Tables.getcolumn(x::PartitionedH5Table, i::Int) = Tables.getcolumn(x, Tables.columnnames(x)[i])
 function Tables.schema(x::PartitionedH5Table)
     isempty(x.tables) && return Tables.Schema(Symbol[], Type[])
-    Tables.schema(x.tables[1])
+    return Tables.schema(x.tables[1])
 end
 
 Base.length(x::PartitionedH5Table) = length(x.tables)
@@ -374,7 +375,7 @@ DataAPI.ncol(x::PartitionedH5Table) = isempty(x.tables) ? 0 : DataAPI.ncol(x.tab
 
 function Base.show(io::IO, ts::PartitionedH5Table)
     total = sum(t.nrow for t in ts.tables)
-    print(
+    return print(
         io,
         "$(length(ts.tables))×H5Table($(basename(HDF5.filename(h5handle(ts.tables[1].f)))), $(DataAPI.ncol(ts.tables[1])) columns, $total rows)",
     )
@@ -405,4 +406,5 @@ function Base.show(io::IO, ::MIME"text/plain", ts::PartitionedH5Table)
         ty = rpad(string(a.eltype), type_w)
         println(io, "  $n ::$ty  (attr)")
     end
+    return
 end
