@@ -9,9 +9,11 @@ using HDF5: HDF5, attributes, open_dataset, open_group, read_attribute, read_dat
 using Tables: Tables
 using TableOperations: joinpartitions
 using DataFrames: DataFrames, DataFrame, subset, subset!
-using TimeZones: TimeZones, DateTime, UTC
+using TimeZones: TimeZones, DateTime
 using Extents: Extents, Extent, extent
+import AWSS3
 import DataAPI
+import EarthData
 
 const SpaceLiDAR = SpaceAltimetry
 

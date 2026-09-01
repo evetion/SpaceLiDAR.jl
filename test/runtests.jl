@@ -45,15 +45,15 @@ GEDI02_fn = download_artifact(v"0.1", "GEDI02_A_2019242104318_O04046_01_T02343_0
 GLAH14_fn = download_artifact(v"0.1", "GLAH14_634_1102_001_0071_0_01_0001.H5")
 GLAH06_fn = download_artifact(v"0.1", "GLAH06_634_2131_002_0084_4_01_0001.H5")
 
-empty_bbox = (min_x = 0.0, min_y = 0.0, max_x = 0.0, max_y = 0.0)
+empty_bbox = (min_x=0.0, min_y=0.0, max_x=0.0, max_y=0.0)
 empty_extent = convert(Extent, empty_bbox)
 
 @testset "SpaceAltimetry.jl" begin
     @testset "Aqua" begin
         Aqua.test_all(
             SpaceAltimetry;
-            deps_compat = (; check_extras = false),
-            piracies = (; treat_as_own = [Extents.Extent]),
+            deps_compat=(; check_extras=false),
+            piracies=(; treat_as_own=[Extents.Extent]),
         )
     end
     @testset "ExplicitImports" begin
@@ -66,11 +66,12 @@ empty_extent = convert(Extent, empty_bbox)
         # accesses) are enforced.
         test_explicit_imports(
             SpaceAltimetry;
-            all_explicit_imports_are_public = false,
-            all_qualified_accesses_via_owners = false,
-            all_qualified_accesses_are_public = false,
+            all_explicit_imports_are_public=false,
+            all_qualified_accesses_via_owners=false,
+            all_qualified_accesses_are_public=false,
         )
     end
     include("sl.jl")
     include("h5table.jl")
+    # include("makie.jl")
 end

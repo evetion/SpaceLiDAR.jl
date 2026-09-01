@@ -1,54 +1,3 @@
-import Downloads
-import AWSS3
-import Aria2_jll
-
-# Custom downloader for Julia 1.6 which doensn't have NETRC + Cookie support
-# This is a method because it will segfault if precompiled.
-function custom_downloader()
-    downloader = Downloads.Downloader()
-    easy_hook =
-        (easy, _) -> begin
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_NETRC, Downloads.Curl.CURL_NETRC_OPTIONAL)
-            Downloads.Curl.setopt(easy, Downloads.Curl.CURLOPT_COOKIEFILE, "")
-        end
-    downloader.easy_hook = easy_hook
-    return downloader
-end
-
-function _download(kwargs...)
-    downloader = custom_downloader()
-    Downloads.download(kwargs...; downloader = downloader)
-end
-
-function _request(args...; kwargs...)
-    downloader = custom_downloader()
-    Downloads.request(args...; kwargs..., downloader = downloader)
-end
-
-function create_aws_config(daac = "nsidc", region = "us-west-2")
-    expiry = DateTime(get(ENV, "AWS_SESSION_EXPIRES", typemin(DateTime)))
-    if expiry < Dates.now(UTC)
-        # If credentials are expired or unset, get new ones
-        creds = get_s3_credentials(daac)
-        set_env!(creds)
-    else
-        # Otherwise, get them from the environment
-        creds = AWSS3.AWSCredentials(
-            get(ENV, "AWS_ACCESS_KEY_ID", ""),
-            get(ENV, "AWS_SECRET_ACCESS_KEY", ""),
-            get(ENV, "AWS_SESSION_TOKEN", ""),
-            expiry = DateTime(get(ENV, "AWS_SESSION_EXPIRES", typemax(DateTime))),
-        )
-    end
-
-    AWSS3.global_aws_config(; creds, region)
-end
-
-function _s3_download(url, fn, config = create_aws_config())
-    bucket, path = split(last(split(url, "//")), "/"; limit = 2)
-    AWSS3.s3_get_file(config, bucket, path, fn)
-end
-
 abstract type Granule end
 Base.:(==)(a::Granule, b::Granule) = id(a) == id(b)
 id(g::Granule) = g.id
@@ -84,17 +33,17 @@ function download!(granule::Granule, folder = ".")
         return granule
     end
     isfile(granule.url) && return granule
+
     tmp = tempname(folder)
-    if startswith(granule.url, "http")
-        _download(granule.url, tmp)
-    elseif startswith(granule.url, "s3")
-        _s3_download(granule.url, tmp)
-    else
-        error("Can't determine how to download $(granule.url)")
+    try
+        EarthData.download(granule.url, tmp)
+        mv(tmp, fn)
+    catch
+        rm(tmp; force = true)
+        rethrow()
     end
-    mv(tmp, fn)
     granule.url = fn
-    granule
+    return granule
 end
 
 """
@@ -134,30 +83,13 @@ function download!(granules::Vector{<:Granule}, folder::AbstractString = ".")
     # Normalize and ensure the directory exists
     folder = normpath(abspath(folder))
     mkpath(folder)
+    isempty(granules) && return granules
 
-    # Download serially if s3 links are present
-    if any(g -> startswith(g.url, "s3"), granules)
-        return map(g -> download!(g, folder), granules)
+    paths = EarthData.download(urls(granules), folder)
+    for (granule, path) in zip(granules, paths)
+        granule.url = path
     end
-
-    f = write_urls(granules)
-    cmd = `$(Aria2_jll.aria2c()) -i $f -c -d $folder`
-    local io
-    try
-        io = run(pipeline(cmd, stdout = stdout, stderr = stderr), wait = false)
-        while process_running(io)
-            sleep(1)
-        end
-    catch e
-        kill(io)
-        println()
-        throw(e)
-    end
-
-    for granule in granules
-        granule.url = joinpath(folder, id(granule))
-    end
-    granules
+    return granules
 end
 
 """
@@ -166,13 +98,7 @@ end
 Like [`download`](@ref), but for a vector of `granules`.
 """
 function download(granules::Vector{<:Granule}, folder::AbstractString = ".")
-
-    # Download serially if s3 links are present
-    if any(g -> startswith(g.url, "s3"), granules)
-        return map(g -> download(g, folder), granules)
-    else
-        download!(copy.(granules), folder)
-    end
+    return download!(copy.(granules), folder)
 end
 
 function Base.filesize(granule::T) where {T<:Granule}

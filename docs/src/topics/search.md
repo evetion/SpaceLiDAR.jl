@@ -3,6 +3,13 @@
 SpaceAltimetry provides tools to find granules — both locally and from NASA's
 Common Metadata Repository (CMR).
 
+Remote search is implemented by
+[EarthData.jl](https://github.com/evetion/EarthData.jl), which was split out of
+SpaceAltimetry's original search and download code. SpaceAltimetry keeps the
+mission-specific defaults and converts EarthData's typed CMR records into its ICESat,
+ICESat-2, and GEDI granule types. Use EarthData.jl directly for generic NASA Earthdata
+collections outside these LiDAR missions.
+
 ## Local Discovery
 
 ```julia
@@ -44,8 +51,8 @@ and spatial footprints.
 Each mission has different default products and providers:
 
 ```julia
-search(:ICESat2)          # defaults to ATL03, version 6
-search(:ICESat2, :ATL08)  # ATL08, version 6
+search(:ICESat2)          # defaults to ATL03, version 7
+search(:ICESat2, :ATL08)  # ATL08, version 7
 search(:GEDI)             # defaults to GEDI02_A, version 2
 search(:ICESat)           # defaults to GLAH14, version 34
 ```

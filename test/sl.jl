@@ -40,7 +40,7 @@ end
     @test length(SpaceAltimetry.search(:ICESat2, :ATL08, after = DateTime(2019, 12, 12), before = DateTime(2019, 12, 13))) == 161
     @test length(SpaceAltimetry.search(:ICESat2, :ATL08, before = DateTime(2017, 12, 12))) == 0
     @test length(SpaceAltimetry.search(:ICESat2, :ATL08, after = now())) == 0
-    @test_throws ErrorException SpaceAltimetry.search(:ICESat2, :ATL08, after = now() - Month(47), before = now() - Month(48))
+    @test_throws ArgumentError SpaceAltimetry.search(:ICESat2, :ATL08, after = now() - Month(47), before = now() - Month(48))
 end
 
 @testset "download" begin
