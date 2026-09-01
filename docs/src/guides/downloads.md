@@ -16,16 +16,17 @@ g.url  # now points to "data/ATL08_..."
 
 ## Batch downloads with aria2c
 
-When downloading multiple granules, SpaceAltimetry automatically uses
-[aria2c](https://aria2.github.io/) for parallel, resumable downloads:
+Batch transfers are delegated to
+[EarthData.jl](https://github.com/evetion/EarthData.jl), which uses bundled `aria2c`
+for parallel, resumable HTTPS downloads:
 
 ```julia
 granules = search(:ICESat2, :ATL08; extent=vietnam)
 download!(granules, "data/")
 ```
 
-This writes a temporary URL list and calls `aria2c -c` (continue/resume).
-No manual setup needed — aria2c is bundled via `Aria2_jll`.
+EarthData writes the temporary URL list and calls `aria2c` with resume enabled. No
+manual aria2 installation is needed.
 
 ## Credentials
 
@@ -35,7 +36,9 @@ NASA Earthdata requires authentication. Set up once:
 SpaceAltimetry.netrc!("your_username", "your_password")
 ```
 
-This writes to `~/.netrc` (or `~/_netrc` on Windows).
+This delegates to `EarthData.netrc!`, which replaces any existing Earthdata Login stanza
+and restricts the credential file to mode `600`. It writes `~/.netrc`, except on Windows,
+where an existing `~/_netrc` is respected.
 
 ## Exporting URL lists
 

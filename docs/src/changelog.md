@@ -20,6 +20,8 @@
 - `points`/`lines` no longer accept a `NamedTuple` for `bbox`; pass an `Extents.Extent` (e.g. `convert(Extent, (min_x=..., min_y=..., max_x=..., max_y=...))`).
 
 ### Changed
+- Delegated CMR search, Earthdata authentication, HTTPS/S3 downloads, and batch transfers
+  to EarthData.jl, which originated as SpaceAltimetry's generic search/download code.
 - Column types resolved at read time via transforms (e.g., `delta_time` becomes `DateTime`).
 - All products now use the shared `H5Table` infrastructure instead of per-product hardcoded readers.
 

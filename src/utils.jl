@@ -117,23 +117,16 @@ urls(g::Vector{<:Granule}) = getfield.(g, :url)
 Write all granule urls to a file.
 """
 function write_urls(fn::String, granules::AbstractVector{<:Granule})
-    open(fn, "w") do f
-        write_urls(f, granules)
-    end
-    abspath(fn)
+    return EarthData.write_urls(fn, urls(granules))
 end
 
 function write_urls(granules::AbstractVector{<:Granule})
-    fn, io = mktemp()
-    write_urls(io, granules)
-    close(io)
-    fn
+    return EarthData.write_urls(urls(granules))
 end
 
-function write_urls(f::IOStream, granules::AbstractVector{<:Granule})
-    for granule in granules
-        println(f, url(granule))
-    end
+function write_urls(io::IOStream, granules::AbstractVector{<:Granule})
+    EarthData.write_urls(io, urls(granules))
+    return nothing
 end
 
 """
@@ -157,22 +150,13 @@ end
 """
     netrc!(username, password)
 
-Writes/updates a .netrc file for ICESat-2 and GEDI downloads. A .netrc is a plaintext
-file containing your username and password for NASA EarthData and DAACs, and can be automatically
-used by Julia using `Downloads` and tools like `wget`, `curl` among others.
+Writes/updates a `.netrc` file for ICESat-2 and GEDI downloads. A `.netrc` is a plaintext
+file containing your username and password for NASA Earthdata and DAACs. This delegates to
+`EarthData.netrc!`, which replaces an existing Earthdata Login stanza and restricts the file
+to mode `600`.
 """
 function netrc!(username, password)
-    if Sys.iswindows()
-        fn = joinpath(homedir(), "_netrc")
-    else
-        fn = joinpath(homedir(), ".netrc")
-    end
-
-    open(fn, "a") do f
-        write(f, "\n")
-        write(f, "machine urs.earthdata.nasa.gov login $username password $(password)\n")
-    end
-    fn
+    return EarthData.netrc!(username, password)
 end
 
 function filter_rgt(granules::Vector{<:Granule}, rgt::Int, cycle::Int)
